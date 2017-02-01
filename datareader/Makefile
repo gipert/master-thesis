@@ -1,1 +1,0 @@
-# makefile for datareader lib

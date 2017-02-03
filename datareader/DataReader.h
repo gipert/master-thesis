@@ -32,15 +32,19 @@ namespace GERDA {
 
       public:
 
-      DataReader( std::string gerdaMetaPath, 
-                  std::string gerdaDataPath,
-                  std::string configListPath );
+      DataReader( std::string gerdaMetaPath,    // location of gerda-metadata repo
+                  std::string gerdaDataPath,    // location of gerda-data folder
+                  std::string configListPath ); // location of runconfiguration_mod.db
       
       // override default destructor
       ~DataReader();
 
       // load tree in dataTree
       bool LoadRun( int runID , bool verbose = false );
+      // retrieve tree
+      // warning: deleted when the DataReader object goes out of scope
+      TChain* GetTree( int runID ) const;
+      TChain* GetGlobalTree() const;
 
       private:
 

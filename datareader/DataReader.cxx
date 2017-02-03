@@ -120,3 +120,21 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
 
     return true;
 }
+
+TChain* DataReader::GetTree( int runID ) const {
+
+    auto result = dataTree.find(runID);
+    if ( result == dataTree.end() ) {
+        std::cout << "DataReader::GetTree: Run" << runID << " not loaded!\n";
+        return nullptr;
+    }
+
+    return result->second;
+}
+
+TChain* DataReader::GetGlobalTree() const {
+
+    TChain* chain = new TChain;
+    for ( auto& it : dataTree ) chain->Add( it.second );
+    return chain;
+}

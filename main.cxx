@@ -27,10 +27,12 @@ int main( int argc, char** argv ) {
     
     GERDA::DataReader reader( metapath, datapath, configpath);
 
-    reader.LoadRun(53, verbose);
-
+    for ( int i = 53; i < 66; i++) reader.LoadRun(i, verbose);
+    
+    std::cout << "Creating global tree...\n" << std::flush;
     auto chain = reader.GetGlobalTree();
-    chain->Print("all");
+    std::cout << "Getting number of entries...\n" << std::flush;
+    std::cout << chain->GetEntries() << std::endl;
 
     
     

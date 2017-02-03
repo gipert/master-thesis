@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <limits>
+#include <memory>
 
 // ROOT
 #include "TFile.h"
@@ -69,10 +70,22 @@ bool DataReader::LoadRun( int runID ) {
     if ( confName == "runnotregistered" ) { std::cout << "Run" << runID << ": runID not found in config list!\n"; return false; }
 
     std::string completePath = gerdaMetaDir + "/config/_aux/geruncfg/" + confName;
+    //auto configFile = std::unique_ptr<TFile, decltype(&TFile::Close)>{ 
+    //    TFile::Open(completePath.c_str,"READ"),
+    //    &TFile::Close
+    //};
+
     TFile configFile( completePath.c_str(), "READ" );
     if ( configFile.IsZombie() ) { std::cout << "Run" << runID << ": config file not found!\n"; return false; }
+    
+    std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Clone("RunConfiguration")));
 
-    
-    
+    std::vector<int> detector_status( gtr->GetNDetectors(), 0 );
+    for ( auto i : detector_status ) {
+        if ( gtr->IsTrash(i) ) detector_status[i] = 2;
+        if ( gtr->IsOn(i)    ) detector_status[i] = 1;
+    }
+
+    configFile.Close();
     return true;
 }

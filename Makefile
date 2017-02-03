@@ -4,8 +4,14 @@
 # Created: 01/02/2017
 
 CC     = c++-4.9
-CFLAGS = $(shell root-config --cflags) -Wall -I./datareader
-LIBS   = $(shell root-config --libs) -L./datareader
+CFLAGS = $(shell root-config --cflags) \
+         $(shell gelatio-config --cflags) \
+	 $(shell mgdo-config --cflags) \
+	 $(shell gerda-ada-config --cflags)/gerda-ada -Wall -I./datareader
+LIBS   = $(shell root-config --libs) \
+         $(shell gelatio-config --libs) \
+	 $(shell mgdo-config --libs) \
+	 $(shell gerda-ada-config --libs) -L./datareader
 
 all : datareader/libDataReader.so main
 

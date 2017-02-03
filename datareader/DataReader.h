@@ -40,7 +40,7 @@ namespace GERDA {
       ~DataReader();
 
       // load tree in dataTree
-      bool LoadRun( int runID );
+      bool LoadRun( int runID , bool verbose = false );
 
       private:
 

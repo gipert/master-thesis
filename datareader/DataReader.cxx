@@ -59,33 +59,64 @@ std::string DataReader::FindRunConfiguration( int runID ) {
         }
         configList.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
-    
+    configList.clear();
+    configList.seekg(0, std::ios::beg);
     return result;
 }
 
-bool DataReader::LoadRun( int runID ) {
+bool DataReader::LoadRun( int runID , bool verbose ) {
 
+    if ( verbose == true ) {
+        std::cout << "RUN" << runID << std::endl;
+        std::cout << "Looking for config list file...\n";
+    }
     std::string confName = FindRunConfiguration( runID );
     if ( confName == "filenotfound"     ) { std::cout << "Config list file not found!\n"; return false; }
+    if ( verbose == true ) std::cout << "Looking for config file...\n";
     if ( confName == "runnotregistered" ) { std::cout << "Run" << runID << ": runID not found in config list!\n"; return false; }
 
-    std::string completePath = gerdaMetaDir + "/config/_aux/geruncfg/" + confName;
+    std::string completePath = gerdaMetaDir + "/config/_aux/geruncfg/" + confName; 
+    if ( verbose == true ) std::cout << "Opening config file...\n";
+    TFile configFile( completePath.c_str(), "READ" );
+    
     //auto configFile = std::unique_ptr<TFile, decltype(&TFile::Close)>{ 
     //    TFile::Open(completePath.c_str,"READ"),
     //    &TFile::Close
     //};
 
-    TFile configFile( completePath.c_str(), "READ" );
     if ( configFile.IsZombie() ) { std::cout << "Run" << runID << ": config file not found!\n"; return false; }
     
-    std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Clone("RunConfiguration")));
-
+    if ( verbose == true ) std::cout << "Retrieving detector status...\n";
+    std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Get("RunConfiguration")));
+       
     std::vector<int> detector_status( gtr->GetNDetectors(), 0 );
-    for ( auto i : detector_status ) {
+    for ( int i = 0; i < (int)detector_status.size(); i++ ) {
         if ( gtr->IsTrash(i) ) detector_status[i] = 2;
         if ( gtr->IsOn(i)    ) detector_status[i] = 1;
     }
-
     configFile.Close();
+ 
+    if ( verbose == true ) std::cout << "Looking for data files...\n";
+    gada::FileMap myMap;
+    myMap.SetRootDir(gerdaDataDir);
+    std::string pathToListOfKeys = gerdaMetaDir + "/data-sets/phy/run00" + std::to_string(runID) + "-phy-analysis.txt";
+    myMap.BuildFromListOfKeys(pathToListOfKeys);
+
+    if ( verbose == true ) std::cout << "Loading trees...\n";
+    gada::DataLoader loader;
+    loader.AddFileMap(&myMap);
+    if ( !loader.BuildTier3() ) {
+        std::cout << "DataLoader::BuildTier3 failed for run" << runID << ", tree not loaded.\n";
+        return false;
+    }
+
+    if ( !loader.BuildTier4() ) {
+        std::cout << "DataLoader::BuildTier4 failed for run" << runID << ", tree not loaded.\n";
+        return false;
+    }
+
+    dataTree.insert(std::make_pair( runID, loader.GetUniqueMasterChain() )); 
+    if ( verbose == true ) std::cout << "Done.\n\n";
+
     return true;
 }

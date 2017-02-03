@@ -100,6 +100,8 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
     gada::FileMap myMap;
     myMap.SetRootDir(gerdaDataDir);
     std::string pathToListOfKeys = gerdaMetaDir + "/data-sets/phy/run00" + std::to_string(runID) + "-phy-analysis.txt";
+    std::ifstream ftmp(pathToListOfKeys.c_str());
+    if ( !ftmp.is_open() ) { std::cout << pathToListOfKeys << " does not exist!\n"; return false; }
     myMap.BuildFromListOfKeys(pathToListOfKeys);
 
     if ( verbose == true ) std::cout << "Loading trees...\n";

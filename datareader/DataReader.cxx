@@ -137,6 +137,6 @@ TChain* DataReader::GetTree( int runID ) const {
 TChain* DataReader::GetGlobalTree() const {
 
     TChain* chain = new TChain;
-    for ( auto& it : dataTree ) chain->Add( it.second );
+    for ( auto& it : dataTree ) chain->AddFriend( it.second );
     return chain;
 }

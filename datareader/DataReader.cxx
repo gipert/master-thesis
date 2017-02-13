@@ -161,7 +161,7 @@ std::vector<TH1D> DataReader::GetEnergyHist() {
         chain->SetBranchAddress("failedFlag"    , &failedFlag);
 
         ProgressBar bar(nEntries);
-        std::cout << "processing run" << it.first << ": " << std::flush;
+        std::cout << "\nprocessing run" << it.first << ": " << std::flush;
         bar.Init();
 
         for ( int e = 0; e < nEntries; e++ ) {

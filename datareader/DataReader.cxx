@@ -18,6 +18,9 @@
 #include "DataLoader.h"
 #include "GETRunConfiguration.hh"
 
+// other
+#include "progressbar.h"
+
 using namespace GERDA;
 
 DataReader::DataReader( std::string gerdaMetaPath, 
@@ -41,7 +44,7 @@ DataReader::DataReader( std::string gerdaMetaPath,
 DataReader::~DataReader() {
     
     configList.close();
-    for ( auto& ch : dataTree ) delete ch.second;  
+    for ( auto& ch : dataTree ) delete ch.second;
 }
 
 std::string DataReader::FindRunConfiguration( int runID ) {
@@ -65,6 +68,12 @@ std::string DataReader::FindRunConfiguration( int runID ) {
 }
 
 bool DataReader::LoadRun( int runID , bool verbose ) {
+
+    auto result = dataTree.find(runID);
+    if ( result != dataTree.end() ) {
+        std::cout << "DataReader::LoadRun: Run" << runID << " already loaded!\n";
+        return false;
+    }
 
     if ( verbose == true ) {
         std::cout << "RUN" << runID << std::endl;
@@ -95,6 +104,7 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
         if ( gtr->IsOn(i)    ) detector_status[i] = 1;
     }
     configFile.Close();
+    detectorStatusMap.insert(std::make_pair( runID, detector_status ));
  
     if ( verbose == true ) std::cout << "Looking for data files...\n";
     gada::FileMap myMap;
@@ -123,7 +133,57 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
     return true;
 }
 
-TChain* DataReader::GetTree( int runID ) const {
+std::vector<TH1D> DataReader::GetEnergyHist() {
+   
+    int nEntries;
+    int multiplicity, isTP, isVetoedInTime; 
+    std::vector<int>*    failedFlag = new std::vector<int>(40);
+    std::vector<double>* energyGauss = new std::vector<double>(40);
+    TChain* chain;
+    std::vector<TH1D> energy;
+    energy.reserve(40);
+
+    std::string histName;
+    for ( int i = 0; i < 40; i++ ) {
+        histName = "energySpectrumDet" + std::to_string(i);
+        energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
+    }
+    
+    for ( const auto& it : dataTree ) {
+
+        chain = it.second;
+        nEntries = chain->GetEntries();
+
+        chain->SetBranchAddress("multiplicity"  , &multiplicity);
+        chain->SetBranchAddress("rawEnergyGauss", &energyGauss);
+        chain->SetBranchAddress("isTP"          , &isTP);
+        chain->SetBranchAddress("isVetoedInTime", &isVetoedInTime);
+        chain->SetBranchAddress("failedFlag"    , &failedFlag);
+
+        ProgressBar bar(nEntries);
+        std::cout << "processing run" << it.first << ": " << std::flush;
+        bar.Init();
+
+        for ( int e = 0; e < nEntries; e++ ) {
+            
+            bar.Update(e);
+            chain->GetEntry(e);
+
+            if ( !isTP and !isVetoedInTime and multiplicity == 1 ) {
+                for ( int det = 0; det < 40; det++ ) {
+                    if ( !failedFlag->at(det) and detectorStatusMap[it.first][det] == 0 ) {
+                        energy[det].Fill(energyGauss->at(det));
+                    }
+                }
+            }
+        }
+    }
+    delete failedFlag;
+    delete energyGauss;
+    return energy;
+}
+
+TChain* DataReader::GetTreeFromRun( int runID ) const {
 
     auto result = dataTree.find(runID);
     if ( result == dataTree.end() ) {
@@ -134,9 +194,9 @@ TChain* DataReader::GetTree( int runID ) const {
     return result->second;
 }
 
-TChain* DataReader::GetGlobalTree() const {
+TChain* DataReader::GetTree() const {
 
-    TChain* chain = new TChain;
+    TChain* chain = new TChain();
     for ( auto& it : dataTree ) chain->AddFriend( it.second );
     return chain;
 }

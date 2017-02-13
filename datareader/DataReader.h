@@ -16,6 +16,7 @@
 
 // ROOT
 #include "TChain.h"
+#include "TH1D.h"
 
 namespace GERDA {
 
@@ -39,12 +40,15 @@ namespace GERDA {
       // override default destructor
       ~DataReader();
 
-      // load tree in dataTree
+      // load tree in dataTree (optional: verbose mode)
       bool LoadRun( int runID , bool verbose = false );
+      // get energy histogram with default cuts:
+      std::vector<TH1D> GetEnergyHist();
       // retrieve tree
-      // warning: deleted when the DataReader object goes out of scope
-      TChain* GetTree( int runID ) const;
-      TChain* GetGlobalTree() const;
+      // WARNING: deleted when the DataReader object goes out of scope
+      TChain* GetTreeFromRun( int runID ) const;
+      TChain* GetTree() const;
+      // TODO: GetOwningTree
 
       private:
 
@@ -59,6 +63,8 @@ namespace GERDA {
       std::string gerdaDataDir;
       // map with trees, the key is the run ID
       std::map<int, TChain*> dataTree;
+      // map with detector's status, the key is the run ID
+      std::map<int, std::vector<int>> detectorStatusMap;
     
       // find run configuration in the config list file
       std::string FindRunConfiguration( int runID );

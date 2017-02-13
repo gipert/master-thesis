@@ -1,0 +1,3 @@
+[submodule "progressbar"]
+	path = progressbar
+	url = git@bitbucket.org:luigipertoldi/progressbar.git

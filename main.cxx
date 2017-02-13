@@ -10,6 +10,8 @@
 
 #include "DataReader.h"
 #include "TChain.h"
+#include "TH1D.h"
+#include "TFile.h"
 
 int main( int argc, char** argv ) {
 
@@ -27,14 +29,19 @@ int main( int argc, char** argv ) {
     
     GERDA::DataReader reader( metapath, datapath, configpath);
 
-    for ( int i = 53; i < 66; i++) reader.LoadRun(i, verbose);
+    reader.LoadRun(53, verbose);
     
-    std::cout << "Creating global tree...\n" << std::flush;
-    auto chain = reader.GetGlobalTree();
+    std::cout << "Getting tree...\n" << std::flush;
+    auto chain = reader.GetTreeFromRun(53);
     std::cout << "Getting number of entries...\n" << std::flush;
     std::cout << chain->GetEntries() << std::endl;
 
-    
+    std::vector<TH1D> energy;
+    energy = reader.GetEnergyHist();
+
+    TFile file( "results.root", "RECREATE" );
+    for ( const auto& it : energy ) it.Write();
+    file.Close();
     
     return 0;
 }

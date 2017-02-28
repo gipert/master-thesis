@@ -4,3 +4,4 @@ results.root
 paths.txt
 main
 datareader/libDataReader.so
+progressbar/libProgressBar.so

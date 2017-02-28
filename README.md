@@ -1,0 +1,3 @@
+## NOTES ##
+
+* clone with `--recursive`

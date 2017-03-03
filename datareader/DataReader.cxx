@@ -133,22 +133,25 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
     return true;
 }
 
-std::vector<TH1D> DataReader::GetEnergyHist() {
+void DataReader::CreateEnergyHist() {
    
     int nEntries;
     int multiplicity, isTP, isVetoedInTime; 
     std::vector<int>*    failedFlag = new std::vector<int>(40);
     std::vector<double>* energyGauss = new std::vector<double>(40);
     TChain* chain;
-    std::vector<TH1D> energy;
-    energy.reserve(40);
 
+    energy.reserve(40);
     std::string histName;
     for ( int i = 0; i < 40; i++ ) {
-        histName = "energySpectrumDet" + std::to_string(i);
+        histName = "energy_";
+        if ( detectorMatrix[i] == 1 ) histName += "BEGe_";
+        if ( detectorMatrix[i] == 2 ) histName += "enrCoax_";
+        if ( detectorMatrix[i] == 3 ) histName += "natCoax_";
+        histName += std::to_string(i);
         energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
     }
-    
+    std::cout << std::endl;
     for ( const auto& it : dataTree ) {
 
         chain = it.second;
@@ -161,7 +164,7 @@ std::vector<TH1D> DataReader::GetEnergyHist() {
         chain->SetBranchAddress("failedFlag"    , &failedFlag);
 
         ProgressBar bar(nEntries);
-        std::cout << "\nprocessing run" << it.first << ": " << std::flush;
+        std::cout << "processing run" << it.first << ": " << std::flush;
         bar.Init();
 
         for ( int e = 0; e < nEntries; e++ ) {
@@ -177,11 +180,49 @@ std::vector<TH1D> DataReader::GetEnergyHist() {
                 }
             }
         }
+        std::cout << std::endl;
     }
     delete failedFlag;
     delete energyGauss;
-    return energy;
+    return;
 }
+
+TH1D* DataReader::GetEnergyHistBEGe() {
+    
+    TH1D* tmp = new TH1D( "energyBEGeAll", "energyBegeAll", 7500, 0, 7500 );
+    if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
+    
+    for ( int i = 0; i < 40; i++ ) {
+        if ( detectorMatrix[i] == 1 ) tmp->Add(&energy[i]);
+    }
+
+    return tmp;
+}
+
+TH1D* DataReader::GetEnergyHistEnrCoax() {
+    
+    TH1D* tmp = new TH1D( "energyEnrCoaxAll", "energyEnrCoaxAll", 7500, 0, 7500 );
+    if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
+    
+    for ( int i = 0; i < 40; i++ ) {
+        if ( detectorMatrix[i] == 2 ) tmp->Add(&energy[i]);
+    }
+
+    return tmp;
+}
+
+TH1D* DataReader::GetEnergyHistNatCoax() {
+    
+    TH1D* tmp = new TH1D( "energyNatCoaxAll", "energyNatCoaxAll", 7500, 0, 7500 );
+    if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
+    
+    for ( int i = 0; i < 40; i++ ) {
+        if ( detectorMatrix[i] == 3 ) tmp->Add(&energy[i]);
+    }
+
+    return tmp;
+}
+
 
 TChain* DataReader::GetTreeFromRun( int runID ) const {
 
@@ -200,3 +241,8 @@ TChain* DataReader::GetTree() const {
     for ( auto& it : dataTree ) chain->AddFriend( it.second );
     return chain;
 }
+
+/*TChain* DataReader::GetUniqueTree() const {
+    TChain chain( *GetTree() );
+    return &chain;
+}*/

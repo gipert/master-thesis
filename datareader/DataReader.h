@@ -42,13 +42,21 @@ namespace GERDA {
 
       // load tree in dataTree (optional: verbose mode)
       bool LoadRun( int runID , bool verbose = false );
-      // get energy histogram with default cuts:
-      std::vector<TH1D> GetEnergyHist();
-      // retrieve tree
+      // get energy histogram from all runs with default cuts:
+      void CreateEnergyHist();
+      // get non-owned vector with energy spectra for each detector
+      std::vector<TH1D> GetEnergyHist() const { return energy; }
+      // get owning pointers for histograms: 
+      // WARNING: delete them to prevent memory leaks
+      TH1D* GetEnergyHistBEGe();
+      TH1D* GetEnergyHistEnrCoax();
+      TH1D* GetEnergyHistNatCoax();
+      TH1D* GetEnergyHistAll();
+      // get non-owning pointers to trees
       // WARNING: deleted when the DataReader object goes out of scope
       TChain* GetTreeFromRun( int runID ) const;
       TChain* GetTree() const;
-      // TODO: GetOwningTree
+      // TODO: TChain* GetUniqueTree() const;
 
       private:
 
@@ -63,8 +71,11 @@ namespace GERDA {
       std::string gerdaDataDir;
       // map with trees, the key is the run ID
       std::map<int, TChain*> dataTree;
-      // map with detector's status, the key is the run ID
+      // map with the detector's status, the key is the run ID
       std::map<int, std::vector<int>> detectorStatusMap;
+      // vector with energy histograms for each detector
+      // filled by GetEnergyHist();
+      std::vector<TH1D> energy;
     
       // find run configuration in the config list file
       std::string FindRunConfiguration( int runID );

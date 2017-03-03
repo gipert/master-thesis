@@ -1,0 +1,19 @@
+
+not already clear what this program will do.
+
+There must be a file named 'paths.txt' in the same location of
+the executable formatted as the following:
+
+  /path/to/gerda-metadata
+  /path/to/data/structure
+  /path/to/runconfiguration_mod.db
+  runID1
+  runID2
+  ...
+  runIDn
+
+OPTIONS:
+
+  --verbose : allow verbosity
+  --help    : display this help message and return
+

@@ -12,16 +12,25 @@
 #include "TChain.h"
 #include "TH1D.h"
 #include "TFile.h"
+#include "TMacro.h"
 
 int main( int argc, char** argv ) {
     
     // copy arguments
     std::vector<std::string> args(argc);
     for ( int i = 0; i < argc; i++ ) args[i] = argv[i];
+
+    // help
+    if ( std::find(args.begin(), args.end(), "--help") != args.end() ) {
+        std::ifstream helpFile("help");
+        if (helpFile.is_open()) std::cout << helpFile.rdbuf();
+        else std::cerr << "help file not found!\n";
+        return 0;
+    }
     
     // set verbose
     bool verbose = false;
-    if ( std::find( args.begin(), args.end(), "--verbose") != args.end() ) verbose = true;
+    if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) verbose = true;
     
     /* NOT WORKING
     // retrieve run IDs
@@ -57,26 +66,47 @@ int main( int argc, char** argv ) {
     for ( auto& i : runsToProcess ) std::cout << i << " ";
     */
 
+    // get configs
     std::ifstream input("paths.txt");
     if ( !input.is_open() ) { std::cout << "File with paths not found! Aborting...\n"; return 0; }
-    
     std::string metapath, datapath, configpath;
     input >> metapath >> datapath >> configpath;
-
     std::vector<int> runsToProcess;
     int value;
     while ( input >> value ) runsToProcess.push_back(value);
     
+    // main reader object
     GERDA::DataReader reader( metapath, datapath, configpath);
     
-    for ( auto& it : runsToProcess ) reader.LoadRun(it, verbose);
-
+    // load runs
+    for ( auto& n : runsToProcess ) reader.LoadRun(n, verbose);
+    
+    // retrieve energy spectrum
     std::vector<TH1D> energy;
+    reader.CreateEnergyHist();
     energy = reader.GetEnergyHist();
+
+    TH1D* energyBEGe = reader.GetEnergyHistBEGe();
+    TH1D* energyEnrCoax = reader.GetEnergyHistEnrCoax();
+    TH1D* energyNatCoax = reader.GetEnergyHistNatCoax();
+
+    TMacro log;
+    log.SetName("log");
+    std::string line = "Runs: ";
+    for ( auto& n : runsToProcess ) line += std::to_string(n) + ' ';
+    log.AddLine(line.c_str());
 
     TFile file( "results.root", "RECREATE" );
     for ( const auto& it : energy ) it.Write();
+    log.Write();
+    energyBEGe->Write();
+    energyEnrCoax->Write();
+    energyNatCoax->Write();
     file.Close();
     
+    delete energyBEGe;
+    delete energyEnrCoax;
+    delete energyNatCoax;
+
     return 0;
 }

@@ -31,6 +31,20 @@ int main( int argc, char** argv ) {
     // set verbose
     bool verbose = false;
     if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) verbose = true;
+
+    // get output filename
+    std::string filename;
+    for ( auto& str : args ) {
+        if ( str.find(".root") != std::string::npos ) { 
+            filename = str;
+            break;
+        }
+    }
+
+    if ( filename.empty() ) {
+        std::cerr << "Please provide a valid .root output filename.\n";
+        return -1;
+    }
     
     /* NOT WORKING
     // retrieve run IDs
@@ -96,7 +110,7 @@ int main( int argc, char** argv ) {
     for ( auto& n : runsToProcess ) line += std::to_string(n) + ' ';
     log.AddLine(line.c_str());
 
-    TFile file( "results.root", "RECREATE" );
+    TFile file( filename.c_str(), "RECREATE" );
     for ( const auto& it : energy ) it.Write();
     log.Write();
     energyBEGe->Write();

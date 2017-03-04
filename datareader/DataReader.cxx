@@ -80,9 +80,9 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
         std::cout << "Looking for config list file...\n";
     }
     std::string confName = FindRunConfiguration( runID );
-    if ( confName == "filenotfound"     ) { std::cout << "Config list file not found!\n"; return false; }
+    if ( confName == "filenotfound"     ) { std::cerr << "Config list file not found!\n"; return false; }
     if ( verbose == true ) std::cout << "Looking for config file...\n";
-    if ( confName == "runnotregistered" ) { std::cout << "Run" << runID << ": runID not found in config list!\n"; return false; }
+    if ( confName == "runnotregistered" ) { std::cerr << "Run" << runID << ": runID not found in config list!\n"; return false; }
 
     std::string completePath = gerdaMetaDir + "/config/_aux/geruncfg/" + confName; 
     if ( verbose == true ) std::cout << "Opening config file...\n";
@@ -93,7 +93,7 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
     //    &TFile::Close
     //};
 
-    if ( configFile.IsZombie() ) { std::cout << "Run" << runID << ": config file not found!\n"; return false; }
+    if ( configFile.IsZombie() ) { std::cerr << "Run" << runID << ": config file not found!\n"; return false; }
     
     if ( verbose == true ) std::cout << "Retrieving detector status...\n";
     std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Get("RunConfiguration")));
@@ -111,23 +111,29 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
     myMap.SetRootDir(gerdaDataDir);
     std::string pathToListOfKeys = gerdaMetaDir + "/data-sets/phy/run00" + std::to_string(runID) + "-phy-analysis.txt";
     std::ifstream ftmp(pathToListOfKeys.c_str());
-    if ( !ftmp.is_open() ) { std::cout << pathToListOfKeys << " does not exist!\n"; return false; }
+    if ( !ftmp.is_open() ) { std::cerr << pathToListOfKeys << " does not exist!\n"; return false; }
     myMap.BuildFromListOfKeys(pathToListOfKeys);
 
     if ( verbose == true ) std::cout << "Loading trees...\n";
     gada::DataLoader loader;
     loader.AddFileMap(&myMap);
     if ( !loader.BuildTier3() ) {
-        std::cout << "DataLoader::BuildTier3 failed for run" << runID << ", tree not loaded.\n";
+        std::cerr << "DataLoader::BuildTier3 failed for run" << runID << ", tree not loaded.\n";
         return false;
     }
 
     if ( !loader.BuildTier4() ) {
-        std::cout << "DataLoader::BuildTier4 failed for run" << runID << ", tree not loaded.\n";
+        std::cerr << "DataLoader::BuildTier4 failed for run" << runID << ", tree not loaded.\n";
         return false;
     }
 
-    dataTree.insert(std::make_pair( runID, loader.GetUniqueMasterChain() )); 
+    auto tmp = loader.GetUniqueMasterChain();
+    if ( tmp->IsZombie() or tmp == 0 ) {
+        std::cerr << "Data chain of run" << runID << " is Zombie! Tree not loaded.\n";
+        return false;
+    }
+
+    dataTree.insert(std::make_pair( runID, tmp )); 
     if ( verbose == true ) std::cout << "Done.\n\n";
 
     return true;
@@ -151,7 +157,7 @@ void DataReader::CreateEnergyHist() {
         histName += std::to_string(i);
         energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
     }
-    std::cout << std::endl;
+
     for ( const auto& it : dataTree ) {
 
         chain = it.second;

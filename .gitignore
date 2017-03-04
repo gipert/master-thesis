@@ -1,6 +1,6 @@
 *.swp
 log
-results.root
+*.root
 paths.txt
 main
 datareader/libDataReader.so

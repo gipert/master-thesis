@@ -41,27 +41,32 @@ namespace GERDA {
       ~DataReader();
 
       // load tree in dataTree (optional: verbose mode)
-      bool LoadRun( int runID , bool verbose = false );
+      bool LoadRun( unsigned int runID , bool verbose = false );
       // get energy histogram from all runs with default cuts:
       void CreateEnergyHist();
       // get non-owned vector with energy spectra for each detector
       std::vector<TH1D> GetEnergyHist() const { return energy; }
+      // get acquisition time (in minutes)
+      unsigned long long GetTimeForRun( unsigned int runID ) const;
+      unsigned long long GetTime() const;
+      unsigned long long GetTimeHoursForRun( unsigned int runID ) const { return (this->GetTimeForRun(runID))*1./3600; }
+      unsigned long long GetTimeHours() const { return (this->GetTime())*1./3600; }
       // get owning pointers for histograms: 
       // WARNING: delete them to prevent memory leaks
-      TH1D* GetEnergyHistBEGe();
-      TH1D* GetEnergyHistEnrCoax();
-      TH1D* GetEnergyHistNatCoax();
-      TH1D* GetEnergyHistAll();
+      TH1D* GetEnergyHistBEGe()    const;
+      TH1D* GetEnergyHistEnrCoax() const;
+      TH1D* GetEnergyHistNatCoax() const;
+      TH1D* GetEnergyHistAll()     const;
       // get non-owning pointers to trees
       // WARNING: deleted when the DataReader object goes out of scope
-      TChain* GetTreeFromRun( int runID ) const;
+      TChain* GetTreeFromRun( unsigned int runID ) const;
       TChain* GetTree() const;
       // TODO: TChain* GetUniqueTree() const;
 
       private:
 
       // description of detectors types in detector strings
-      std::vector<int> detectorMatrix;
+      std::vector<unsigned int> detectorMatrix;
       // config list file
       std::ifstream configList;
       // paths to gerda-metadata repo and data directory
@@ -70,15 +75,15 @@ namespace GERDA {
       std::string gerdaMetaDir;
       std::string gerdaDataDir;
       // map with trees, the key is the run ID
-      std::map<int, TChain*> dataTree;
+      std::map<unsigned int, TChain*> dataTree;
       // map with the detector's status, the key is the run ID
-      std::map<int, std::vector<int>> detectorStatusMap;
+      std::map<unsigned int, std::vector<unsigned int>> detectorStatusMap;
       // vector with energy histograms for each detector
       // filled by GetEnergyHist();
       std::vector<TH1D> energy;
     
       // find run configuration in the config list file
-      std::string FindRunConfiguration( int runID );
+      std::string FindRunConfiguration( unsigned int runID );
   };
 }
 

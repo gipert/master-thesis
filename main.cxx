@@ -12,7 +12,7 @@
 #include "TChain.h"
 #include "TH1D.h"
 #include "TFile.h"
-#include "TMacro.h"
+#include "TNamed.h"
 
 int main( int argc, char** argv ) {
     
@@ -82,15 +82,15 @@ int main( int argc, char** argv ) {
 
     // get configs
     std::ifstream input("paths.txt");
-    if ( !input.is_open() ) { std::cout << "File with paths not found! Aborting...\n"; return 0; }
+    if ( !input.is_open() ) { std::cerr << "File with paths not found! Aborting...\n"; return 0; }
     std::string metapath, datapath, configpath;
     input >> metapath >> datapath >> configpath;
-    std::vector<int> runsToProcess;
+    std::vector<unsigned int> runsToProcess;
     int value;
     while ( input >> value ) runsToProcess.push_back(value);
     
     // main reader object
-    GERDA::DataReader reader( metapath, datapath, configpath);
+    GERDA::DataReader reader( metapath, datapath, configpath );
     
     // load runs
     for ( auto& n : runsToProcess ) reader.LoadRun(n, verbose);
@@ -104,15 +104,18 @@ int main( int argc, char** argv ) {
     TH1D* energyEnrCoax = reader.GetEnergyHistEnrCoax();
     TH1D* energyNatCoax = reader.GetEnergyHistNatCoax();
 
-    TMacro log;
-    log.SetName("log");
-    std::string line = "Runs: ";
-    for ( auto& n : runsToProcess ) line += std::to_string(n) + ' ';
-    log.AddLine(line.c_str());
+    for ( auto& i : runsToProcess ) std::cout << "Acquisition time for run" << i << ": " << reader.GetTimeHoursForRun(i) << " h\n";
+    std::cout << "Total acquisition time: " << reader.GetTimeHours() << std::endl;
+    std::cout << reader.GetTree()->GetEntries() << std::endl;
+    reader.GetTree()->GetListOfFriends()->Print();
+
+    std::string processedRunsStr;
+    for ( auto& r : runsToProcess ) processedRunsStr += std::to_string(r) + ' ';
+    TNamed processed_runs( "processed runs", processedRunsStr);
 
     TFile file( filename.c_str(), "RECREATE" );
     for ( const auto& it : energy ) it.Write();
-    log.Write();
+    processed_runs.Write();
     energyBEGe->Write();
     energyEnrCoax->Write();
     energyNatCoax->Write();

@@ -47,7 +47,7 @@ DataReader::~DataReader() {
     for ( auto& ch : dataTree ) delete ch.second;
 }
 
-std::string DataReader::FindRunConfiguration( int runID ) {
+std::string DataReader::FindRunConfiguration( unsigned int runID ) {
 
     if ( !configList.is_open() ) return "filenotfound";
     configList.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -56,7 +56,7 @@ std::string DataReader::FindRunConfiguration( int runID ) {
     std::string dummy;
     std::string result = "runnotregistered";
     while ( configList >> dummy ) {
-        if ( std::stoi(dummy) == runID ) {
+        if ( (unsigned int)std::stoi(dummy) == runID ) {
             configList >> result;
             break;
         }
@@ -67,7 +67,7 @@ std::string DataReader::FindRunConfiguration( int runID ) {
     return result;
 }
 
-bool DataReader::LoadRun( int runID , bool verbose ) {
+bool DataReader::LoadRun( unsigned int runID , bool verbose ) {
 
     auto result = dataTree.find(runID);
     if ( result != dataTree.end() ) {
@@ -98,7 +98,7 @@ bool DataReader::LoadRun( int runID , bool verbose ) {
     if ( verbose == true ) std::cout << "Retrieving detector status...\n";
     std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Get("RunConfiguration")));
        
-    std::vector<int> detector_status( gtr->GetNDetectors(), 0 );
+    std::vector<unsigned int> detector_status( gtr->GetNDetectors(), 0 );
     for ( int i = 0; i < (int)detector_status.size(); i++ ) {
         if ( gtr->IsTrash(i) ) detector_status[i] = 2;
         if ( gtr->IsOn(i)    ) detector_status[i] = 1;
@@ -188,12 +188,43 @@ void DataReader::CreateEnergyHist() {
         }
         std::cout << std::endl;
     }
+    
+    chain->ResetBranchAddresses();
     delete failedFlag;
     delete energyGauss;
+
     return;
 }
 
-TH1D* DataReader::GetEnergyHistBEGe() {
+unsigned long long DataReader::GetTimeForRun( unsigned int runID ) const {
+    
+    unsigned long long timestamp;
+    auto chain = GetTreeFromRun( runID );
+    chain->SetBranchAddress("timestamp", &timestamp);
+    chain->GetEntry(0);
+    auto t1 = timestamp;
+    std::cout << chain->GetEntries() << std::endl;
+    chain->GetEntry(chain->GetEntries()-1);
+    auto t2 = timestamp;
+
+    return t2-t1;
+}
+
+unsigned long long DataReader::GetTime() const {
+    
+    unsigned long long timestamp;
+    auto chain = GetTree();
+    chain->SetBranchAddress("timestamp", &timestamp);
+    chain->GetEntry(0);
+    auto t1 = timestamp;
+    std::cout << chain->GetEntries() << std::endl;
+    chain->GetEntry(chain->GetEntries()-1);
+    auto t2 = timestamp;
+
+    return t2-t1;
+}
+
+TH1D* DataReader::GetEnergyHistBEGe() const {
     
     TH1D* tmp = new TH1D( "energyBEGeAll", "energyBegeAll", 7500, 0, 7500 );
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
@@ -205,7 +236,7 @@ TH1D* DataReader::GetEnergyHistBEGe() {
     return tmp;
 }
 
-TH1D* DataReader::GetEnergyHistEnrCoax() {
+TH1D* DataReader::GetEnergyHistEnrCoax() const {
     
     TH1D* tmp = new TH1D( "energyEnrCoaxAll", "energyEnrCoaxAll", 7500, 0, 7500 );
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
@@ -217,7 +248,7 @@ TH1D* DataReader::GetEnergyHistEnrCoax() {
     return tmp;
 }
 
-TH1D* DataReader::GetEnergyHistNatCoax() {
+TH1D* DataReader::GetEnergyHistNatCoax() const {
     
     TH1D* tmp = new TH1D( "energyNatCoaxAll", "energyNatCoaxAll", 7500, 0, 7500 );
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
@@ -230,7 +261,7 @@ TH1D* DataReader::GetEnergyHistNatCoax() {
 }
 
 
-TChain* DataReader::GetTreeFromRun( int runID ) const {
+TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
 
     auto result = dataTree.find(runID);
     if ( result == dataTree.end() ) {

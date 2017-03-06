@@ -13,6 +13,7 @@
 #include "TH1D.h"
 #include "TFile.h"
 #include "TNamed.h"
+#include "TParameter.h"
 
 int main( int argc, char** argv ) {
     
@@ -27,10 +28,6 @@ int main( int argc, char** argv ) {
         else std::cerr << "help file not found!\n";
         return 0;
     }
-    
-    // set verbose
-    bool verbose = false;
-    if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) verbose = true;
 
     // get output filename
     std::string filename;
@@ -90,10 +87,12 @@ int main( int argc, char** argv ) {
     while ( input >> value ) runsToProcess.push_back(value);
     
     // main reader object
-    GERDA::DataReader reader( metapath, datapath, configpath );
+    GERDA::DataReader reader( metapath, datapath, configpath );    
+    // set verbose
+    if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) GERDA::DataReader::kVerbosity = true;
     
     // load runs
-    for ( auto& n : runsToProcess ) reader.LoadRun(n, verbose);
+    for ( auto& n : runsToProcess ) reader.LoadRun(n);
     
     // retrieve energy spectrum
     std::vector<TH1D> energy;
@@ -106,8 +105,8 @@ int main( int argc, char** argv ) {
 
     for ( auto& i : runsToProcess ) std::cout << "Acquisition time for run" << i << ": " << reader.GetTimeHoursForRun(i) << " h\n";
     std::cout << "Total acquisition time: " << reader.GetTimeHours() << std::endl;
-    std::cout << reader.GetTree()->GetEntries() << std::endl;
-    reader.GetTree()->GetListOfFriends()->Print();
+
+    TParameter<float> time( "total_acq_time_in_h", reader.GetTimeHours() );
 
     std::string processedRunsStr;
     for ( auto& r : runsToProcess ) processedRunsStr += std::to_string(r) + ' ';
@@ -116,6 +115,7 @@ int main( int argc, char** argv ) {
     TFile file( filename.c_str(), "RECREATE" );
     for ( const auto& it : energy ) it.Write();
     processed_runs.Write();
+    time.Write();
     energyBEGe->Write();
     energyEnrCoax->Write();
     energyNatCoax->Write();

@@ -40,17 +40,17 @@ namespace GERDA {
       // override default destructor
       ~DataReader();
 
-      // load tree in dataTree (optional: verbose mode)
-      bool LoadRun( unsigned int runID , bool verbose = false );
+      // load tree in DataTreeMap (optional: verbose mode)
+      bool LoadRun( unsigned int runID );
       // get energy histogram from all runs with default cuts:
       void CreateEnergyHist();
       // get non-owned vector with energy spectra for each detector
       std::vector<TH1D> GetEnergyHist() const { return energy; }
       // get acquisition time (in minutes)
-      unsigned long long GetTimeForRun( unsigned int runID ) const;
-      unsigned long long GetTime() const;
-      unsigned long long GetTimeHoursForRun( unsigned int runID ) const { return (this->GetTimeForRun(runID))*1./3600; }
-      unsigned long long GetTimeHours() const { return (this->GetTime())*1./3600; }
+      unsigned long long GetTimeForRun( unsigned int runID );
+      unsigned long long GetTime();
+      float GetTimeHoursForRun( unsigned int runID ) { return (this->GetTimeForRun(runID))*1./3600; }
+      float GetTimeHours() { return (this->GetTime())*1./3600; }
       // get owning pointers for histograms: 
       // WARNING: delete them to prevent memory leaks
       TH1D* GetEnergyHistBEGe()    const;
@@ -60,8 +60,10 @@ namespace GERDA {
       // get non-owning pointers to trees
       // WARNING: deleted when the DataReader object goes out of scope
       TChain* GetTreeFromRun( unsigned int runID ) const;
-      TChain* GetTree() const;
+      TChain* GetTree();
       // TODO: TChain* GetUniqueTree() const;
+      
+      static bool kVerbosity;
 
       private:
 
@@ -75,7 +77,8 @@ namespace GERDA {
       std::string gerdaMetaDir;
       std::string gerdaDataDir;
       // map with trees, the key is the run ID
-      std::map<unsigned int, TChain*> dataTree;
+      std::map<unsigned int, TChain*> dataTreeMap;
+      TChain* dataTree;
       // map with the detector's status, the key is the run ID
       std::map<unsigned int, std::vector<unsigned int>> detectorStatusMap;
       // vector with energy histograms for each detector

@@ -23,6 +23,8 @@
 
 using namespace GERDA;
 
+bool DataReader::kVerbosity = false;
+
 DataReader::DataReader( std::string gerdaMetaPath, 
                         std::string gerdaDataPath,
                         std::string configListPath ) :
@@ -44,7 +46,8 @@ DataReader::DataReader( std::string gerdaMetaPath,
 DataReader::~DataReader() {
     
     configList.close();
-    for ( auto& ch : dataTree ) delete ch.second;
+    for ( auto& ch : dataTreeMap ) delete ch.second;
+    delete dataTree;
 }
 
 std::string DataReader::FindRunConfiguration( unsigned int runID ) {
@@ -67,25 +70,25 @@ std::string DataReader::FindRunConfiguration( unsigned int runID ) {
     return result;
 }
 
-bool DataReader::LoadRun( unsigned int runID , bool verbose ) {
+bool DataReader::LoadRun( unsigned int runID ) {
 
-    auto result = dataTree.find(runID);
-    if ( result != dataTree.end() ) {
+    auto result = dataTreeMap.find(runID);
+    if ( result != dataTreeMap.end() ) {
         std::cout << "DataReader::LoadRun: Run" << runID << " already loaded!\n";
         return false;
     }
 
-    if ( verbose == true ) {
+    if (kVerbosity) {
         std::cout << "RUN" << runID << std::endl;
         std::cout << "Looking for config list file...\n";
     }
     std::string confName = FindRunConfiguration( runID );
     if ( confName == "filenotfound"     ) { std::cerr << "Config list file not found!\n"; return false; }
-    if ( verbose == true ) std::cout << "Looking for config file...\n";
+    if (kVerbosity) std::cout << "Looking for config file...\n";
     if ( confName == "runnotregistered" ) { std::cerr << "Run" << runID << ": runID not found in config list!\n"; return false; }
 
     std::string completePath = gerdaMetaDir + "/config/_aux/geruncfg/" + confName; 
-    if ( verbose == true ) std::cout << "Opening config file...\n";
+    if (kVerbosity) std::cout << "Opening config file...\n";
     TFile configFile( completePath.c_str(), "READ" );
     
     //auto configFile = std::unique_ptr<TFile, decltype(&TFile::Close)>{ 
@@ -95,7 +98,7 @@ bool DataReader::LoadRun( unsigned int runID , bool verbose ) {
 
     if ( configFile.IsZombie() ) { std::cerr << "Run" << runID << ": config file not found!\n"; return false; }
     
-    if ( verbose == true ) std::cout << "Retrieving detector status...\n";
+    if (kVerbosity) std::cout << "Retrieving detector status...\n";
     std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Get("RunConfiguration")));
        
     std::vector<unsigned int> detector_status( gtr->GetNDetectors(), 0 );
@@ -106,7 +109,7 @@ bool DataReader::LoadRun( unsigned int runID , bool verbose ) {
     configFile.Close();
     detectorStatusMap.insert(std::make_pair( runID, detector_status ));
  
-    if ( verbose == true ) std::cout << "Looking for data files...\n";
+    if (kVerbosity) std::cout << "Looking for data files...\n";
     gada::FileMap myMap;
     myMap.SetRootDir(gerdaDataDir);
     std::string pathToListOfKeys = gerdaMetaDir + "/data-sets/phy/run00" + std::to_string(runID) + "-phy-analysis.txt";
@@ -114,7 +117,7 @@ bool DataReader::LoadRun( unsigned int runID , bool verbose ) {
     if ( !ftmp.is_open() ) { std::cerr << pathToListOfKeys << " does not exist!\n"; return false; }
     myMap.BuildFromListOfKeys(pathToListOfKeys);
 
-    if ( verbose == true ) std::cout << "Loading trees...\n";
+    if (kVerbosity) std::cout << "Loading trees...\n";
     gada::DataLoader loader;
     loader.AddFileMap(&myMap);
     if ( !loader.BuildTier3() ) {
@@ -133,8 +136,8 @@ bool DataReader::LoadRun( unsigned int runID , bool verbose ) {
         return false;
     }
 
-    dataTree.insert(std::make_pair( runID, tmp )); 
-    if ( verbose == true ) std::cout << "Done.\n\n";
+    dataTreeMap.insert(std::make_pair( runID, tmp )); 
+    if (kVerbosity) std::cout << "Done.\n\n";
 
     return true;
 }
@@ -158,7 +161,7 @@ void DataReader::CreateEnergyHist() {
         energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
     }
 
-    for ( const auto& it : dataTree ) {
+    for ( const auto& it : dataTreeMap ) {
 
         chain = it.second;
         nEntries = chain->GetEntries();
@@ -196,28 +199,26 @@ void DataReader::CreateEnergyHist() {
     return;
 }
 
-unsigned long long DataReader::GetTimeForRun( unsigned int runID ) const {
+unsigned long long DataReader::GetTimeForRun( unsigned int runID ) {
     
     unsigned long long timestamp;
-    auto chain = GetTreeFromRun( runID );
+    auto chain = this->GetTreeFromRun( runID );
     chain->SetBranchAddress("timestamp", &timestamp);
     chain->GetEntry(0);
     auto t1 = timestamp;
-    std::cout << chain->GetEntries() << std::endl;
     chain->GetEntry(chain->GetEntries()-1);
     auto t2 = timestamp;
 
     return t2-t1;
 }
 
-unsigned long long DataReader::GetTime() const {
+unsigned long long DataReader::GetTime() {
     
     unsigned long long timestamp;
-    auto chain = GetTree();
+    auto chain = this->GetTree();
     chain->SetBranchAddress("timestamp", &timestamp);
     chain->GetEntry(0);
     auto t1 = timestamp;
-    std::cout << chain->GetEntries() << std::endl;
     chain->GetEntry(chain->GetEntries()-1);
     auto t2 = timestamp;
 
@@ -263,8 +264,8 @@ TH1D* DataReader::GetEnergyHistNatCoax() const {
 
 TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
 
-    auto result = dataTree.find(runID);
-    if ( result == dataTree.end() ) {
+    auto result = dataTreeMap.find(runID);
+    if ( result == dataTreeMap.end() ) {
         std::cout << "DataReader::GetTree: Run" << runID << " not loaded!\n";
         return nullptr;
     }
@@ -272,11 +273,16 @@ TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
     return result->second;
 }
 
-TChain* DataReader::GetTree() const {
+TChain* DataReader::GetTree() {
+    
+    if (!dataTree) {
+        if (kVerbosity) std::cout << "Creating Master Tree for the first time..." << std::endl;
+        TChain* chain = new TChain();
+        for ( auto& it : dataTreeMap ) chain->Add( it.second );
+        dataTree = chain;
+    }
 
-    TChain* chain = new TChain();
-    for ( auto& it : dataTree ) chain->AddFriend( it.second );
-    return chain;
+    return dataTree;
 }
 
 /*TChain* DataReader::GetUniqueTree() const {

@@ -105,13 +105,13 @@ int main( int argc, char** argv ) {
 
     for ( auto& i : runsToProcess ) std::cout << "Acquisition time for run" << i << ": " << reader.GetTimeHoursForRun(i) << " h\n";
     std::cout << "Total acquisition time: " << reader.GetTimeHours() << std::endl;
-
+   
     TParameter<float> time( "total_acq_time_in_h", reader.GetTimeHours() );
 
     std::string processedRunsStr;
     for ( auto& r : runsToProcess ) processedRunsStr += std::to_string(r) + ' ';
     TNamed processed_runs( "processed runs", processedRunsStr);
-
+    
     TFile file( filename.c_str(), "RECREATE" );
     for ( const auto& it : energy ) it.Write();
     processed_runs.Write();

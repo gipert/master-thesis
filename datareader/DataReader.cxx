@@ -41,6 +41,8 @@ DataReader::DataReader( std::string gerdaMetaPath,
                        2,2,2,           /*string5*/
                        1,1,1,1,1,1,2,   /*string6*/
                        3,3,3            /*string7*/ }; // 1 BEGe, 2 enrCoax, 3 natCoax
+    
+    dataTree = nullptr;
 }
 
 DataReader::~DataReader() {
@@ -190,9 +192,9 @@ void DataReader::CreateEnergyHist() {
             }
         }
         std::cout << std::endl;
+        chain->ResetBranchAddresses();
     }
     
-    chain->ResetBranchAddresses();
     delete failedFlag;
     delete energyGauss;
 
@@ -209,6 +211,7 @@ unsigned long long DataReader::GetTimeForRun( unsigned int runID ) {
     chain->GetEntry(chain->GetEntries()-1);
     auto t2 = timestamp;
 
+    chain->ResetBranchAddresses();
     return t2-t1;
 }
 
@@ -222,6 +225,7 @@ unsigned long long DataReader::GetTime() {
     chain->GetEntry(chain->GetEntries()-1);
     auto t2 = timestamp;
 
+    chain->ResetBranchAddresses();
     return t2-t1;
 }
 

@@ -1,7 +1,7 @@
 *.swp
-log
+misc/log
 *.root
-paths.txt
+misc/paths.txt
 main
 datareader/libDataReader.so
 progressbar/libProgressBar.so

@@ -23,7 +23,7 @@ int main( int argc, char** argv ) {
 
     // help
     if ( std::find(args.begin(), args.end(), "--help") != args.end() ) {
-        std::ifstream helpFile("help");
+        std::ifstream helpFile("misc/help");
         if (helpFile.is_open()) std::cout << helpFile.rdbuf();
         else std::cerr << "help file not found!\n";
         return 0;
@@ -78,7 +78,7 @@ int main( int argc, char** argv ) {
     */
 
     // get configs
-    std::ifstream input("paths.txt");
+    std::ifstream input("misc/paths.txt");
     if ( !input.is_open() ) { std::cerr << "File with paths not found! Aborting...\n"; return 0; }
     std::string metapath, datapath, configpath;
     input >> metapath >> datapath >> configpath;

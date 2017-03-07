@@ -1,6 +1,9 @@
 
 not already clear what this program will do.
 
+USAGE:
+  ./main [OPTIONS] <output file name>.root
+
 There must be a file named 'paths.txt' in the same location of
 the executable formatted as the following:
 

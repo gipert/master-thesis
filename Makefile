@@ -7,7 +7,7 @@ CC     = c++-4.9
 CFLAGS = $(shell root-config --cflags) \
          $(shell gelatio-config --cflags) \
          $(shell mgdo-config --cflags) \
-         $(shell gerda-ada-config --cflags)/gerda-ada -Wall -g -I./datareader -I./progressbar
+         $(shell gerda-ada-config --cflags)/gerda-ada -Wall -O3 -g -I./datareader -I./progressbar
 LIBS   = $(shell root-config --libs) \
          $(shell gelatio-config --libs) \
          $(shell mgdo-config --libs) \

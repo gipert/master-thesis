@@ -173,6 +173,7 @@ void DataReader::CreateEnergyHist() {
 
     for ( const auto& it : dataTreeMap ) {
         
+        if (kVerbosity) std::cout << "Initialising... ";
         nTP = 0;
         chain = it.second;
         nEntries = chain->GetEntries();

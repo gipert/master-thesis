@@ -173,9 +173,10 @@ void DataReader::CreateEnergyHist() {
 
     for ( const auto& it : dataTreeMap ) {
         
-        if (kVerbosity) std::cout << "Initialising... ";
+        if (kVerbosity) std::cout << "Initialising... " << std::flush;
         nTP = 0;
         chain = it.second;
+        std::cout << "getting entries..." << std::flush;
         nEntries = chain->GetEntries();
 
         chain->SetBranchAddress("multiplicity"  , &multiplicity);

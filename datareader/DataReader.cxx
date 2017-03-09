@@ -41,7 +41,18 @@ DataReader::DataReader( std::string gerdaMetaPath,
                        2,2,2,           /*string5*/
                        1,1,1,1,1,1,2,   /*string6*/
                        3,3,3            /*string7*/ }; // 1 BEGe, 2 enrCoax, 3 natCoax
-    
+ 
+    energy.reserve(40);
+    std::string histName;
+    for ( int i = 0; i < 40; i++ ) {
+        histName = "energy_";
+        if ( detectorMatrix[i] == 1 ) histName += "BEGe_";
+        if ( detectorMatrix[i] == 2 ) histName += "enrCoax_";
+        if ( detectorMatrix[i] == 3 ) histName += "natCoax_";
+        histName += std::to_string(i);
+        energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
+    }
+   
     dataTree = nullptr;
 }
 
@@ -105,9 +116,10 @@ bool DataReader::LoadRun( unsigned int runID ) {
        
     std::vector<unsigned int> detector_status( gtr->GetNDetectors(), 0 );
     for ( int i = 0; i < (int)detector_status.size(); i++ ) {
-        if ( gtr->IsTrash(i) ) detector_status[i] = 2;
-        if ( gtr->IsOn(i)    ) detector_status[i] = 1;
+        if      (  gtr->IsTrash(i) ) detector_status[i] = 2;
+        else if ( !gtr->IsOn(i)    ) detector_status[i] = 1;
     }
+
     configFile.Close();
     detectorStatusMap.insert(std::make_pair( runID, detector_status ));
  
@@ -146,22 +158,13 @@ bool DataReader::LoadRun( unsigned int runID ) {
 
 void DataReader::CreateEnergyHist() {
    
+    // TODO: Add check for multiple function calling
+
     int nEntries;
     int multiplicity, isTP, isVetoedInTime; 
     std::vector<int>*    failedFlag = new std::vector<int>(40);
     std::vector<double>* energyGauss = new std::vector<double>(40);
     TChain* chain;
-
-    energy.reserve(40);
-    std::string histName;
-    for ( int i = 0; i < 40; i++ ) {
-        histName = "energy_";
-        if ( detectorMatrix[i] == 1 ) histName += "BEGe_";
-        if ( detectorMatrix[i] == 2 ) histName += "enrCoax_";
-        if ( detectorMatrix[i] == 3 ) histName += "natCoax_";
-        histName += std::to_string(i);
-        energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
-    }
 
     for ( const auto& it : dataTreeMap ) {
 
@@ -177,7 +180,7 @@ void DataReader::CreateEnergyHist() {
         ProgressBar bar(nEntries);
         std::cout << "processing run" << it.first << ": " << std::flush;
         bar.Init();
-
+        
         for ( int e = 0; e < nEntries; e++ ) {
             
             bar.Update(e);

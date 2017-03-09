@@ -52,6 +52,7 @@ DataReader::DataReader( std::string gerdaMetaPath,
         histName += std::to_string(i);
         energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
     }
+    kMustResetEnergy = false;
    
     dataTree = nullptr;
 }
@@ -158,16 +159,21 @@ bool DataReader::LoadRun( unsigned int runID ) {
 
 void DataReader::CreateEnergyHist() {
    
-    // TODO: Add check for multiple function calling
-
+    if (kMustResetEnergy) {
+        std::cout << "Warning: the energy vector is non-empty, call DataReader::ResetEnergy. Aborting...\n"; 
+        return;
+    }
+    
+    int nTP;
     int nEntries;
-    int multiplicity, isTP, isVetoedInTime; 
+    int multiplicity, isTP, isVetoedInTime;
     std::vector<int>*    failedFlag = new std::vector<int>(40);
     std::vector<double>* energyGauss = new std::vector<double>(40);
     TChain* chain;
 
     for ( const auto& it : dataTreeMap ) {
-
+        
+        nTP = 0;
         chain = it.second;
         nEntries = chain->GetEntries();
 
@@ -186,6 +192,8 @@ void DataReader::CreateEnergyHist() {
             bar.Update(e);
             chain->GetEntry(e);
 
+            if (isTP) nTP++;
+
             if ( !isTP and !isVetoedInTime and multiplicity == 1 ) {
                 for ( int det = 0; det < 40; det++ ) {
                     if ( !failedFlag->at(det) and detectorStatusMap[it.first][det] == 0 ) {
@@ -196,6 +204,7 @@ void DataReader::CreateEnergyHist() {
         }
         std::cout << std::endl;
         chain->ResetBranchAddresses();
+        time.insert(std::make_pair(it.first, nTP*20));
     }
     
     delete failedFlag;
@@ -204,32 +213,18 @@ void DataReader::CreateEnergyHist() {
     return;
 }
 
-unsigned long long DataReader::GetTimeForRun( unsigned int runID ) {
-    
-    unsigned long long timestamp;
-    auto chain = this->GetTreeFromRun( runID );
-    chain->SetBranchAddress("timestamp", &timestamp);
-    chain->GetEntry(0);
-    auto t1 = timestamp;
-    chain->GetEntry(chain->GetEntries()-1);
-    auto t2 = timestamp;
+void DataReader::ResetEnergy() {
 
-    chain->ResetBranchAddresses();
-    return t2-t1;
+    for ( auto& it : energy ) it.Reset();
+    kMustResetEnergy = false;
+    return;
 }
 
-unsigned long long DataReader::GetTime() {
-    
-    unsigned long long timestamp;
-    auto chain = this->GetTree();
-    chain->SetBranchAddress("timestamp", &timestamp);
-    chain->GetEntry(0);
-    auto t1 = timestamp;
-    chain->GetEntry(chain->GetEntries()-1);
-    auto t2 = timestamp;
-
-    chain->ResetBranchAddresses();
-    return t2-t1;
+unsigned int DataReader::GetTime() {
+   
+   unsigned int tmp = 0;
+   for ( auto& it : time ) tmp += it.second;
+   return tmp;
 }
 
 TH1D* DataReader::GetEnergyHistBEGe() const {

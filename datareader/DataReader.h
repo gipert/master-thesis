@@ -44,11 +44,13 @@ namespace GERDA {
       bool LoadRun( unsigned int runID );
       // get energy histogram from all runs with default cuts:
       void CreateEnergyHist();
+      // clear energy histograms
+      void ResetEnergy();
       // get non-owned vector with energy spectra for each detector
       std::vector<TH1D> GetEnergyHist() const { return energy; }
       // get acquisition time (in minutes)
-      unsigned long long GetTimeForRun( unsigned int runID );
-      unsigned long long GetTime();
+      unsigned int GetTimeForRun( unsigned int runID ) { return time.at(runID); }
+      unsigned int GetTime();
       float GetTimeHoursForRun( unsigned int runID ) { return (this->GetTimeForRun(runID))*1./3600; }
       float GetTimeHours() { return (this->GetTime())*1./3600; }
       // get owning pointers for histograms: 
@@ -84,6 +86,9 @@ namespace GERDA {
       // vector with energy histograms for each detector
       // filled by GetEnergyHist();
       std::vector<TH1D> energy;
+      // flag for multiple calling of CreateEnergyhist
+      bool kMustResetEnergy;
+      std::map<unsigned int, unsigned int> time;
     
       // find run configuration in the config list file
       std::string FindRunConfiguration( unsigned int runID );

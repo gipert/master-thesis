@@ -3,7 +3,7 @@
 # Author: Luigi Pertoldi (luigi.pertoldi@pd.infn.it)
 # Created: 01/02/2017
 
-CC     = c++
+CC     = c++-4.9
 CFLAGS = $(shell root-config --cflags) \
          $(shell gelatio-config --cflags) \
          $(shell mgdo-config --cflags) \
@@ -13,7 +13,7 @@ LIBS   = $(shell root-config --libs) \
          $(shell mgdo-config --libs) \
          $(shell gerda-ada-config --libs) -L./datareader -L./progressbar
 
-all : datareader/libDataReader.so progressbar/libProgressBar.so main
+all : datareader/libDataReader.so progressbar/libProgressBar.so getspectra
 
 progressbar/libProgressBar.so : progressbar/progressbar.cc progressbar/progressbar.h
 	$(CC) -fPIC -shared -o $@ $<

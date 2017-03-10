@@ -1,9 +1,9 @@
-# main Makefile
+# Makefile for GerdaCPT
 #
 # Author: Luigi Pertoldi (luigi.pertoldi@pd.infn.it)
 # Created: 01/02/2017
 
-CC     = c++-4.9
+CC     = c++
 CFLAGS = $(shell root-config --cflags) \
          $(shell gelatio-config --cflags) \
          $(shell mgdo-config --cflags) \
@@ -21,11 +21,11 @@ progressbar/libProgressBar.so : progressbar/progressbar.cc progressbar/progressb
 datareader/libDataReader.so : datareader/DataReader.cxx datareader/DataReader.h progressbar/libProgressBar.so
 	$(CC) -fPIC -shared $(CFLAGS) -o $@ $< $(LIBS) -lProgressBar
 
-main : main.cxx datareader/libDataReader.so
+getspectra : getspectra.cxx datareader/libDataReader.so
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS) -lDataReader
 
 .PHONY : clean
 clean :
 	-rm datareader/libDataReader.so
 	-rm progressbar/libProgressBar.so
-	-rm main
+	-rm getspectra

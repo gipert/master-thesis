@@ -2,6 +2,6 @@
 misc/log
 *.root
 misc/paths.txt
-main
+getspectra
 datareader/libDataReader.so
 progressbar/libProgressBar.so

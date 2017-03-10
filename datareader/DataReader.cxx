@@ -61,8 +61,6 @@ DataReader::DataReader( std::string gerdaMetaPath,
 DataReader::~DataReader() {
     
     configList.close();
-    for ( auto& ch : dataTreeMap ) delete ch.second;
-    delete dataTree;
 }
 
 std::string DataReader::FindRunConfiguration( unsigned int runID ) {
@@ -146,13 +144,13 @@ bool DataReader::LoadRun( unsigned int runID ) {
         return false;
     }
 
-    auto tmp = loader.GetUniqueMasterChain();
+    /*auto tmp = loader.GetUniqueMasterChain();
     if ( tmp->IsZombie() or tmp == 0 ) {
         std::cerr << "Data chain of run" << runID << " is Zombie! Tree not loaded.\n";
         return false;
-    }
-
-    dataTreeMap.insert(std::make_pair( runID, tmp )); 
+    }*/
+    
+    dataTreeMap.insert(std::make_pair( runID, std::unique_ptr<TChain>(loader.GetUniqueMasterChain() ))); 
     if (kVerbosity) std::cout << "Done.\n\n";
 
     return true;
@@ -177,13 +175,12 @@ void DataReader::CreateEnergyHist( std::string opt ) {
     std::vector<double>* energyGauss = new std::vector<double>(40);
     std::vector<double>* energyZAC   = new std::vector<double>(40);
     std::vector<double>* energyTot   = new std::vector<double>(40);
-    TChain* chain;
 
     for ( const auto& it : dataTreeMap ) {
         
         if (kVerbosity) std::cout << "Initialising... " << std::flush;
         nTP = 0;
-        chain = it.second;
+        auto& chain = it.second;
         nEntries = chain->GetEntries();
 
         chain->SetBranchAddress("multiplicity"  , &multiplicity);
@@ -263,9 +260,9 @@ unsigned int DataReader::GetTime() {
    return tmp;
 }
 
-TH1D* DataReader::GetEnergyHistBEGe() const {
+std::unique_ptr<TH1D> DataReader::GetEnergyHistBEGe() const {
     
-    TH1D* tmp = new TH1D( "energyBEGeAll", "energyBegeAll", 7500, 0, 7500 );
+    std::unique_ptr<TH1D> tmp(new TH1D( "energyBEGeAll", "energyBegeAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
     for ( int i = 0; i < 40; i++ ) {
@@ -275,9 +272,9 @@ TH1D* DataReader::GetEnergyHistBEGe() const {
     return tmp;
 }
 
-TH1D* DataReader::GetEnergyHistEnrCoax() const {
+std::unique_ptr<TH1D> DataReader::GetEnergyHistEnrCoax() const {
     
-    TH1D* tmp = new TH1D( "energyEnrCoaxAll", "energyEnrCoaxAll", 7500, 0, 7500 );
+    std::unique_ptr<TH1D> tmp(new TH1D( "energyEnrCoaxAll", "energyEnrCoaxAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
     for ( int i = 0; i < 40; i++ ) {
@@ -287,9 +284,9 @@ TH1D* DataReader::GetEnergyHistEnrCoax() const {
     return tmp;
 }
 
-TH1D* DataReader::GetEnergyHistNatCoax() const {
+std::unique_ptr<TH1D> DataReader::GetEnergyHistNatCoax() const {
     
-    TH1D* tmp = new TH1D( "energyNatCoaxAll", "energyNatCoaxAll", 7500, 0, 7500 );
+    std::unique_ptr<TH1D> tmp(new TH1D( "energyNatCoaxAll", "energyNatCoaxAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
     for ( int i = 0; i < 40; i++ ) {
@@ -308,22 +305,22 @@ TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
         return nullptr;
     }
 
-    return result->second;
+    return result->second.get();
 }
 
 TChain* DataReader::GetTree() {
     
     if (!dataTree) {
         if (kVerbosity) std::cout << "Creating Master Tree for the first time..." << std::endl;
-        TChain* chain = new TChain();
-        for ( auto& it : dataTreeMap ) chain->Add( it.second );
-        dataTree = chain;
+        dataTree = std::unique_ptr<TChain>(new TChain());
+        for ( auto& it : dataTreeMap ) dataTree->Add( it.second.get() );
     }
 
-    return dataTree;
+    return dataTree.get();
 }
 
-/*TChain* DataReader::GetUniqueTree() const {
-    TChain chain( *GetTree() );
-    return &chain;
-}*/
+std::unique_ptr<TChain> DataReader::GetUniqueTree() {
+
+    if (!dataTree) this->GetTree();
+    else return dataTree;
+}

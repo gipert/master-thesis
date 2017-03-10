@@ -106,9 +106,9 @@ int main( int argc, char** argv ) {
     reader.CreateEnergyHist(opt);
     energy = reader.GetEnergyHist();
 
-    TH1D* energyBEGe = reader.GetEnergyHistBEGe();
-    TH1D* energyEnrCoax = reader.GetEnergyHistEnrCoax();
-    TH1D* energyNatCoax = reader.GetEnergyHistNatCoax();
+    auto energyBEGe = reader.GetEnergyHistBEGe();
+    auto energyEnrCoax = reader.GetEnergyHistEnrCoax();
+    auto energyNatCoax = reader.GetEnergyHistNatCoax();
    
     TParameter<float> time( "total_acq_time_in_h", reader.GetTimeHours() );
 
@@ -125,9 +125,5 @@ int main( int argc, char** argv ) {
     energyNatCoax->Write();
     file.Close();
     
-    delete energyBEGe;
-    delete energyEnrCoax;
-    delete energyNatCoax;
-
     return 0;
 }

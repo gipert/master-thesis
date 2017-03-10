@@ -13,6 +13,7 @@
 #include <map>
 #include <string>
 #include <fstream>
+#include <memory>
 
 // ROOT
 #include "TChain.h"
@@ -46,24 +47,23 @@ namespace GERDA {
       void CreateEnergyHist( std::string opt = "gauss" );
       // clear energy histograms
       void ResetEnergy();
-      // get non-owned vector with energy spectra for each detector
+      // get vector with energy spectra for each detector
       std::vector<TH1D> GetEnergyHist() const { return energy; }
       // get acquisition time (in minutes)
       unsigned int GetTimeForRun( unsigned int runID ) { return time.at(runID); }
       unsigned int GetTime();
       float GetTimeHoursForRun( unsigned int runID ) { return (this->GetTimeForRun(runID))*1./3600; }
       float GetTimeHours() { return (this->GetTime())*1./3600; }
-      // get owning pointers for histograms: 
-      // WARNING: delete them to prevent memory leaks
-      TH1D* GetEnergyHistBEGe()    const;
-      TH1D* GetEnergyHistEnrCoax() const;
-      TH1D* GetEnergyHistNatCoax() const;
-      TH1D* GetEnergyHistAll()     const;
+      // get owning pointers for histograms:
+      std::unique_ptr<TH1D> GetEnergyHistBEGe()    const;
+      std::unique_ptr<TH1D> GetEnergyHistEnrCoax() const;
+      std::unique_ptr<TH1D> GetEnergyHistNatCoax() const;
+      std::unique_ptr<TH1D> GetEnergyHistAll()     const;
       // get non-owning pointers to trees
       // WARNING: deleted when the DataReader object goes out of scope
       TChain* GetTreeFromRun( unsigned int runID ) const;
       TChain* GetTree();
-      // TODO: TChain* GetUniqueTree() const;
+      std::unique_ptr<TChain> GetUniqueTree();
       
       static bool kVerbosity;
 
@@ -79,8 +79,8 @@ namespace GERDA {
       std::string gerdaMetaDir;
       std::string gerdaDataDir;
       // map with trees, the key is the run ID
-      std::map<unsigned int, TChain*> dataTreeMap;
-      TChain* dataTree;
+      std::map<unsigned int, std::unique_ptr<TChain>> dataTreeMap;
+      std::unique_ptr<TChain> dataTree;
       // map with the detector's status, the key is the run ID
       std::map<unsigned int, std::vector<unsigned int>> detectorStatusMap;
       // vector with energy histograms for each detector

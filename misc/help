@@ -1,5 +1,6 @@
 
-not already clear what this program will do.
+The program produces the energy spectra (saved in a .root file)
+of the 40 detectors installed in Gerda given a set of runIDs.
 
 USAGE:
   ./main [OPTIONS] <output file name>.root
@@ -19,4 +20,9 @@ OPTIONS:
 
   --verbose : allow verbosity
   --help    : display this help message and return
+
+ASSIGNABLE:
+
+  --energy  : default is "gauss", specify "ZAC" to use energy
+              reconstructed with the ZAC filter
 

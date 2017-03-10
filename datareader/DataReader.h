@@ -43,7 +43,7 @@ namespace GERDA {
       // load tree in DataTreeMap (optional: verbose mode)
       bool LoadRun( unsigned int runID );
       // get energy histogram from all runs with default cuts:
-      void CreateEnergyHist();
+      void CreateEnergyHist( std::string opt = "gauss" );
       // clear energy histograms
       void ResetEnergy();
       // get non-owned vector with energy spectra for each detector

@@ -42,6 +42,10 @@ int main( int argc, char** argv ) {
         std::cerr << "Please provide a valid .root output filename.\n";
         return -1;
     }
+
+    std::string opt = "gauss";
+    if ( std::find(args.begin(), args.end(), "zac") != args.end() or
+         std::find(args.begin(), args.end(), "ZAC") != args.end() ) opt = "zac";
     
     /* NOT WORKING
     // retrieve run IDs
@@ -96,7 +100,7 @@ int main( int argc, char** argv ) {
     
     // retrieve energy spectrum
     std::vector<TH1D> energy;
-    reader.CreateEnergyHist();
+    reader.CreateEnergyHist(opt);
     energy = reader.GetEnergyHist();
 
     TH1D* energyBEGe = reader.GetEnergyHistBEGe();

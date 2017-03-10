@@ -9,6 +9,7 @@
 #include <iostream>
 #include <limits>
 #include <memory>
+#include <chrono>
 
 // ROOT
 #include "TFile.h"
@@ -157,7 +158,12 @@ bool DataReader::LoadRun( unsigned int runID ) {
     return true;
 }
 
-void DataReader::CreateEnergyHist() {
+void DataReader::CreateEnergyHist( std::string opt ) {
+
+    if ( opt != "zac" and opt != "ZAC" and opt != "gauss" and opt != "GAUSS" ) {
+        std::cout << opt << ": Unknown option, aborting...\n";
+        return;
+    }
    
     if (kMustResetEnergy) {
         std::cout << "Warning: the energy vector is non-empty, call DataReader::ResetEnergy. Aborting...\n"; 
@@ -167,8 +173,10 @@ void DataReader::CreateEnergyHist() {
     int nTP;
     int nEntries;
     int multiplicity, isTP, isVetoedInTime;
-    std::vector<int>*    failedFlag = new std::vector<int>(40);
+    std::vector<int>*    failedFlag  = new std::vector<int>(40);
     std::vector<double>* energyGauss = new std::vector<double>(40);
+    std::vector<double>* energyZAC   = new std::vector<double>(40);
+    std::vector<double>* energyTot   = new std::vector<double>(40);
     TChain* chain;
 
     for ( const auto& it : dataTreeMap ) {
@@ -180,14 +188,18 @@ void DataReader::CreateEnergyHist() {
 
         chain->SetBranchAddress("multiplicity"  , &multiplicity);
         chain->SetBranchAddress("rawEnergyGauss", &energyGauss);
+        chain->SetBranchAddress("rawEnergyZAC"  , &energyZAC);
+        chain->SetBranchAddress("energy"        , &energyTot);
         chain->SetBranchAddress("isTP"          , &isTP);
         chain->SetBranchAddress("isVetoedInTime", &isVetoedInTime);
         chain->SetBranchAddress("failedFlag"    , &failedFlag);
 
         ProgressBar bar(nEntries);
         std::cout << "processing run" << it.first << ": " << std::flush;
-        bar.Init();
         
+        auto start = std::chrono::system_clock::now();
+
+        bar.Init();
         for ( int e = 0; e < nEntries; e++ ) {
             
             bar.Update(e);
@@ -197,15 +209,38 @@ void DataReader::CreateEnergyHist() {
 
             if ( !isTP and !isVetoedInTime and multiplicity == 1 ) {
                 for ( int det = 0; det < 40; det++ ) {
-                    if ( !failedFlag->at(det) and detectorStatusMap[it.first][det] == 0 ) {
-                        energy[det].Fill(energyGauss->at(det));
+
+                    if ( opt == "gauss" or opt == "GAUSS" ) {
+                    
+                        // equivalent
+                        /*if ( failedFlag->at(det) == 0 and 
+                            detectorStatusMap[it.first][det] == 0 and
+                            energyTot->at(det) > 0 and energyTot->at(det) < 10000 ) {
+                            energy[det].Fill(energyGauss->at(det));
+                        }*/
+                    
+                        if ( energyTot->at(det) > 0 and energyTot->at(det) < 10000 ) {
+                            energy[det].Fill(energyTot->at(det));
+                        }
+                    }
+
+                    else if ( opt == "zac" or opt == "ZAC" ) {
+                        
+                        if ( failedFlag->at(det) == 0 and 
+                            detectorStatusMap[it.first][det] == 0 and
+                            energyTot->at(det) > 0 and energyTot->at(det) < 10000 ) {
+                            energy[det].Fill(energyZAC->at(det));
+                        }
+
                     }
                 }
             }
         }
-        std::cout << std::endl;
         chain->ResetBranchAddresses();
         time.insert(std::make_pair(it.first, nTP*20));
+
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
+        std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
     
     delete failedFlag;

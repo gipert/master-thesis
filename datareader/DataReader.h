@@ -39,7 +39,7 @@ namespace GERDA {
                   std::string configListPath ); // location of runconfiguration_mod.db
       
       // override default destructor
-      ~DataReader();
+      ~DataReader() { configList.close(); }
 
       // load tree in DataTreeMap (optional: verbose mode)
       bool LoadRun( unsigned int runID );
@@ -63,7 +63,8 @@ namespace GERDA {
       // WARNING: deleted when the DataReader object goes out of scope
       TChain* GetTreeFromRun( unsigned int runID ) const;
       TChain* GetTree();
-      std::unique_ptr<TChain> GetUniqueTree();
+      // get owning pointer to global tree
+      std::unique_ptr<TChain> MoveTree();
       
       static bool kVerbosity;
 

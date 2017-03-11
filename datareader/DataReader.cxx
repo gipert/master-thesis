@@ -54,13 +54,6 @@ DataReader::DataReader( std::string gerdaMetaPath,
         energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
     }
     kMustResetEnergy = false;
-   
-    dataTree = nullptr;
-}
-
-DataReader::~DataReader() {
-    
-    configList.close();
 }
 
 std::string DataReader::FindRunConfiguration( unsigned int runID ) {
@@ -103,11 +96,6 @@ bool DataReader::LoadRun( unsigned int runID ) {
     std::string completePath = gerdaMetaDir + "/config/_aux/geruncfg/" + confName; 
     if (kVerbosity) std::cout << "Opening config file...\n";
     TFile configFile( completePath.c_str(), "READ" );
-    
-    //auto configFile = std::unique_ptr<TFile, decltype(&TFile::Close)>{ 
-    //    TFile::Open(completePath.c_str,"READ"),
-    //    &TFile::Close
-    //};
 
     if ( configFile.IsZombie() ) { std::cerr << "Run" << runID << ": config file not found!\n"; return false; }
     
@@ -150,7 +138,7 @@ bool DataReader::LoadRun( unsigned int runID ) {
         return false;
     }*/
     
-    dataTreeMap.insert(std::make_pair( runID, std::unique_ptr<TChain>(loader.GetUniqueMasterChain() ))); 
+    dataTreeMap.insert(std::make_pair( runID, std::unique_ptr<TChain>(loader.GetUniqueMasterChain()) )); 
     if (kVerbosity) std::cout << "Done.\n\n";
 
     return true;
@@ -242,6 +230,8 @@ void DataReader::CreateEnergyHist( std::string opt ) {
     
     delete failedFlag;
     delete energyGauss;
+    delete energyZAC;
+    delete energyTot;
 
     return;
 }
@@ -319,8 +309,8 @@ TChain* DataReader::GetTree() {
     return dataTree.get();
 }
 
-std::unique_ptr<TChain> DataReader::GetUniqueTree() {
+std::unique_ptr<TChain> DataReader::MoveTree() {
 
     if (!dataTree) this->GetTree();
-    else return dataTree;
+    return std::move(dataTree);
 }

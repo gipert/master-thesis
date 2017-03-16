@@ -20,7 +20,7 @@
 #include "GETRunConfiguration.hh"
 
 // other
-#include "progressbar.h"
+#include "ProgressBar.h"
 
 using namespace GERDA;
 
@@ -30,19 +30,37 @@ DataReader::DataReader( std::string gerdaMetaPath,
                         std::string gerdaDataPath,
                         std::string configListPath ) :
     
+    detectorMatrix { 1,1,1,1,1,1,1,1, /*string1*/
+                     2,2,2,           /*string2*/
+                     1,1,1,1,1,1,1,1, /*string3*/
+                     1,1,1,1,1,1,1,1, /*string4*/
+                     2,2,2,           /*string5*/
+                     1,1,1,1,1,1,2,   /*string6*/
+                     3,3,3            /*string7*/ }, // 1 BEGe, 2 enrCoax, 3 natCoax
+
+    mass { 627, 810, 625, 697, 731, 620, 662, 627,
+           2746, 2110, 2391,
+           545, 716, 458, 743, 595, 634, 384, 815,
+           634, 824, 526, 813, 812, 768, 650, 751,
+           2833, 2166, 2372,
+           496, 788, 763, 693, 720, 524, 958,
+           2965, 2321, 2312 }, // g
+
+    fractionAV { 0.889, 0.914, 0.885, 0.880, 0.892, 0.859, 0.834, 0.887,
+                 0.831, 0.904, 0.866,
+                 0.896, 0.883, 0.882, 0.895, 0.874, 0.887, 0.848, 0.892,
+                 0.902, 0.878, 0.863, 0.889, 0.878, 0.902, 0.889, 0.887,
+                 0.871, 0.831, 0.901,
+                 0.866, 0.888, 0.881, 0.888, 0.913, 0.882, 0.830,
+                 0.000, 0.970, 0.000 }, // if 0.000 it's N.A.
+ 
     configList(configListPath.c_str())
+
 { 
     if ( gerdaMetaPath.back() == '/' ) gerdaMetaPath.pop_back(); gerdaMetaDir = gerdaMetaPath;
     if ( gerdaDataPath.back() == '/' ) gerdaDataPath.pop_back(); gerdaDataDir = gerdaDataPath;
     
-    detectorMatrix = { 1,1,1,1,1,1,1,1, /*string1*/
-                       2,2,2,           /*string2*/
-                       1,1,1,1,1,1,1,1, /*string3*/
-                       1,1,1,1,1,1,1,1, /*string4*/
-                       2,2,2,           /*string5*/
-                       1,1,1,1,1,1,2,   /*string6*/
-                       3,3,3            /*string7*/ }; // 1 BEGe, 2 enrCoax, 3 natCoax
- 
+
     energy.reserve(40);
     std::string histName;
     for ( int i = 0; i < 40; i++ ) {
@@ -286,6 +304,35 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistNatCoax() const {
     return tmp;
 }
 
+std::vector<float> DataReader::GetVolume( std::string opt ) const {
+    
+    std::vector<float> volume;
+    for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))/enrGeDensity);
+    for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))/natGeDensity);
+    
+    if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
+    return volume;
+}
+
+std::vector<float> DataReader::GetActiveVolume( std::string opt ) const {
+    
+    std::vector<float> volume;
+    for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/enrGeDensity);
+    for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/natGeDensity);
+
+    if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
+    return volume;
+}
+
+std::vector<float> DataReader::GetDeadVolume( std::string opt ) const {
+    
+    std::vector<float> volume;
+    for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/enrGeDensity);
+    for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/natGeDensity);
+
+    if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
+    return volume;
+}
 
 TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
 
@@ -313,4 +360,21 @@ std::unique_ptr<TChain> DataReader::MoveTree() {
 
     if (!dataTree) this->GetTree();
     return std::move(dataTree);
+}
+
+template<typename T>
+void GERDA::ReorderAsMaGeInput( std::vector<T>& v ) {
+    
+    // reorder as MaGe inpunt naming convention
+    int c = 0;
+    auto v_ = v;
+    for ( int i = 37; i <= 39 ; i++ ) { v[c] = v_[i]; c++; }
+    for ( int i = 8 ; i <= 10 ; i++ ) { v[c] = v_[i]; c++; }
+    for ( int i = 27; i <= 29 ; i++ ) { v[c] = v_[i]; c++; }
+    v[c] = v_[36]; c++;
+    for ( int i = 0 ; i <= 7  ; i++ ) { v[c] = v_[i]; c++; }
+    for ( int i = 11; i <= 26 ; i++ ) { v[c] = v_[i]; c++; }
+    for ( int i = 30; i <= 35 ; i++ ) { v[c] = v_[i]; c++; }
+
+    return;
 }

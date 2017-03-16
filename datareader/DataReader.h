@@ -59,6 +59,10 @@ namespace GERDA {
       std::unique_ptr<TH1D> GetEnergyHistEnrCoax() const;
       std::unique_ptr<TH1D> GetEnergyHistNatCoax() const;
       std::unique_ptr<TH1D> GetEnergyHistAll()     const;
+      // get total volume, active volume, dead volume cm^3
+      std::vector<float> GetVolume( std::string opt = "" ) const;
+      std::vector<float> GetActiveVolume( std::string opt = "" ) const;
+      std::vector<float> GetDeadVolume( std::string opt = "" ) const;
       // get non-owning pointers to trees
       // WARNING: deleted when the DataReader object goes out of scope
       TChain* GetTreeFromRun( unsigned int runID ) const;
@@ -71,7 +75,12 @@ namespace GERDA {
       private:
 
       // description of detectors types in detector strings
-      std::vector<unsigned int> detectorMatrix;
+      const std::vector<unsigned int> detectorMatrix;
+      // total mass and active volume fraction:
+      const std::vector<int>   mass; // g
+      const std::vector<float> fractionAV;
+      const float natGeDensity = 5.32; // g/cm^3
+      const float enrGeDensity = 5.54;
       // config list file
       std::ifstream configList;
       // paths to gerda-metadata repo and data directory
@@ -94,6 +103,10 @@ namespace GERDA {
       // find run configuration in the config list file
       std::string FindRunConfiguration( unsigned int runID );
   };
+  
+  // order vectors in the MaGe input naming scheme
+  template<typename T>
+  void ReorderAsMaGeInput( std::vector<T>& v );
 }
 
 #endif

@@ -3,5 +3,6 @@ misc/log
 *.root
 misc/paths.txt
 getspectra
+sumspectra
 datareader/libDataReader.so
 progressbar/libProgressBar.so

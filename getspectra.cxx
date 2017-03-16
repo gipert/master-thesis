@@ -70,7 +70,7 @@ int main( int argc, char** argv ) {
     
     // retrieve energy spectrum
     std::vector<TH1D> energy;
-    reader.CreateEnergyHist(opt);
+    //reader.CreateEnergyHist(opt);
     energy = reader.GetEnergyHist();
 
     auto energyBEGe = reader.GetEnergyHistBEGe();
@@ -78,6 +78,13 @@ int main( int argc, char** argv ) {
     auto energyNatCoax = reader.GetEnergyHistNatCoax();
    
     TParameter<float> time( "total_acq_time_in_h", reader.GetTimeHours() );
+
+    std::vector<float> volume = reader.GetVolume();
+    for ( const auto& i : volume ) std::cout << i << ' '; std::cout << std::endl;
+    std::vector<float> activevolume = reader.GetActiveVolume();
+    for ( const auto& i : activevolume ) std::cout << i << ' ';std::cout << std::endl;
+    std::vector<float> deadvolume = reader.GetDeadVolume();
+    for ( const auto& i : deadvolume ) std::cout << i << ' ';std::cout << std::endl;
 
     std::string processedRunsStr;
     for ( auto& r : runsToProcess ) processedRunsStr += std::to_string(r) + ' ';

@@ -59,7 +59,6 @@ DataReader::DataReader( std::string gerdaMetaPath,
 { 
     if ( gerdaMetaPath.back() == '/' ) gerdaMetaPath.pop_back(); gerdaMetaDir = gerdaMetaPath;
     if ( gerdaDataPath.back() == '/' ) gerdaDataPath.pop_back(); gerdaDataDir = gerdaDataPath;
-    
 
     energy.reserve(40);
     std::string histName;
@@ -73,7 +72,64 @@ DataReader::DataReader( std::string gerdaMetaPath,
     }
     kMustResetEnergy = false;
 }
+// -------------------------------------------------------------------------------
+DataReader::DataReader( std::string pathsFile , bool verbose ) : 
+    
+    detectorMatrix { 1,1,1,1,1,1,1,1, /*string1*/
+                     2,2,2,           /*string2*/
+                     1,1,1,1,1,1,1,1, /*string3*/
+                     1,1,1,1,1,1,1,1, /*string4*/
+                     2,2,2,           /*string5*/
+                     1,1,1,1,1,1,2,   /*string6*/
+                     3,3,3            /*string7*/ }, // 1 BEGe, 2 enrCoax, 3 natCoax
 
+    mass { 627, 810, 625, 697, 731, 620, 662, 627,
+           2746, 2110, 2391,
+           545, 716, 458, 743, 595, 634, 384, 815,
+           634, 824, 526, 813, 812, 768, 650, 751,
+           2833, 2166, 2372,
+           496, 788, 763, 693, 720, 524, 958,
+           2965, 2321, 2312 }, // g
+
+    fractionAV { 0.889, 0.914, 0.885, 0.880, 0.892, 0.859, 0.834, 0.887,
+                 0.831, 0.904, 0.866,
+                 0.896, 0.883, 0.882, 0.895, 0.874, 0.887, 0.848, 0.892,
+                 0.902, 0.878, 0.863, 0.889, 0.878, 0.902, 0.889, 0.887,
+                 0.871, 0.831, 0.901,
+                 0.866, 0.888, 0.881, 0.888, 0.913, 0.882, 0.830,
+                 0.000, 0.970, 0.000 } // if 0.000 it's N.A.
+ 
+{ 
+    kVerbosity = verbose;
+
+    std::ifstream input(pathsFile.c_str());
+    if ( !input.is_open() ) std::cerr << "File with paths not found!\n";
+    std::string metapath, datapath, configpath;
+    input >> metapath >> datapath >> configpath;
+    std::vector<unsigned int> runsToProcess;
+    int value;
+    while ( input >> value ) runsToProcess.push_back(value);
+    input.close();
+
+    configList.open(configpath.c_str());
+    if ( metapath.back() == '/' ) metapath.pop_back(); gerdaMetaDir = metapath;
+    if ( datapath.back() == '/' ) datapath.pop_back(); gerdaDataDir = datapath;
+
+    energy.reserve(40);
+    std::string histName;
+    for ( int i = 0; i < 40; i++ ) {
+        histName = "energy_";
+        if ( detectorMatrix[i] == 1 ) histName += "BEGe_";
+        if ( detectorMatrix[i] == 2 ) histName += "enrCoax_";
+        if ( detectorMatrix[i] == 3 ) histName += "natCoax_";
+        histName += std::to_string(i);
+        energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
+    }
+    kMustResetEnergy = false;
+
+    for ( auto& n : runsToProcess ) this->LoadRun(n);
+}
+// -------------------------------------------------------------------------------
 std::string DataReader::FindRunConfiguration( unsigned int runID ) {
 
     if ( !configList.is_open() ) return "filenotfound";
@@ -93,7 +149,7 @@ std::string DataReader::FindRunConfiguration( unsigned int runID ) {
     configList.seekg(0, std::ios::beg);
     return result;
 }
-
+// -------------------------------------------------------------------------------
 bool DataReader::LoadRun( unsigned int runID ) {
 
     auto result = dataTreeMap.find(runID);
@@ -161,7 +217,7 @@ bool DataReader::LoadRun( unsigned int runID ) {
 
     return true;
 }
-
+// -------------------------------------------------------------------------------
 void DataReader::CreateEnergyHist( std::string opt ) {
 
     if ( opt != "zac" and opt != "ZAC" and opt != "gauss" and opt != "GAUSS" ) {
@@ -240,7 +296,7 @@ void DataReader::CreateEnergyHist( std::string opt ) {
             }
         }
         chain->ResetBranchAddresses();
-        time.insert(std::make_pair(it.first, nTP*20));
+        timeMap.insert(std::make_pair(it.first, nTP*20));
 
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
@@ -253,21 +309,21 @@ void DataReader::CreateEnergyHist( std::string opt ) {
 
     return;
 }
-
+// -------------------------------------------------------------------------------
 void DataReader::ResetEnergy() {
 
     for ( auto& it : energy ) it.Reset();
     kMustResetEnergy = false;
     return;
 }
-
+// -------------------------------------------------------------------------------
 unsigned int DataReader::GetTime() {
    
    unsigned int tmp = 0;
-   for ( auto& it : time ) tmp += it.second;
+   for ( auto& it : timeMap ) tmp += it.second;
    return tmp;
 }
-
+// -------------------------------------------------------------------------------
 std::unique_ptr<TH1D> DataReader::GetEnergyHistBEGe() const {
     
     std::unique_ptr<TH1D> tmp(new TH1D( "energyBEGeAll", "energyBegeAll", 7500, 0, 7500 ));
@@ -279,7 +335,7 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistBEGe() const {
 
     return tmp;
 }
-
+// -------------------------------------------------------------------------------
 std::unique_ptr<TH1D> DataReader::GetEnergyHistEnrCoax() const {
     
     std::unique_ptr<TH1D> tmp(new TH1D( "energyEnrCoaxAll", "energyEnrCoaxAll", 7500, 0, 7500 ));
@@ -291,7 +347,7 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistEnrCoax() const {
 
     return tmp;
 }
-
+// -------------------------------------------------------------------------------
 std::unique_ptr<TH1D> DataReader::GetEnergyHistNatCoax() const {
     
     std::unique_ptr<TH1D> tmp(new TH1D( "energyNatCoaxAll", "energyNatCoaxAll", 7500, 0, 7500 ));
@@ -303,7 +359,7 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistNatCoax() const {
 
     return tmp;
 }
-
+// -------------------------------------------------------------------------------
 std::vector<float> DataReader::GetVolume( std::string opt ) const {
     
     std::vector<float> volume;
@@ -313,7 +369,7 @@ std::vector<float> DataReader::GetVolume( std::string opt ) const {
     if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
     return volume;
 }
-
+// -------------------------------------------------------------------------------
 std::vector<float> DataReader::GetActiveVolume( std::string opt ) const {
     
     std::vector<float> volume;
@@ -323,7 +379,7 @@ std::vector<float> DataReader::GetActiveVolume( std::string opt ) const {
     if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
     return volume;
 }
-
+// -------------------------------------------------------------------------------
 std::vector<float> DataReader::GetDeadVolume( std::string opt ) const {
     
     std::vector<float> volume;
@@ -333,7 +389,7 @@ std::vector<float> DataReader::GetDeadVolume( std::string opt ) const {
     if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
     return volume;
 }
-
+// -------------------------------------------------------------------------------
 TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
 
     auto result = dataTreeMap.find(runID);
@@ -344,7 +400,7 @@ TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
 
     return result->second.get();
 }
-
+// -------------------------------------------------------------------------------
 TChain* DataReader::GetTree() {
     
     if (!dataTree) {
@@ -355,13 +411,13 @@ TChain* DataReader::GetTree() {
 
     return dataTree.get();
 }
-
+// -------------------------------------------------------------------------------
 std::unique_ptr<TChain> DataReader::MoveTree() {
 
     if (!dataTree) this->GetTree();
     return std::move(dataTree);
 }
-
+// -------- end class ------------------------------------------------------------
 template<typename T>
 void GERDA::ReorderAsMaGeInput( std::vector<T>& v ) {
     

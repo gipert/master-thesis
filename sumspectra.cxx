@@ -12,6 +12,7 @@
 #include <string>
 #include <memory>
 #include <chrono>
+#include <map>
 
 #include "TFile.h"
 #include "TTree.h"
@@ -24,16 +25,9 @@
 
 int main() {
 
-    // get configs
-    std::ifstream input("misc/paths.txt");
-    if ( !input.is_open() ) { std::cerr << "File with paths not found! Aborting...\n"; return 0; }
-    std::string metapath, datapath, configpath;
-    input >> metapath >> datapath >> configpath;
-    input.close();
-
-    GERDA::DataReader reader(metapath, datapath, configpath);
+    GERDA::DataReader reader("misc/paths.txt", false);
     
-    // get volumes
+    // get volumes with MaGe input naming convention
     std::vector<float> AV = reader.GetActiveVolume("MaGe");
     std::vector<float> DV = reader.GetDeadVolume("MaGe");
   
@@ -41,6 +35,23 @@ int main() {
     auto maxvolumeAV = std::max_element(AV.begin()+3, AV.end());
     auto maxvolumeDV = std::max_element(DV.begin()+3, DV.end());
     float maxvolume = *maxvolumeAV > *maxvolumeDV ? *maxvolumeAV : *maxvolumeDV;
+
+    // get detectorStatusMap
+    auto dsm = reader.GetDetectorStatusMap();
+
+    // get live times
+    std::ifstream timeFile("results.txt");
+    std::map<unsigned int, unsigned int> timeMap;
+    unsigned int runID, time;
+    while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time));
+
+    // calculate the total time each detector is ON --> detector status = 0
+    std::vector<int> totalTime(40, 0);
+    for ( const auto& i : dsm ) {
+        for ( int j = 0; j < 40; j++ ) {
+            if ( i.second[j] == 0 ) totalTime[j] += timeMap[i.first];
+        }
+    }
 
     // define reading objects
     std::unique_ptr<TFile> file;
@@ -50,7 +61,7 @@ int main() {
     TTreeReaderArray<int>   det_id(treereader, "det_id");
     TTreeReaderArray<float> det_edep(treereader, "det_edep");
 
-    // final histogram
+    // construct final histograms
     std::vector<TH1F> hist;
     for ( int i = 0; i < 40; i++ ) {
         hist.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 2100, 0, 2.1);
@@ -66,36 +77,37 @@ int main() {
 // -----------------------------------------------------------------------------------------------------
     // lambda to fill histograms
     auto fillHistos = [&]( int i , std::string opt ) {
+
+        filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_";
         
         if ( opt == "A_COAX" ) {
-            filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_AV_det11_"  
-                       + std::to_string(i) + ".root";
-            display = "AV_det11_" + std::to_string(i) + " ";
+            filename += "AV_det11_";
+            display += "AV_det11_";
             corrFactor = AV[i-1]/maxvolume;
         }
 
         else if ( opt == "D_COAX" ) {
-            filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_DV_det11_" 
-                       + std::to_string(i) + ".root";
-            display = "DV_det11_" + std::to_string(i) + " ";
+            filename += "DV_det11_"; 
+            display += "DV_det11_";
             corrFactor = DV[i-1]/maxvolume;
         }
 
         else if ( opt == "A_BEGe" ) {
-            filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_AV_det5_" 
-                       + std::to_string(i) + ".root";
-            display = "AV_det5_" + std::to_string(i) + " ";
+            filename += "AV_det5_";
+            display += "AV_det5_";
             corrFactor = AV[i+9]/maxvolume;
         }
         
         else if ( opt == "D_BEGe" ) {
-            filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_DV_det5_" 
-                       + std::to_string(i) + ".root";
-            display = "DV_det5_" + std::to_string(i) + " ";
+            filename += "DV_det5_"; 
+            display += "DV_det5_";
             corrFactor = DV[i+9]/maxvolume;
         }
 
         else { std::cout << "wut?\n"; return; }
+
+        filename += std::to_string(i) + ".root";
+        display += std::to_string(i) + " ";
         
         file = std::unique_ptr<TFile>{ TFile::Open(filename.c_str(), "READ") };
         fTree = dynamic_cast<TTree*>(file->Get("fTree"));
@@ -125,7 +137,8 @@ int main() {
     for ( int i = 4; i <= 10; i++ ) {
         
         auto start = std::chrono::system_clock::now();
-
+        
+        // run
         fillHistos(i, "A_COAX"); std::cout << std::endl;
         fillHistos(i, "D_COAX");
         
@@ -138,6 +151,7 @@ int main() {
 
         auto start = std::chrono::system_clock::now();
         
+        // run
         fillHistos(i, "A_BEGe"); std::cout << std::endl;
         fillHistos(i, "D_BEGe");
 

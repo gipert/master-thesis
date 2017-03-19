@@ -33,10 +33,13 @@ namespace GERDA {
       DataReader& operator=(DataReader&&)      = default;
 
       public:
-
+      
+      // set paths, need then to call LoadRun to complete the configuration
       DataReader( std::string gerdaMetaPath,    // location of gerda-metadata repo
                   std::string gerdaDataPath,    // location of gerda-data folder
                   std::string configListPath ); // location of runconfiguration_mod.db
+      // shortcut: set paths and load runs stored in an input file
+      DataReader( std::string pathsFile, bool verbose = false );
       
       // override default destructor
       ~DataReader() { configList.close(); }
@@ -49,12 +52,15 @@ namespace GERDA {
       void ResetEnergy();
       // get vector with energy spectra for each detector
       std::vector<TH1D> GetEnergyHist() const { return energy; }
+      // get detector status map
+      std::map<unsigned int, std::vector<unsigned int>> GetDetectorStatusMap() const { return detectorStatusMap; }
       // get acquisition time (in minutes)
-      unsigned int GetTimeForRun( unsigned int runID ) { return time.at(runID); }
+      unsigned int GetTimeForRun( unsigned int runID ) { return timeMap.at(runID); }
       unsigned int GetTime();
+      std::map<unsigned int, unsigned int> GetTimeMap() const { return timeMap; };
       float GetTimeHoursForRun( unsigned int runID ) { return (this->GetTimeForRun(runID))*1./3600; }
       float GetTimeHours() { return (this->GetTime())*1./3600; }
-      // get owning pointers for histograms:
+      // get owning pointers for energy histograms:
       std::unique_ptr<TH1D> GetEnergyHistBEGe()    const;
       std::unique_ptr<TH1D> GetEnergyHistEnrCoax() const;
       std::unique_ptr<TH1D> GetEnergyHistNatCoax() const;
@@ -92,13 +98,14 @@ namespace GERDA {
       std::map<unsigned int, std::unique_ptr<TChain>> dataTreeMap;
       std::unique_ptr<TChain> dataTree;
       // map with the detector's status, the key is the run ID
+      // 0 = ON, 1 = AC, 2 = OFF
       std::map<unsigned int, std::vector<unsigned int>> detectorStatusMap;
       // vector with energy histograms for each detector
       // filled by GetEnergyHist();
       std::vector<TH1D> energy;
       // flag for multiple calling of CreateEnergyhist
       bool kMustResetEnergy;
-      std::map<unsigned int, unsigned int> time;
+      std::map<unsigned int, unsigned int> timeMap;
     
       // find run configuration in the config list file
       std::string FindRunConfiguration( unsigned int runID );

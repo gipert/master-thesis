@@ -8,12 +8,11 @@
 #include <vector>
 #include <string>
 
-#include "DataReader.h"
 #include "TChain.h"
 #include "TH1D.h"
 #include "TFile.h"
-#include "TNamed.h"
-#include "TParameter.h"
+
+#include "DataReader.h"
 
 int main( int argc, char** argv ) {
     
@@ -49,91 +48,40 @@ int main( int argc, char** argv ) {
         opt = "zac";
         std::cout << "Using ZAC filter results...\n";
     }
-    
-    // get configs
-    std::ifstream input("misc/paths.txt");
-    if ( !input.is_open() ) { std::cerr << "File with paths not found! Aborting...\n"; return 0; }
-    std::string metapath, datapath, configpath;
-    input >> metapath >> datapath >> configpath;
-    std::vector<unsigned int> runsToProcess;
-    int value;
-    while ( input >> value ) runsToProcess.push_back(value);
-    input.close();
-    
+ 
+ // ----------------------------------------------------------------------------------------------------
     // main reader object
-    GERDA::DataReader reader( metapath, datapath, configpath );    
-    // set verbose
-    if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) GERDA::DataReader::kVerbosity = true;
-    
-    // load runs
-    for ( auto& n : runsToProcess ) reader.LoadRun(n);
+    bool verbose = false;
+    if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) verbose = true;
+    GERDA::DataReader reader( "misc/paths.txt", verbose );    
+
+    // create output ROOT file and .txt file
+    TFile file( filename.c_str(), "RECREATE" );
+    filename.erase(filename.end()-4,filename.end());
+    filename += "dat";
+    std::ofstream textFile(filename.c_str());
     
     // retrieve energy spectrum
     std::vector<TH1D> energy;
-    //reader.CreateEnergyHist(opt);
+    reader.CreateEnergyHist(opt);
     energy = reader.GetEnergyHist();
 
-    auto energyBEGe = reader.GetEnergyHistBEGe();
+    auto energyBEGe    = reader.GetEnergyHistBEGe();
     auto energyEnrCoax = reader.GetEnergyHistEnrCoax();
     auto energyNatCoax = reader.GetEnergyHistNatCoax();
    
-    TParameter<float> time( "total_acq_time_in_h", reader.GetTimeHours() );
-
-    std::vector<float> volume = reader.GetVolume();
-    for ( const auto& i : volume ) std::cout << i << ' '; std::cout << std::endl;
-    std::vector<float> activevolume = reader.GetActiveVolume();
-    for ( const auto& i : activevolume ) std::cout << i << ' ';std::cout << std::endl;
-    std::vector<float> deadvolume = reader.GetDeadVolume();
-    for ( const auto& i : deadvolume ) std::cout << i << ' ';std::cout << std::endl;
-
-    std::string processedRunsStr;
-    for ( auto& r : runsToProcess ) processedRunsStr += std::to_string(r) + ' ';
-    TNamed processed_runs( "processed runs", processedRunsStr);
-    
-    TFile file( filename.c_str(), "RECREATE" );
+    // write on disk
     for ( const auto& it : energy ) it.Write();
-    processed_runs.Write();
-    time.Write();
     energyBEGe->Write();
     energyEnrCoax->Write();
     energyNatCoax->Write();
-    file.Close();
     
+    // retrieve time for each run
+    auto timeMap = reader.GetTimeMap();
+    // write on disk
+    for ( const auto& i : timeMap ) textFile << i.first << '\t' << i.second << '\n';
+    
+    textFile.close();
+
     return 0;
 }
-
-    /* NOT WORKING
-    // retrieve run IDs from command line
-    std::vector<int> runsToProcess;
-    std::string tmp;
-    for ( auto& it : args ) {
-        if ( it.front() == '{' and it.back() == '}' ) {
-            for ( int i = 1; i < it.size()-1; i++ ) {
-                if ( it[i] != ',' ) tmp.append(it[i]);
-                if ( it[i] == ',' ) {
-                    if ( tmp.find('-') != std::string::npos ) {
-                        std::string tmp1, tmp2;
-                        tmp1.append(tmp[0]);
-                        tmp1.append(tmp[1]);
-                        tmp2.append(tmp[3]);
-                        tmp2.append(tmp[4]);
-                        for ( int j = std::stoi(tmp1); j <= std::stoi(tmp2); j++ ) {
-                            runsToProcess.push_back(j);
-                        }
-                        tmp1.clear();
-                        tmp2.clear();
-                    }
-                    else {
-                        runsToProcess.push_back(std::stoi(tmp));
-                        tmp.clear();
-                    }
-                }
-            }
-        }
-
-        else { std::cout << "bad input! See --help"<< std::endl; return -1; }
-    }
-    for ( auto& i : runsToProcess ) std::cout << i << " ";
-    */
-
-

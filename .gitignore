@@ -1,4 +1,5 @@
 *.swp
+*.dat
 misc/log
 *.root
 misc/paths.txt

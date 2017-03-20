@@ -1,25 +1,21 @@
-// ***************************************************************
-// This file was created using the bat-project script.
-// bat-project is part of Bayesian Analysis Toolkit (BAT).
-// BAT can be downloaded from http://mpp.mpg.de/bat
-// ***************************************************************
+/* Fit2nbbLV.h
+ *
+ * Author: Luigi Pertoldi - luigi.pertoldi@pd.infn.it
+ * Created: 20/03/2017
+ *
+ */
 
 #include "Fit2nbbLV.h"
 
 #include <BAT/BCMath.h>
 
 // ---------------------------------------------------------
-Fit2nbbLV::Fit2nbbLV(const char * name) : BCModel(name) {
+Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()) {
 	// constructor
 	// define parameters here. For example:
 	// AddParameter("mu",-2,1,"#mu");
 	// and set priors, if using built-in priors. For example:
 	// SetPriorGauss("mu",-1,0.25);
-}
-
-// ---------------------------------------------------------
-Fit2nbbLV::~Fit2nbbLV() {
-	// destructor
 }
 
 // ---------------------------------------------------------
@@ -47,3 +43,5 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
 // 	// You need not overload this function, if you are using built-in
 // 	// priors through the function SetPriorGauss, SetPriorConstant, etc.
 // }
+// ---------------------------------------------------------
+

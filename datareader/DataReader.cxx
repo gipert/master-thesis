@@ -303,11 +303,11 @@ void DataReader::CreateEnergyHist( std::string opt ) {
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
     
-    delete failedFlag;
-    delete energyGauss;
+    delete[] failedFlag;
+    delete[] energyGauss;
     if ( opt == "zac" or opt == "ZAC" ) 
-        { delete energyZAC; }
-    delete energyTot;
+        { delete[] energyZAC; }
+    delete[] energyTot;
 
     return;
 }

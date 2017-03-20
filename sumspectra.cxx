@@ -1,7 +1,12 @@
 /* sumspectra.cxx
  *
  * Program to sum MaGe simulations for each detector (AV and DV)
- * into one global energy spectra.
+ * into global energy spectra.
+ *
+ * state-of-arts: enrCOAX are not summed, neither the events with
+ * vertex into them nor energy deposition into them. Different
+ * volumes and live times of the detectors (depending on the 
+ * considered runs) are taken into account.
  *
  * Author: Luigi Pertoldi - luigi.pertoldi@pd.infn.it
  * Created: 15/03/2017
@@ -79,7 +84,7 @@ int main( int argc, char** argv ) {
     // construct final histograms
     std::vector<TH1F> hist;
     for ( int i = 0; i < 40; i++ ) {
-        hist.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 2100, 0, 2.1);
+        hist.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);
     }
     
     ProgressBar bar;
@@ -94,8 +99,8 @@ int main( int argc, char** argv ) {
     // lambda to fill histograms
     auto fillHistos = [&]( int i , std::string genopt , std::string phys ) {
 
-        if ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_";
-        else if ( phys == "2nbb" ) filename = "/home/GERDA/pertoldi/simulations/2nbb/";
+        if      ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_";
+        else if ( phys == "2nbb"   ) filename = "/home/GERDA/pertoldi/simulations/2nbb/";
         display.clear();
         
         if ( genopt == "A_COAX" ) {
@@ -130,8 +135,8 @@ int main( int argc, char** argv ) {
             corrTime = (float)totalTime[i+9]/maxtime;
         }
 
-        if ( phys == "2nbbLV" ) filename += std::to_string(i) + ".root";
-        else if ( phys == "2nbb" ) filename += std::to_string(i) + "_1000000events.root";
+        if      ( phys == "2nbbLV" ) filename += std::to_string(i) + ".root";
+        else if ( phys == "2nbb"   ) filename += std::to_string(i) + "_1000000events.root";
         display += std::to_string(i) + " ";
         
         file = std::unique_ptr<TFile>{ TFile::Open(filename.c_str(), "READ") };
@@ -184,14 +189,28 @@ int main( int argc, char** argv ) {
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
 
-    TH1F tothist( "energy_total", "global MaGe energy spectrum", 2100, 0, 2.1 );
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe.root";
+    TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7.5);
+    TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7.5);
+    TH1F histTot( "energy_total", "global MaGe energy spectrum", 7500, 0, 7.5 );
+    
+    if ( phys == "2nbb" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbb.root";
+    else path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbbLV.root";
     TFile fileout(path.c_str(), "RECREATE");
+    
     for ( auto& h : hist ) {
         h.Write();
-        tothist.Add(&h);
+        histTot.Add(&h);
     }
-    tothist.Write();
+    
+    for ( int i = 0; i < 40; i++ ) {
+        if ( i == 0 or i == 1 or i == 2 ) continue;
+        else if ( i == 11 or i == 12 or i == 13 or i == 30 or i == 31 or i == 32 or i == 39 ) histCOAX.Add(&hist[i]);
+        else histBEGe.Add(&hist[i]);
+    }
+    
+    histCOAX.Write();
+    histBEGe.Write();
+    histTot.Write();
     fileout.Close();
 
     return 0;

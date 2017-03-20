@@ -3,7 +3,7 @@
 # Author: Luigi Pertoldi (luigi.pertoldi@pd.infn.it)
 # Created: 01/02/2017
 
-CC     = c++-4.9 --std=c++11
+CC     = c++ -std=c++0x
 CFLAGS = $(shell root-config --cflags) \
          $(shell gelatio-config --cflags) \
          $(shell mgdo-config --cflags) \
@@ -11,25 +11,25 @@ CFLAGS = $(shell root-config --cflags) \
 LIBS   = $(shell root-config --libs) -lTreePlayer \
          $(shell gelatio-config --libs) \
          $(shell mgdo-config --libs) \
-         $(shell gerda-ada-config --libs) -L./datareader -L./progressbar
+         $(shell gerda-ada-config --libs) -L./lib
 
-all : datareader/libDataReader.so progressbar/libProgressBar.so getspectra sumspectra
+all : init lib/libDataReader.so lib/libProgressBar.so bin/getspectra bin/sumspectra
 
-progressbar/libProgressBar.so : progressbar/ProgressBar.cc progressbar/ProgressBar.h
+init : 
+	-mkdir -p lib bin
+
+lib/libProgressBar.so : progressbar/ProgressBar.cc progressbar/ProgressBar.h
 	$(CC) -fPIC -shared -o $@ $<
 
-datareader/libDataReader.so : datareader/DataReader.cxx datareader/DataReader.h progressbar/libProgressBar.so
+lib/libDataReader.so : datareader/DataReader.cxx datareader/DataReader.h lib/libProgressBar.so
 	$(CC) -fPIC -shared $(CFLAGS) -o $@ $< $(LIBS) -lProgressBar
 
-getspectra : getspectra.cxx datareader/libDataReader.so
+bin/getspectra : getspectra.cxx lib/libDataReader.so
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS) -lDataReader
 
-sumspectra : sumspectra.cxx datareader/libDataReader.so
+bin/sumspectra : sumspectra.cxx lib/libDataReader.so
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS) -lDataReader -lProgressBar
 
 .PHONY : clean
 clean :
-	-rm datareader/libDataReader.so
-	-rm progressbar/libProgressBar.so
-	-rm getspectra
-	-rm sumspectra
+	-rm -rf lib bin

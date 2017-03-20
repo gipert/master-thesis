@@ -1,9 +1,10 @@
 *.swp
-*.dat
-misc/log
 *.root
+*.dat
+
+out/
+lib/
+bin/
+
+misc/log
 misc/paths.txt
-getspectra
-sumspectra
-datareader/libDataReader.so
-progressbar/libProgressBar.so

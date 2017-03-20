@@ -22,7 +22,7 @@ int main( int argc, char** argv ) {
 
     // help
     if ( std::find(args.begin(), args.end(), "--help") != args.end() ) {
-        std::ifstream helpFile("misc/help");
+        std::ifstream helpFile( std::string(std::getenv("GERDACPTDIR")) + "/misc/help");
         if (helpFile.is_open()) std::cout << helpFile.rdbuf();
         else std::cerr << "help file not found!\n";
         return 0;
@@ -36,6 +36,7 @@ int main( int argc, char** argv ) {
             break;
         }
     }
+    filename = std::string(std::getenv("GERDACPTDIR")) + "/out/" + filename;
 
     if ( filename.empty() ) {
         std::cerr << "Please provide a valid .root output filename.\n";
@@ -53,7 +54,7 @@ int main( int argc, char** argv ) {
     // main reader object
     bool verbose = false;
     if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) verbose = true;
-    GERDA::DataReader reader( "misc/paths.txt", verbose );    
+    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", verbose );    
 
     // create output ROOT file and .txt file
     TFile file( filename.c_str(), "RECREATE" );

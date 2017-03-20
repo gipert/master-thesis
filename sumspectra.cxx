@@ -1,4 +1,5 @@
-/* 
+/* sumspectra.cxx
+ *
  * Program to sum MaGe simulations for each detector (AV and DV)
  * into one global energy spectra.
  *
@@ -23,9 +24,17 @@
 #include "DataReader.h"
 #include "ProgressBar.h"
 
-int main() {
+int main( int argc, char** argv ) {
 
-    GERDA::DataReader reader("misc/paths.txt", false);
+    std::vector<std::string> args(argc);
+    for ( int i = 0; i < argc; i++ ) args[i] = argv[i];
+    
+    std::string phys;
+    if      ( std::find(args.begin(), args.end(), "--2nbb"  ) != args.end() ) phys = "2nbb";
+    else if ( std::find(args.begin(), args.end(), "--2nbbLV") != args.end() ) phys = "2nbbLV";
+    else { std::cout << "Please specify --2nbb or --2nbbLV option!\n"; return 0; }
+
+    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false);
     
     // get volumes with MaGe input naming convention
     std::vector<float> AV = reader.GetActiveVolume("MaGe");
@@ -40,7 +49,7 @@ int main() {
     auto dsm = reader.GetDetectorStatusMap();
 
     // get live times
-    std::ifstream timeFile("results.dat");
+    std::ifstream timeFile(std::string(std::getenv("GERDACPTDIR")) + "/out/results.dat");
     std::map<unsigned int, unsigned int> timeMap;
     unsigned int runID, time;
     while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time));
@@ -82,42 +91,46 @@ int main() {
 
 // -----------------------------------------------------------------------------------------------------
     // lambda to fill histograms
-    auto fillHistos = [&]( int i , std::string opt ) {
+    auto fillHistos = [&]( int i , std::string genopt , std::string phys ) {
 
-        filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_";
+        if ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_";
+        else if ( phys == "2nbb" ) filename = "/home/GERDA/pertoldi/simulations/2nbb/";
         display.clear();
         
-        if ( opt == "A_COAX" ) {
-            filename += "AV_det11_";
+        if ( genopt == "A_COAX" ) {
+            if ( phys == "2nbbLV" ) filename += "AV_det11_";
+            else if ( phys == "2nbb" ) filename += "AV_files/2nbb_intrinsic_AV_det11_";
             display += "AV_det11_";
             corrVol = AV[i-1]/maxvolume;
             corrTime = (float)totalTime[i-1]/maxtime;
         }
 
-        else if ( opt == "D_COAX" ) {
-            filename += "DV_det11_"; 
+        else if ( genopt == "D_COAX" ) {
+            if ( phys == "2nbbLV" ) filename += "DV_det11_"; 
+            else if ( phys == "2nbb" ) filename += "DV_files/2nbb_intrinsic_DV_det11_";
             display += "DV_det11_";
             corrVol = DV[i-1]/maxvolume;
             corrTime = (float)totalTime[i-1]/maxtime;
         }
 
-        else if ( opt == "A_BEGe" ) {
-            filename += "AV_det5_";
+        else if ( genopt == "A_BEGe" ) {
+            if ( phys == "2nbbLV" ) filename += "AV_det5_";
+            else if ( phys == "2nbb" ) filename += "AV_files/2nbb_intrinsic_AV_det5_";
             display += "AV_det5_";
             corrVol = AV[i+9]/maxvolume;
             corrTime = (float)totalTime[i+9]/maxtime;
         }
         
-        else if ( opt == "D_BEGe" ) {
-            filename += "DV_det5_"; 
+        else if ( genopt == "D_BEGe" ) {
+            if ( phys == "2nbbLV" ) filename += "DV_det5_"; 
+            else if ( phys == "2nbb" ) filename += "DV_files/2nbb_intrinsic_DV_det5_";
             display += "DV_det5_";
             corrVol = DV[i+9]/maxvolume;
             corrTime = (float)totalTime[i+9]/maxtime;
         }
 
-        else { std::cout << "wut?\n"; return; }
-
-        filename += std::to_string(i) + ".root";
+        if ( phys == "2nbbLV" ) filename += std::to_string(i) + ".root";
+        else if ( phys == "2nbb" ) filename += std::to_string(i) + "_1000000events.root";
         display += std::to_string(i) + " ";
         
         file = std::unique_ptr<TFile>{ TFile::Open(filename.c_str(), "READ") };
@@ -150,8 +163,8 @@ int main() {
         auto start = std::chrono::system_clock::now();
         
         // run
-        fillHistos(i, "A_COAX"); std::cout << std::endl;
-        fillHistos(i, "D_COAX");
+        fillHistos(i, "A_COAX", phys); std::cout << std::endl;
+        fillHistos(i, "D_COAX", phys);
         
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
@@ -163,15 +176,15 @@ int main() {
         auto start = std::chrono::system_clock::now();
         
         // run
-        fillHistos(i, "A_BEGe"); std::cout << std::endl;
-        fillHistos(i, "D_BEGe");
+        fillHistos(i, "A_BEGe", phys); std::cout << std::endl;
+        fillHistos(i, "D_BEGe", phys);
 
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
 
     TH1F tothist( "energy_total", "global MaGe energy spectrum", 2100, 0, 2.1 );
-    TFile fileout("sumMaGe.root", "RECREATE");
+    TFile fileout(std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe.root", "RECREATE");
     for ( auto& h : hist ) {
         h.Write();
         tothist.Add(&h);

@@ -8,3 +8,4 @@ bin/
 
 misc/log
 misc/paths.txt
+misc/vars.mk

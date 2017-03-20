@@ -40,7 +40,7 @@ int main() {
     auto dsm = reader.GetDetectorStatusMap();
 
     // get live times
-    std::ifstream timeFile("results.txt");
+    std::ifstream timeFile("results.dat");
     std::map<unsigned int, unsigned int> timeMap;
     unsigned int runID, time;
     while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time));
@@ -52,6 +52,11 @@ int main() {
             if ( i.second[j] == 0 ) totalTime[j] += timeMap[i.first];
         }
     }
+    // reorder
+    GERDA::ReorderAsMaGeInput<int>(totalTime);
+
+    // find max time
+    unsigned int maxtime = *std::max_element(totalTime.begin()+3, totalTime.end());
 
     // define reading objects
     std::unique_ptr<TFile> file;
@@ -72,36 +77,42 @@ int main() {
     std::string display;
     int nentries;
     int size;
-    float corrFactor;
+    float corrVol;
+    float corrTime;
 
 // -----------------------------------------------------------------------------------------------------
     // lambda to fill histograms
     auto fillHistos = [&]( int i , std::string opt ) {
 
         filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_";
+        display.clear();
         
         if ( opt == "A_COAX" ) {
             filename += "AV_det11_";
             display += "AV_det11_";
-            corrFactor = AV[i-1]/maxvolume;
+            corrVol = AV[i-1]/maxvolume;
+            corrTime = (float)totalTime[i-1]/maxtime;
         }
 
         else if ( opt == "D_COAX" ) {
             filename += "DV_det11_"; 
             display += "DV_det11_";
-            corrFactor = DV[i-1]/maxvolume;
+            corrVol = DV[i-1]/maxvolume;
+            corrTime = (float)totalTime[i-1]/maxtime;
         }
 
         else if ( opt == "A_BEGe" ) {
             filename += "AV_det5_";
             display += "AV_det5_";
-            corrFactor = AV[i+9]/maxvolume;
+            corrVol = AV[i+9]/maxvolume;
+            corrTime = (float)totalTime[i+9]/maxtime;
         }
         
         else if ( opt == "D_BEGe" ) {
             filename += "DV_det5_"; 
             display += "DV_det5_";
-            corrFactor = DV[i+9]/maxvolume;
+            corrVol = DV[i+9]/maxvolume;
+            corrTime = (float)totalTime[i+9]/maxtime;
         }
 
         else { std::cout << "wut?\n"; return; }
@@ -114,7 +125,7 @@ int main() {
         treereader.SetTree(fTree);       
 
         // fill with correct entries
-        nentries = treereader.GetEntries(true)*corrFactor;
+        nentries = treereader.GetEntries(true)*corrVol*corrTime;
         bar.SetNIter(nentries);
         std::cout << display;
         bar.Init();

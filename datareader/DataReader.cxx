@@ -247,7 +247,8 @@ void DataReader::CreateEnergyHist( std::string opt ) {
 
         chain->SetBranchAddress("multiplicity"  , &multiplicity);
         chain->SetBranchAddress("rawEnergyGauss", &energyGauss);
-        chain->SetBranchAddress("rawEnergyZAC"  , &energyZAC);
+        if ( opt == "zac" or opt == "ZAC" )
+            { chain->SetBranchAddress("rawEnergyZAC"  , &energyZAC); }
         chain->SetBranchAddress("energy"        , &energyTot);
         chain->SetBranchAddress("isTP"          , &isTP);
         chain->SetBranchAddress("isVetoedInTime", &isVetoedInTime);
@@ -304,7 +305,8 @@ void DataReader::CreateEnergyHist( std::string opt ) {
     
     delete failedFlag;
     delete energyGauss;
-    delete energyZAC;
+    if ( opt == "zac" or opt == "ZAC" ) 
+        { delete energyZAC; }
     delete energyTot;
 
     return;
@@ -366,7 +368,7 @@ std::vector<float> DataReader::GetVolume( std::string opt ) const {
     for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))/enrGeDensity);
     for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))/natGeDensity);
     
-    if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
+    if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
     return volume;
 }
 // -------------------------------------------------------------------------------
@@ -376,7 +378,7 @@ std::vector<float> DataReader::GetActiveVolume( std::string opt ) const {
     for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/enrGeDensity);
     for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/natGeDensity);
 
-    if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
+    if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
     return volume;
 }
 // -------------------------------------------------------------------------------
@@ -386,7 +388,7 @@ std::vector<float> DataReader::GetDeadVolume( std::string opt ) const {
     for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/enrGeDensity);
     for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/natGeDensity);
 
-    if ( opt == "MaGe" ) ReorderAsMaGeInput(volume);
+    if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
     return volume;
 }
 // -------------------------------------------------------------------------------
@@ -418,19 +420,3 @@ std::unique_ptr<TChain> DataReader::MoveTree() {
     return std::move(dataTree);
 }
 // -------- end class ------------------------------------------------------------
-template<typename T>
-void GERDA::ReorderAsMaGeInput( std::vector<T>& v ) {
-    
-    // reorder as MaGe inpunt naming convention
-    int c = 0;
-    auto v_ = v;
-    for ( int i = 37; i <= 39 ; i++ ) { v[c] = v_[i]; c++; }
-    for ( int i = 8 ; i <= 10 ; i++ ) { v[c] = v_[i]; c++; }
-    for ( int i = 27; i <= 29 ; i++ ) { v[c] = v_[i]; c++; }
-    v[c] = v_[36]; c++;
-    for ( int i = 0 ; i <= 7  ; i++ ) { v[c] = v_[i]; c++; }
-    for ( int i = 11; i <= 26 ; i++ ) { v[c] = v_[i]; c++; }
-    for ( int i = 30; i <= 35 ; i++ ) { v[c] = v_[i]; c++; }
-
-    return;
-}

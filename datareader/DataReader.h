@@ -113,7 +113,21 @@ namespace GERDA {
   
   // order vectors in the MaGe input naming scheme
   template<typename T>
-  void ReorderAsMaGeInput( std::vector<T>& v );
+  void ReorderAsMaGeInput( std::vector<T>& v ) {
+    
+    // reorder as MaGe inpunt naming convention
+    int c = 0;
+    auto v_ = v;
+    for ( int i = 37; i <= 39 ; i++ ) { v[c] = v_[i]; c++; }
+    for ( int i = 8 ; i <= 10 ; i++ ) { v[c] = v_[i]; c++; }
+    for ( int i = 27; i <= 29 ; i++ ) { v[c] = v_[i]; c++; }
+    v[c] = v_[36]; c++;
+    for ( int i = 0 ; i <= 7  ; i++ ) { v[c] = v_[i]; c++; }
+    for ( int i = 11; i <= 26 ; i++ ) { v[c] = v_[i]; c++; }
+    for ( int i = 30; i <= 35 ; i++ ) { v[c] = v_[i]; c++; }
+
+    return;
+  }
 }
 
 #endif

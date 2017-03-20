@@ -36,12 +36,12 @@ int main( int argc, char** argv ) {
             break;
         }
     }
-    filename = std::string(std::getenv("GERDACPTDIR")) + "/out/" + filename;
 
     if ( filename.empty() ) {
         std::cerr << "Please provide a valid .root output filename.\n";
         return -1;
     }
+    filename = std::string(std::getenv("GERDACPTDIR")) + "/out/" + filename;
 
     std::string opt = "gauss";
     if ( std::find(args.begin(), args.end(), "--energy=zac") != args.end() or

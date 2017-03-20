@@ -3,7 +3,7 @@
 # Author: Luigi Pertoldi (luigi.pertoldi@pd.infn.it)
 # Created: 01/02/2017
 
-CC     = c++ -std=c++0x
+CC     = c++-4.9 -std=c++11
 CFLAGS = $(shell root-config --cflags) \
          $(shell gelatio-config --cflags) \
          $(shell mgdo-config --cflags) \
@@ -16,7 +16,7 @@ LIBS   = $(shell root-config --libs) -lTreePlayer \
 all : init lib/libDataReader.so lib/libProgressBar.so bin/getspectra bin/sumspectra
 
 init : 
-	-mkdir -p lib bin
+	-mkdir -p lib bin out
 
 lib/libProgressBar.so : progressbar/ProgressBar.cc progressbar/ProgressBar.h
 	$(CC) -fPIC -shared -o $@ $<

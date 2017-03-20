@@ -49,7 +49,8 @@ int main( int argc, char** argv ) {
     auto dsm = reader.GetDetectorStatusMap();
 
     // get live times
-    std::ifstream timeFile(std::string(std::getenv("GERDACPTDIR")) + "/out/results.dat");
+    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/results.dat";
+    std::ifstream timeFile(path.c_str());
     std::map<unsigned int, unsigned int> timeMap;
     unsigned int runID, time;
     while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time));
@@ -184,7 +185,8 @@ int main( int argc, char** argv ) {
     }
 
     TH1F tothist( "energy_total", "global MaGe energy spectrum", 2100, 0, 2.1 );
-    TFile fileout(std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe.root", "RECREATE");
+    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe.root";
+    TFile fileout(path.c_str(), "RECREATE");
     for ( auto& h : hist ) {
         h.Write();
         tothist.Add(&h);

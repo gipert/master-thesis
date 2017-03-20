@@ -18,7 +18,7 @@ int main( int argc, char** argv ) {
     
     // copy arguments
     std::vector<std::string> args(argc);
-    for ( int i = 0; i < argc; i++ ) args[i] = argv[i];
+    for ( int i = 0; i < argc; ++i ) args[i] = argv[i];
 
     // help
     if ( std::find(args.begin(), args.end(), "--help") != args.end() ) {

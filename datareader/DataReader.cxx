@@ -62,7 +62,7 @@ DataReader::DataReader( std::string gerdaMetaPath,
 
     energy.reserve(40);
     std::string histName;
-    for ( int i = 0; i < 40; i++ ) {
+    for ( int i = 0; i < 40; ++i ) {
         histName = "energy_";
         if ( detectorMatrix[i] == 1 ) histName += "BEGe_";
         if ( detectorMatrix[i] == 2 ) histName += "enrCoax_";
@@ -117,7 +117,7 @@ DataReader::DataReader( std::string pathsFile , bool verbose ) :
 
     energy.reserve(40);
     std::string histName;
-    for ( int i = 0; i < 40; i++ ) {
+    for ( int i = 0; i < 40; ++i ) {
         histName = "energy_";
         if ( detectorMatrix[i] == 1 ) histName += "BEGe_";
         if ( detectorMatrix[i] == 2 ) histName += "enrCoax_";
@@ -177,7 +177,7 @@ bool DataReader::LoadRun( unsigned int runID ) {
     std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Get("RunConfiguration")));
        
     std::vector<unsigned int> detector_status( gtr->GetNDetectors(), 0 );
-    for ( int i = 0; i < (int)detector_status.size(); i++ ) {
+    for ( int i = 0; i < (int)detector_status.size(); ++i ) {
         if      (  gtr->IsTrash(i) ) detector_status[i] = 2;
         else if ( !gtr->IsOn(i)    ) detector_status[i] = 1;
     }
@@ -260,7 +260,7 @@ void DataReader::CreateEnergyHist( std::string opt ) {
         auto start = std::chrono::system_clock::now();
 
         bar.Init();
-        for ( int e = 0; e < nEntries; e++ ) {
+        for ( int e = 0; e < nEntries; ++e ) {
             
             bar.Update(e);
             chain->GetEntry(e);
@@ -331,7 +331,7 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistBEGe() const {
     std::unique_ptr<TH1D> tmp(new TH1D( "energyBEGeAll", "energyBegeAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
-    for ( int i = 0; i < 40; i++ ) {
+    for ( int i = 0; i < 40; ++i ) {
         if ( detectorMatrix[i] == 1 ) tmp->Add(&energy[i]);
     }
 
@@ -343,7 +343,7 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistEnrCoax() const {
     std::unique_ptr<TH1D> tmp(new TH1D( "energyEnrCoaxAll", "energyEnrCoaxAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
-    for ( int i = 0; i < 40; i++ ) {
+    for ( int i = 0; i < 40; ++i ) {
         if ( detectorMatrix[i] == 2 ) tmp->Add(&energy[i]);
     }
 
@@ -355,7 +355,7 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistNatCoax() const {
     std::unique_ptr<TH1D> tmp(new TH1D( "energyNatCoaxAll", "energyNatCoaxAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
-    for ( int i = 0; i < 40; i++ ) {
+    for ( int i = 0; i < 40; ++i ) {
         if ( detectorMatrix[i] == 3 ) tmp->Add(&energy[i]);
     }
 
@@ -365,8 +365,8 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistNatCoax() const {
 std::vector<float> DataReader::GetVolume( std::string opt ) const {
     
     std::vector<float> volume;
-    for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))/enrGeDensity);
-    for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))/natGeDensity);
+    for ( int i = 0 ; i < 37; ++i ) volume.push_back(((float)mass.at(i))/enrGeDensity);
+    for ( int i = 37; i < 40; ++i ) volume.push_back(((float)mass.at(i))/natGeDensity);
     
     if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
     return volume;
@@ -375,8 +375,8 @@ std::vector<float> DataReader::GetVolume( std::string opt ) const {
 std::vector<float> DataReader::GetActiveVolume( std::string opt ) const {
     
     std::vector<float> volume;
-    for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/enrGeDensity);
-    for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/natGeDensity);
+    for ( int i = 0 ; i < 37; ++i ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/enrGeDensity);
+    for ( int i = 37; i < 40; ++i ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/natGeDensity);
 
     if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
     return volume;
@@ -385,8 +385,8 @@ std::vector<float> DataReader::GetActiveVolume( std::string opt ) const {
 std::vector<float> DataReader::GetDeadVolume( std::string opt ) const {
     
     std::vector<float> volume;
-    for ( int i = 0 ; i < 37; i++ ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/enrGeDensity);
-    for ( int i = 37; i < 40; i++ ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/natGeDensity);
+    for ( int i = 0 ; i < 37; ++i ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/enrGeDensity);
+    for ( int i = 37; i < 40; ++i ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/natGeDensity);
 
     if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
     return volume;

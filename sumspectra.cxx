@@ -32,7 +32,7 @@
 int main( int argc, char** argv ) {
 
     std::vector<std::string> args(argc);
-    for ( int i = 0; i < argc; i++ ) args[i] = argv[i];
+    for ( int i = 0; i < argc; ++i ) args[i] = argv[i];
     
     std::string phys;
     if      ( std::find(args.begin(), args.end(), "--2nbb"  ) != args.end() ) phys = "2nbb";
@@ -63,7 +63,7 @@ int main( int argc, char** argv ) {
     // calculate the total time each detector is ON --> detector status = 0
     std::vector<int> totalTime(40, 0);
     for ( const auto& i : dsm ) {
-        for ( int j = 0; j < 40; j++ ) {
+        for ( int j = 0; j < 40; ++j ) {
             if ( i.second[j] == 0 ) totalTime[j] += timeMap[i.first];
         }
     }
@@ -83,7 +83,7 @@ int main( int argc, char** argv ) {
 
     // construct final histograms
     std::vector<TH1F> hist;
-    for ( int i = 0; i < 40; i++ ) {
+    for ( int i = 0; i < 40; ++i ) {
         hist.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);
     }
     
@@ -148,11 +148,11 @@ int main( int argc, char** argv ) {
         bar.SetNIter(nentries);
         std::cout << display;
         bar.Init();
-        for ( int j = 0; j < nentries; j++ ) {
+        for ( int j = 0; j < nentries; ++j ) {
             bar.Update(j);
             treereader.Next();
             size = det_id.GetSize();
-            for ( int k = 0; k < size; k++ ) {
+            for ( int k = 0; k < size; ++k ) {
                 if ( det_id[k] != 0 and det_id[k] != 1 and det_id[k] != 2 ) {
                     hist[det_id[k]].Fill(det_edep[k]);
                 }
@@ -164,7 +164,7 @@ int main( int argc, char** argv ) {
 // -----------------------------------------------------------------------------------------------------
     
     // loop over enrCOAX files
-    for ( int i = 4; i <= 10; i++ ) {
+    for ( int i = 4; i <= 10; ++i ) {
         
         auto start = std::chrono::system_clock::now();
         
@@ -177,7 +177,7 @@ int main( int argc, char** argv ) {
     }
 
     // loop over BEGe
-    for ( int i = 1; i <= 30; i++ ) {
+    for ( int i = 1; i <= 30; ++i ) {
 
         auto start = std::chrono::system_clock::now();
         
@@ -202,7 +202,7 @@ int main( int argc, char** argv ) {
         histTot.Add(&h);
     }
     
-    for ( int i = 0; i < 40; i++ ) {
+    for ( int i = 0; i < 40; ++i ) {
         if ( i == 0 or i == 1 or i == 2 ) continue;
         else if ( i == 11 or i == 12 or i == 13 or i == 30 or i == 31 or i == 32 or i == 39 ) histCOAX.Add(&hist[i]);
         else histBEGe.Add(&hist[i]);

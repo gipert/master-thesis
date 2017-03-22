@@ -13,6 +13,9 @@
 
 // ROOT
 #include "TFile.h"
+#include "TTreeReader.h"
+#include "TTreeReaderValue.h"
+#include "TTreeReaderArray.h"
 
 // gerda-ADA
 #include "FileMap.h"
@@ -183,43 +186,36 @@ void DataReader::CreateEnergyHist( std::string opt ) {
     }
     
     int nTP;
-    int nEntries;
-    int multiplicity, isTP, isVetoedInTime;
-    std::vector<int>*    failedFlag  = new std::vector<int>(40);
-    std::vector<double>* energyGauss = new std::vector<double>(40);
-    std::vector<double>* energyZAC   = new std::vector<double>(40);
-    std::vector<double>* energyTot   = new std::vector<double>(40);
+
+    TTreeReader treereader;
+    TTreeReaderValue<int> multiplicity  (treereader, "multiplicity");
+    TTreeReaderValue<int> isTP          (treereader, "isTP");
+    TTreeReaderValue<int> isVetoedInTime(treereader, "isVetoedInTime");
+    TTreeReaderArray<int> failedFlag    (treereader, "failedFlag");
+    TTreeReaderArray<int> energyGauss   (treereader, "rawEnergyGauss");
+    TTreeReaderArray<int> energyZAC     (treereader, "rawEnergyZAC");
+    TTreeReaderArray<int> energyTot     (treereader, "energy");
 
     for ( const auto& it : dataTreeMap ) {
         
-        if (kVerbosity) std::cout << "Initialising... " << std::flush;
         nTP = 0;
         auto& chain = it.second;
-        nEntries = chain->GetEntries();
+        treereader.SetTree(chain.get());
 
-        chain->SetBranchAddress("multiplicity"  , &multiplicity);
-        chain->SetBranchAddress("rawEnergyGauss", &energyGauss);
-        if ( opt == "zac" or opt == "ZAC" )
-            { chain->SetBranchAddress("rawEnergyZAC"  , &energyZAC); }
-        chain->SetBranchAddress("energy"        , &energyTot);
-        chain->SetBranchAddress("isTP"          , &isTP);
-        chain->SetBranchAddress("isVetoedInTime", &isVetoedInTime);
-        chain->SetBranchAddress("failedFlag"    , &failedFlag);
-
-        ProgressBar bar(nEntries);
+        ProgressBar bar(chain->GetEntries());
         std::cout << "processing run" << it.first << ": " << std::flush;
         
         auto start = std::chrono::system_clock::now();
 
         bar.Init();
-        for ( int e = 0; e < nEntries; ++e ) {
+        int i = 0;
+        while (treereader.Next()) {
             
-            bar.Update(e);
-            chain->GetEntry(e);
+            bar.Update(i); i++;
 
-            if (isTP) nTP++;
+            if (*isTP) nTP++;
 
-            if ( !isTP and !isVetoedInTime and multiplicity == 1 ) {
+            if ( !*isTP and !*isVetoedInTime and *multiplicity == 1 ) {
                 for ( int det = 0; det < 40; det++ ) {
 
                     if ( opt == "gauss" or opt == "GAUSS" ) {
@@ -231,36 +227,29 @@ void DataReader::CreateEnergyHist( std::string opt ) {
                             energy[det].Fill(energyGauss->at(det));
                         }*/
                     
-                        if ( energyTot->at(det) > 0 and energyTot->at(det) < 10000 ) {
-                            energy[det].Fill(energyTot->at(det));
+                        if ( energyTot[det] > 0 and energyTot[det] < 10000 ) {
+                            energy[det].Fill(energyTot[det]);
                         }
                     }
 
                     else if ( opt == "zac" or opt == "ZAC" ) {
                         
-                        if ( failedFlag->at(det) == 0 and 
+                        if ( failedFlag[det] == 0 and 
                             detectorStatusMap[it.first][det] == 0 and
-                            energyTot->at(det) > 0 and energyTot->at(det) < 10000 ) {
-                            energy[det].Fill(energyZAC->at(det));
+                            energyTot[det] > 0 and energyTot[det] < 10000 ) {
+                            energy[det].Fill(energyZAC[det]);
                         }
 
                     }
                 }
             }
         }
-        chain->ResetBranchAddresses();
         timeMap.insert(std::make_pair(it.first, nTP*20));
 
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
     
-    delete[] failedFlag;
-    delete[] energyGauss;
-    if ( opt == "zac" or opt == "ZAC" ) 
-        { delete[] energyZAC; }
-    delete[] energyTot;
-
     return;
 }
 // -------------------------------------------------------------------------------

@@ -13,6 +13,7 @@
  *
  */
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -40,7 +41,7 @@ int main( int argc, char** argv ) {
     else { std::cout << "Please specify --2nbb or --2nbbLV option!\n"; return 0; }
 
     GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false);
-    
+   
     // get volumes with MaGe input naming convention
     std::vector<float> AV = reader.GetActiveVolume("MaGe");
     std::vector<float> DV = reader.GetDeadVolume("MaGe");

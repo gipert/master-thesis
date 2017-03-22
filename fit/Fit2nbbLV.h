@@ -34,15 +34,17 @@ class Fit2nbbLV : public BCModel {
     // useful in LogLikelihood, no boundary check for performance reasons
     float GetBinCenter(int i) const { return (float)(ubin[i-1]+ubin[i])/2; }
     // initialize ubin vector
-    void SetBinning(std::vector<int>& v) { ubin = v; }
+    void SetBinning(std::vector<int>& v);
+    // set fit boundaries, a=b equals no boundaries
+    void SetFitRange(double down, double up);
     // initialize dataBEGe vector
     void SetDataBEGe(std::vector<int>& v) { dataBEGe = v; }
     // initialize dataCOAX vector 
     void SetDataCOAX(std::vector<int>& v) { dataCOAX = v; }
     // initialize simBEGe vector
-    void SetbbSimBEGe(std::vector<int>& v) { bbSimBEGe = v; }
+    void SetSimBEGe(std::vector<std::vector<int>>& v) { simBEGe = v; }
     // initialize simCOAX vector
-    void SetbbSimCOAX(std::vector<int>& v) { bbSimCOAX = v; }
+    void SetSimCOAX(std::vector<std::vector<int>>& v) { simCOAX = v; }
 
     private:
     
@@ -50,18 +52,23 @@ class Fit2nbbLV : public BCModel {
     // WARNING: integer values
     // upper bin bounds
     std::vector<int> ubin;
+    // upper and lower fit limits
+    bool kUseRange;
+    int downBin;
+    int upBin;
     // entries for BEGe
     std::vector<int> dataBEGe;
     // entries for enrCOAX
     std::vector<int> dataCOAX;
 
     // custom model containters (MaGe output)
-    // 2nbb
-    std::vector<int> bbSimBEGe;
-    std::vector<int> bbSimCOAX;
-    
-    // bkg
-    // std::vector<int> bkgSim;
+    // WARNING: must be normalized
+    std::vector<std::vector<int>> simBEGe;
+    std::vector<std::vector<int>> simCOAX;
+    // legend:
+    // [0] 2bnn
+    // [1] 2nbbLV
+    // [2] ...
 };
 
 #endif

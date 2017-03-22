@@ -100,43 +100,38 @@ int main( int argc, char** argv ) {
     auto fillHistos = [&]( int i , std::string genopt , std::string phys ) {
 
         if      ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_";
-        else if ( phys == "2nbb"   ) filename = "/home/GERDA/pertoldi/simulations/2nbb/";
+        else if ( phys == "2nbb"   ) filename = "/home/GERDA/pertoldi/simulations/2nbb/2nbb_";
         display.clear();
         
         if ( genopt == "A_COAX" ) {
-            if ( phys == "2nbbLV" ) filename += "AV_det11_";
-            else if ( phys == "2nbb" ) filename += "AV_files/2nbb_intrinsic_AV_det11_";
+            filename += "AV_det11_";
             display += "AV_det11_";
             corrVol = AV[i-1]/maxvolume;
             corrTime = (float)totalTime[i-1]/maxtime;
         }
 
         else if ( genopt == "D_COAX" ) {
-            if ( phys == "2nbbLV" ) filename += "DV_det11_"; 
-            else if ( phys == "2nbb" ) filename += "DV_files/2nbb_intrinsic_DV_det11_";
+            filename += "DV_det11_"; 
             display += "DV_det11_";
             corrVol = DV[i-1]/maxvolume;
             corrTime = (float)totalTime[i-1]/maxtime;
         }
 
         else if ( genopt == "A_BEGe" ) {
-            if ( phys == "2nbbLV" ) filename += "AV_det5_";
-            else if ( phys == "2nbb" ) filename += "AV_files/2nbb_intrinsic_AV_det5_";
+            filename += "AV_det5_";
             display += "AV_det5_";
             corrVol = AV[i+9]/maxvolume;
             corrTime = (float)totalTime[i+9]/maxtime;
         }
         
         else if ( genopt == "D_BEGe" ) {
-            if ( phys == "2nbbLV" ) filename += "DV_det5_"; 
-            else if ( phys == "2nbb" ) filename += "DV_files/2nbb_intrinsic_DV_det5_";
+            filename += "DV_det5_"; 
             display += "DV_det5_";
             corrVol = DV[i+9]/maxvolume;
             corrTime = (float)totalTime[i+9]/maxtime;
         }
 
-        if      ( phys == "2nbbLV" ) filename += std::to_string(i) + ".root";
-        else if ( phys == "2nbb"   ) filename += std::to_string(i) + "_1000000events.root";
+        filename += std::to_string(i) + ".root";
         display += std::to_string(i) + " ";
         
         file = std::unique_ptr<TFile>{ TFile::Open(filename.c_str(), "READ") };

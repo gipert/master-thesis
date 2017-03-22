@@ -392,6 +392,14 @@ std::vector<float> DataReader::GetDeadVolume( std::string opt ) const {
     return volume;
 }
 // -------------------------------------------------------------------------------
+std::vector<int> DataReader::GetMass( std::string opt ) const {
+    
+    std::vector<int> tmp = mass;
+    
+    if ( opt == "MaGe" ) ReorderAsMaGeInput<int>(tmp);
+    return tmp;
+}
+// -------------------------------------------------------------------------------
 TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
 
     auto result = dataTreeMap.find(runID);

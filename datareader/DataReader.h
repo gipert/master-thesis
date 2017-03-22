@@ -69,6 +69,7 @@ namespace GERDA {
       std::vector<float> GetVolume( std::string opt = "" ) const;
       std::vector<float> GetActiveVolume( std::string opt = "" ) const;
       std::vector<float> GetDeadVolume( std::string opt = "" ) const;
+      std::vector<int>   GetMass( std::string opt = "" ) const;
       // get non-owning pointers to trees
       // WARNING: deleted when the DataReader object goes out of scope
       TChain* GetTreeFromRun( unsigned int runID ) const;

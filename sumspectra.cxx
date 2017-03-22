@@ -40,10 +40,11 @@ int main( int argc, char** argv ) {
     else { std::cout << "Please specify --2nbb or --2nbbLV option!\n"; return 0; }
 
     GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false);
+    GERDA::DetectorSet set("MaGe");
     
     // get volumes with MaGe input naming convention
-    std::vector<float> AV = reader.GetActiveVolume("MaGe");
-    std::vector<float> DV = reader.GetDeadVolume("MaGe");
+    std::vector<float> AV = set.GetActiveVolume();
+    std::vector<float> DV = set.GetDeadVolume();
   
     // find max volume
     auto maxvolumeAV = std::max_element(AV.begin()+3, AV.end());
@@ -68,7 +69,7 @@ int main( int argc, char** argv ) {
         }
     }
     // reorder
-    GERDA::ReorderAsMaGeInput<int>(totalTime);
+    GERDA::ReorderAsMaGe<int>(totalTime);
 
     // find max time
     unsigned int maxtime = *std::max_element(totalTime.begin()+3, totalTime.end());

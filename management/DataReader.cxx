@@ -31,10 +31,12 @@ bool DataReader::kVerbosity = false;
 
 DataReader::DataReader( std::string gerdaMetaPath, 
                         std::string gerdaDataPath,
-                        std::string configListPath ) :
+                        std::string configListPath, 
+                        std::string ordering ) :
     
     DetectorSet("GELATIO"),
-    configList(configListPath.c_str())
+    configList(configListPath.c_str()),
+    kOrdering(ordering)
 
 { 
     if ( gerdaMetaPath.back() == '/' ) gerdaMetaPath.pop_back(); gerdaMetaDir = gerdaMetaPath;
@@ -53,7 +55,11 @@ DataReader::DataReader( std::string gerdaMetaPath,
     kMustResetEnergy = false;
 }
 // -------------------------------------------------------------------------------
-DataReader::DataReader( std::string pathsFile , bool verbose ) : DetectorSet("GELATIO") { 
+DataReader::DataReader( std::string pathsFile, bool verbose, std::string ordering ) : 
+    
+    DetectorSet("GELATIO"),
+    kOrdering(ordering)
+{ 
 
     kVerbosity = verbose;
 
@@ -259,6 +265,26 @@ void DataReader::ResetEnergy() {
     for ( auto& it : energy ) it.Reset();
     kMustResetEnergy = false;
     return;
+}
+// -------------------------------------------------------------------------------
+std::vector<TH1D> DataReader::GetEnergyHist() {
+    
+    if ( kOrdering == "MaGe" ) {
+        auto v = energy;
+        GERDA::ReorderAsMaGe(v);
+        return v;
+    }
+    else return energy;
+}
+// -------------------------------------------------------------------------------
+std::map<unsigned int, std::vector<int>> DataReader::GetDetectorStatusMap() { 
+     
+    if ( kOrdering == "MaGe" ) {
+        auto v = detectorStatusMap;
+        for ( auto& i : v ) GERDA::ReorderAsMaGe(i.second);
+        return v;
+    }
+    else return detectorStatusMap;
 }
 // -------------------------------------------------------------------------------
 unsigned int DataReader::GetTime() {

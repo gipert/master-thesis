@@ -6,6 +6,9 @@
 // Author: Luigi Pertoldi
 // Contact: luigi.pertoldi@pd.infn.it
 // created: 31/01/2017
+//
+// NOTES: - the internal DetectorSet has always "GELATIO" odering,
+//          also if DataReader is "MaGe", keep in mind.
 
 #ifndef DATA_READER__
 #define DATA_READER__
@@ -40,9 +43,10 @@ namespace GERDA {
       // set paths, need then to call LoadRun to complete the configuration
       DataReader( std::string gerdaMetaPath,    // location of gerda-metadata repo
                   std::string gerdaDataPath,    // location of gerda-data folder
-                  std::string configListPath ); // location of runconfiguration_mod.db
+                  std::string configListPath,   // location of runconfiguration_mod.db
+                  std::string ordering = "GELATIO" );       // "GELATIO" or "MaGe"
       // shortcut: set paths and load runs stored in an input file
-      DataReader( std::string pathsFile, bool verbose = false );
+      DataReader( std::string pathsFile, bool verbose = false, std::string ordering = "GELATIO" );
       
       // override default destructor
       ~DataReader() { configList.close(); }
@@ -54,9 +58,9 @@ namespace GERDA {
       // clear energy histograms
       void ResetEnergy();
       // get vector with energy spectra for each detector
-      std::vector<TH1D> GetEnergyHist() const { return energy; }
+      std::vector<TH1D> GetEnergyHist();
       // get detector status
-      std::map<unsigned int, std::vector<int>> GetDetectorStatusMap() const { return detectorStatusMap; }
+      std::map<unsigned int, std::vector<int>> GetDetectorStatusMap();
       // get acquisition time (in minutes)
       unsigned int GetTimeForRun( unsigned int runID ) { return timeMap.at(runID); }
       unsigned int GetTime();
@@ -78,7 +82,7 @@ namespace GERDA {
       static bool kVerbosity;
 
       private:
-
+    
       // detector status: 0 = ON, 1 = AC, 2 = OFF
       std::map<unsigned int, std::vector<int>> detectorStatusMap;
       // config list file
@@ -96,6 +100,7 @@ namespace GERDA {
       std::vector<TH1D> energy;
       // flag for multiple calling of CreateEnergyhist
       bool kMustResetEnergy;
+      const std::string kOrdering;
       std::map<unsigned int, unsigned int> timeMap;
     
       // find run configuration in the config list file

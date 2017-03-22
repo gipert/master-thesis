@@ -39,7 +39,8 @@ int main( int argc, char** argv ) {
     else if ( std::find(args.begin(), args.end(), "--2nbbLV") != args.end() ) phys = "2nbbLV";
     else { std::cout << "Please specify --2nbb or --2nbbLV option!\n"; return 0; }
 
-    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false);
+    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false, "MaGe");
+    // FIXME: stop doing this
     GERDA::DetectorSet set("MaGe");
     
     // get volumes with MaGe input naming convention
@@ -68,8 +69,6 @@ int main( int argc, char** argv ) {
             if ( i.second[j] == 0 ) totalTime[j] += timeMap[i.first];
         }
     }
-    // reorder
-    GERDA::ReorderAsMaGe<int>(totalTime);
 
     // find max time
     unsigned int maxtime = *std::max_element(totalTime.begin()+3, totalTime.end());

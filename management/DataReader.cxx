@@ -188,16 +188,17 @@ void DataReader::CreateEnergyHist( std::string opt ) {
     int nTP;
 
     TTreeReader treereader;
-    TTreeReaderValue<int> multiplicity  (treereader, "multiplicity");
-    TTreeReaderValue<int> isTP          (treereader, "isTP");
-    TTreeReaderValue<int> isVetoedInTime(treereader, "isVetoedInTime");
+    TTreeReaderValue<int> multiplicity  (treereader, "multiplicity.firedChannels");
+    TTreeReaderValue<int> isTP          (treereader, "isTP.isTP");
+    TTreeReaderValue<int> isVetoedInTime(treereader, "isVetoedInTime.isvetoedintime");
     TTreeReaderArray<int> failedFlag    (treereader, "failedFlag");
-    TTreeReaderArray<int> energyGauss   (treereader, "rawEnergyGauss");
-    TTreeReaderArray<int> energyZAC     (treereader, "rawEnergyZAC");
-    TTreeReaderArray<int> energyTot     (treereader, "energy");
+    TTreeReaderArray<double> energyGauss   (treereader, "rawEnergyGauss");
+    TTreeReaderArray<double> energyZAC     (treereader, "rawEnergyZAC");
+    TTreeReaderArray<double> energyTot     (treereader, "energy");
 
     for ( const auto& it : dataTreeMap ) {
-        
+       
+        if (kVerbosity) std::cout << "Initializing... " << std::flush;
         nTP = 0;
         auto& chain = it.second;
         treereader.SetTree(chain.get());

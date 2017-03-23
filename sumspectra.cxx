@@ -39,9 +39,11 @@ int main( int argc, char** argv ) {
     else if ( std::find(args.begin(), args.end(), "--2nbbLV") != args.end() ) phys = "2nbbLV";
     else { std::cout << "Please specify --2nbb or --2nbbLV option!\n"; return 0; }
 
-    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false, "MaGe");
-    // FIXME: stop doing this
-    GERDA::DetectorSet set("MaGe");
+    // infos about runs
+    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false, "MaGeInput");
+   
+    // infos on experimental setup
+    GERDA::DetectorSet set("MaGeInput");
     
     // get volumes with MaGe input naming convention
     std::vector<float> AV = set.GetActiveVolume();
@@ -55,7 +57,7 @@ int main( int argc, char** argv ) {
     // get detectorStatusMap
     auto dsm = reader.GetDetectorStatusMap();
 
-    // get live times
+    // get saved live times
     std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/results.dat";
     std::ifstream timeFile(path.c_str());
     std::map<unsigned int, unsigned int> timeMap;
@@ -81,7 +83,7 @@ int main( int argc, char** argv ) {
     TTreeReaderArray<int>   det_id(treereader, "det_id");
     TTreeReaderArray<float> det_edep(treereader, "det_edep");
 
-    // construct final histograms
+    // construct final histograms (MaGeOutput scheme)
     std::vector<TH1F> hist;
     for ( int i = 0; i < 40; ++i ) {
         hist.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);

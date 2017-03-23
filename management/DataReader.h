@@ -8,7 +8,8 @@
 // created: 31/01/2017
 //
 // NOTES: - the internal DetectorSet has always "GELATIO" odering,
-//          also if DataReader is "MaGe", keep in mind.
+//          also if DataReader is "MaGe", keep in mind. Decided to 
+//          make inheritance private.
 
 #ifndef DATA_READER__
 #define DATA_READER__
@@ -27,7 +28,7 @@
 
 namespace GERDA {
 
-  class DataReader : public DetectorSet {
+  class DataReader : private DetectorSet {
     
       public:
       
@@ -44,7 +45,7 @@ namespace GERDA {
       DataReader( std::string gerdaMetaPath,    // location of gerda-metadata repo
                   std::string gerdaDataPath,    // location of gerda-data folder
                   std::string configListPath,   // location of runconfiguration_mod.db
-                  std::string ordering = "GELATIO" );       // "GELATIO" or "MaGe"
+                  std::string ordering = "GELATIO" );       // "GELATIO" or "MaGeInput" or "MaGeOutput"
       // shortcut: set paths and load runs stored in an input file
       DataReader( std::string pathsFile, bool verbose = false, std::string ordering = "GELATIO" );
       

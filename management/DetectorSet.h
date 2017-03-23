@@ -6,13 +6,12 @@
  * Author: Luigi Pertoldi - luigi.pertoldi@pd.infn.it
  * Created: 22/03/2017
  *
- * Ordering convention: GELATIO scheme
- *
  */
 
 #ifndef DETECTOR_SET__
 #define DETECTOR_SET__
 
+#include <iostream>
 #include <vector>
 #include <string>
 
@@ -22,7 +21,8 @@ namespace GERDA {
 
       public:
 
-      DetectorSet( std::string naming = "GELATIO" );
+      DetectorSet( std::string naming );
+      DetectorSet()                              = delete;
       ~DetectorSet()                             = default;
       // delete copy constructor/assignement
       DetectorSet           (DetectorSet const&) = delete;
@@ -32,6 +32,8 @@ namespace GERDA {
       DetectorSet& operator=(DetectorSet&&)      = default;
 
       
+      std::vector<std::string> GetNames()   const { return names; }
+      // 1 = BEGe, 2 = enrCOAX, 3 = natCOAX
       std::vector<int>   GetDetectorTypes() const { return detectorTypes; }
       // get mass [g]
       std::vector<int>   GetMass()          const { return mass; }
@@ -43,8 +45,10 @@ namespace GERDA {
       std::vector<double> GetN76Ge()        const;
 
       protected:
-
-      // detectors types in detector strings:
+      
+      // detector's names
+      std::vector<std::string> names;
+      // detector's types in detector strings:
       // 1 = BEGe, 2 = enrCOAX, 3 = natCOAX
       std::vector<int> detectorTypes;
       // masses
@@ -62,19 +66,90 @@ namespace GERDA {
       const double NAv = 6.02214E23;
   };
   
-  // order vectors in the MaGe naming scheme
+  // order vectors in the MaGe naming scheme: GELATIO -> MaGe
   template<typename T>
-  void ReorderAsMaGe( std::vector<T>& v ) {
+  void ReorderAsMaGe(std::vector<T>& v, std::string mode) {
     
-    int c = 0;
     auto v_ = v;
-    for ( int i = 37; i <= 39 ; i++ ) { v[c] = v_[i]; c++; }
-    for ( int i = 8 ; i <= 10 ; i++ ) { v[c] = v_[i]; c++; }
-    for ( int i = 27; i <= 29 ; i++ ) { v[c] = v_[i]; c++; }
-    v[c] = v_[36]; c++;
-    for ( int i = 0 ; i <= 7  ; i++ ) { v[c] = v_[i]; c++; }
-    for ( int i = 11; i <= 26 ; i++ ) { v[c] = v_[i]; c++; }
-    for ( int i = 30; i <= 35 ; i++ ) { v[c] = v_[i]; c++; }
+    if (mode == "input") {
+        int c = 0;
+        for ( int i = 37; i <= 39 ; i++ ) { v[c] = v_[i]; c++; }
+        for ( int i = 8 ; i <= 10 ; i++ ) { v[c] = v_[i]; c++; }
+        for ( int i = 27; i <= 29 ; i++ ) { v[c] = v_[i]; c++; }
+        v[c] = v_[36]; c++;
+        for ( int i = 0 ; i <= 7  ; i++ ) { v[c] = v_[i]; c++; }
+        for ( int i = 11; i <= 26 ; i++ ) { v[c] = v_[i]; c++; }
+        for ( int i = 30; i <= 35 ; i++ ) { v[c] = v_[i]; c++; }
+        return;
+    }
+
+    else if (mode == "output") {
+        int c = 0;
+        for ( int i = 37; i <= 39; i++ ) { v[c] = v_[i]; c++; }
+        for ( int i = 0 ; i <= 36; i++ ) { v[c] = v_[i]; c++; }
+        return;
+    }
+
+    else return;
+  }
+  
+  // print vectors depending on the ordering scheme
+  template<typename T>
+  void Print(std::vector<T>& v, std::string mode) {
+    
+    if (mode == "GELATIO") {
+        std::cout << "string1  ";
+        for ( int i = 0 ; i <= 7 ; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring2  ";
+        for ( int i = 8 ; i <= 10; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring3  ";
+        for ( int i = 11; i <= 18; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring4  ";
+        for ( int i = 19; i <= 26; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring5  ";
+        for ( int i = 27; i <= 29; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring6  ";
+        for ( int i = 30; i <= 36; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring7  ";
+        for ( int i = 37; i <= 38; ++i ) std::cout << v[i] << ", ";
+        std::cout << v[39] << std::endl;
+        return;
+    }
+    else if (mode == "MaGeOutput") {
+        std::cout << "string7  ";
+        for ( int i = 0 ; i <= 2 ; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring1  ";
+        for ( int i = 3 ; i <= 10; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring2  ";
+        for ( int i = 11; i <= 13; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring3  ";
+        for ( int i = 14; i <= 21; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring4  ";
+        for ( int i = 22; i <= 29; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring5  ";
+        for ( int i = 30; i <= 32; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\nstring6  ";
+        for ( int i = 33; i <= 38; ++i ) std::cout << v[i] << ", ";
+        std::cout << v[39] << std::endl;
+        return;
+    }
+    else if (mode == "MaGeInput") {
+        std::cout << "natCOAX  ";
+        for ( int i = 0 ; i <= 2 ; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\n\nenrCOAX  ";
+        for ( int i = 3 ; i <= 9 ; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\n\nBEGe     ";
+        for ( int i = 10 ; i <= 17 ; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\n         ";
+        for ( int i = 18 ; i <= 25 ; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\n         ";
+        for ( int i = 26 ; i <= 33 ; ++i ) std::cout << v[i] << ", ";
+        std::cout << "\n         ";
+        for ( int i = 34 ; i <= 38 ; ++i ) std::cout << v[i] << ", ";
+        std::cout << v[39] << std::endl;
+        return;
+    }
+    else { std::cout << "Print failed.\n"; return; }
   }
 }
 

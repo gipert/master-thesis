@@ -194,10 +194,10 @@ void DataReader::CreateEnergyHist( std::string opt ) {
     int nTP;
 
     TTreeReader treereader;
-    TTreeReaderValue<int> multiplicity  (treereader, "multiplicity.firedChannels");
-    TTreeReaderValue<int> isTP          (treereader, "isTP.isTP");
-    TTreeReaderValue<int> isVetoedInTime(treereader, "isVetoedInTime.isvetoedintime");
-    TTreeReaderArray<int> failedFlag    (treereader, "failedFlag");
+    TTreeReaderValue<int> multiplicity     (treereader, "multiplicity.firedChannels");
+    TTreeReaderValue<int> isTP             (treereader, "isTP.isTP");
+    TTreeReaderValue<int> isVetoedInTime   (treereader, "isVetoedInTime.isvetoedintime");
+    TTreeReaderArray<int> failedFlag       (treereader, "failedFlag");
     TTreeReaderArray<double> energyGauss   (treereader, "rawEnergyGauss");
     TTreeReaderArray<double> energyZAC     (treereader, "rawEnergyZAC");
     TTreeReaderArray<double> energyTot     (treereader, "energy");
@@ -269,9 +269,14 @@ void DataReader::ResetEnergy() {
 // -------------------------------------------------------------------------------
 std::vector<TH1D> DataReader::GetEnergyHist() {
     
-    if ( kOrdering == "MaGe" ) {
+    if ( kOrdering == "MaGeInput" ) {
         auto v = energy;
-        GERDA::ReorderAsMaGe(v);
+        GERDA::ReorderAsMaGe(v, "input");
+        return v;
+    }
+    else if ( kOrdering == "MaGeOutput" ) {
+        auto v = energy;
+        GERDA::ReorderAsMaGe(v, "output");
         return v;
     }
     else return energy;
@@ -279,9 +284,14 @@ std::vector<TH1D> DataReader::GetEnergyHist() {
 // -------------------------------------------------------------------------------
 std::map<unsigned int, std::vector<int>> DataReader::GetDetectorStatusMap() { 
      
-    if ( kOrdering == "MaGe" ) {
+    if ( kOrdering == "MaGeInput" ) {
         auto v = detectorStatusMap;
-        for ( auto& i : v ) GERDA::ReorderAsMaGe(i.second);
+        for ( auto& i : v ) GERDA::ReorderAsMaGe(i.second, "input");
+        return v;
+    }
+    else if ( kOrdering == "MaGeOutput" ) {
+        auto v = detectorStatusMap;
+        for ( auto& i : v ) GERDA::ReorderAsMaGe(i.second, "output");
         return v;
     }
     else return detectorStatusMap;

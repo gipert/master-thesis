@@ -35,6 +35,9 @@ int main( int argc, char** argv ) {
     std::vector<std::string> args(argc);
     for ( int i = 0; i < argc; ++i ) args[i] = argv[i];
     
+    bool verbose = false;
+    if ( std::find(args.begin(), args.end(), "--verbose"  ) != args.end() ) verbose = true;
+    
     std::string phys;
     if      ( std::find(args.begin(), args.end(), "--2nbb"  ) != args.end() ) phys = "2nbb";
     else if ( std::find(args.begin(), args.end(), "--2nbbLV") != args.end() ) phys = "2nbbLV";
@@ -80,7 +83,7 @@ int main( int argc, char** argv ) {
     // construct final histograms (MaGeOutput scheme because we are reading the MaGe output)
     std::vector<TH1F> hist;
     for ( int i = 0; i < 40; ++i ) {
-        hist.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);
+        hist.emplace_back(Form("energy_det_tmp_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);
     }
     
     std::vector<TH1F> histTot;
@@ -141,19 +144,22 @@ int main( int argc, char** argv ) {
         treereader.SetTree(fTree);       
 
         // fill with all entries
-        bar.SetNIter(treereader.GetEntries(true));
-        std::cout << display;
-        bar.Init();
+        if (verbose) { 
+            nentries = treereader.GetEntries(true);
+            bar.SetNIter(nentries);
+            bar.Init(); 
+        }
         int j = 0;
+        std::cout << display << std::flush;
         while ( treereader.Next() ) {
-            bar.Update(j); j++;
+            if (verbose) {bar.Update(j); j++;}
             size = det_id.GetSize();
             for ( int k = 0; k < size; ++k ) {
                 if ( det_id[k] != 0 and det_id[k] != 1 and det_id[k] != 2 ) {
                     hist[det_id[k]].Fill(det_edep[k]);
                 }
             }
-        } std::cout << ' ' << nentries << " entries";
+        } std::cout << ' '; if (verbose) std::cout << nentries << " entries";
         
         // scale, add to final histogram, clear
         for ( int k = 0; k < 40; ++k ) {
@@ -172,11 +178,11 @@ int main( int argc, char** argv ) {
         auto start = std::chrono::system_clock::now();
         
         // run
-        fillHistos(i, "A_COAX", phys); std::cout << std::endl;
+        fillHistos(i, "A_COAX", phys); if (verbose) std::cout << std::endl;
         fillHistos(i, "D_COAX", phys);
         
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
-        std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
+        if (verbose) std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
 
     // loop over BEGe
@@ -185,11 +191,11 @@ int main( int argc, char** argv ) {
         auto start = std::chrono::system_clock::now();
         
         // run
-        fillHistos(i, "A_BEGe", phys); std::cout << std::endl;
+        fillHistos(i, "A_BEGe", phys); if (verbose) std::cout << std::endl;
         fillHistos(i, "D_BEGe", phys);
 
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
-        std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
+        if (verbose) std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7.5);

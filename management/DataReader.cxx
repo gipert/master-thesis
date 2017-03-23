@@ -13,6 +13,9 @@
 
 // ROOT
 #include "TFile.h"
+#include "TTreeReader.h"
+#include "TTreeReaderValue.h"
+#include "TTreeReaderArray.h"
 
 // gerda-ADA
 #include "FileMap.h"
@@ -28,33 +31,12 @@ bool DataReader::kVerbosity = false;
 
 DataReader::DataReader( std::string gerdaMetaPath, 
                         std::string gerdaDataPath,
-                        std::string configListPath ) :
+                        std::string configListPath, 
+                        std::string ordering ) :
     
-    detectorMatrix { 1,1,1,1,1,1,1,1, /*string1*/
-                     2,2,2,           /*string2*/
-                     1,1,1,1,1,1,1,1, /*string3*/
-                     1,1,1,1,1,1,1,1, /*string4*/
-                     2,2,2,           /*string5*/
-                     1,1,1,1,1,1,2,   /*string6*/
-                     3,3,3            /*string7*/ }, // 1 BEGe, 2 enrCoax, 3 natCoax
-
-    mass { 627, 810, 625, 697, 731, 620, 662, 627,
-           2746, 2110, 2391,
-           545, 716, 458, 743, 595, 634, 384, 815,
-           634, 824, 526, 813, 812, 768, 650, 751,
-           2833, 2166, 2372,
-           496, 788, 763, 693, 720, 524, 958,
-           2965, 2321, 2312 }, // g
-
-    fractionAV { 0.889, 0.914, 0.885, 0.880, 0.892, 0.859, 0.834, 0.887,
-                 0.831, 0.904, 0.866,
-                 0.896, 0.883, 0.882, 0.895, 0.874, 0.887, 0.848, 0.892,
-                 0.902, 0.878, 0.863, 0.889, 0.878, 0.902, 0.889, 0.887,
-                 0.871, 0.831, 0.901,
-                 0.866, 0.888, 0.881, 0.888, 0.913, 0.882, 0.830,
-                 0.000, 0.970, 0.000 }, // if 0.000 it's N.A.
- 
-    configList(configListPath.c_str())
+    DetectorSet("GELATIO"),
+    configList(configListPath.c_str()),
+    kOrdering(ordering)
 
 { 
     if ( gerdaMetaPath.back() == '/' ) gerdaMetaPath.pop_back(); gerdaMetaDir = gerdaMetaPath;
@@ -64,42 +46,21 @@ DataReader::DataReader( std::string gerdaMetaPath,
     std::string histName;
     for ( int i = 0; i < 40; ++i ) {
         histName = "energy_";
-        if ( detectorMatrix[i] == 1 ) histName += "BEGe_";
-        if ( detectorMatrix[i] == 2 ) histName += "enrCoax_";
-        if ( detectorMatrix[i] == 3 ) histName += "natCoax_";
+        if ( detectorTypes[i] == 1 ) histName += "BEGe_";
+        if ( detectorTypes[i] == 2 ) histName += "enrCoax_";
+        if ( detectorTypes[i] == 3 ) histName += "natCoax_";
         histName += std::to_string(i);
         energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
     }
     kMustResetEnergy = false;
 }
 // -------------------------------------------------------------------------------
-DataReader::DataReader( std::string pathsFile , bool verbose ) : 
+DataReader::DataReader( std::string pathsFile, bool verbose, std::string ordering ) : 
     
-    detectorMatrix { 1,1,1,1,1,1,1,1, /*string1*/
-                     2,2,2,           /*string2*/
-                     1,1,1,1,1,1,1,1, /*string3*/
-                     1,1,1,1,1,1,1,1, /*string4*/
-                     2,2,2,           /*string5*/
-                     1,1,1,1,1,1,2,   /*string6*/
-                     3,3,3            /*string7*/ }, // 1 BEGe, 2 enrCoax, 3 natCoax
-
-    mass { 627, 810, 625, 697, 731, 620, 662, 627,
-           2746, 2110, 2391,
-           545, 716, 458, 743, 595, 634, 384, 815,
-           634, 824, 526, 813, 812, 768, 650, 751,
-           2833, 2166, 2372,
-           496, 788, 763, 693, 720, 524, 958,
-           2965, 2321, 2312 }, // g
-
-    fractionAV { 0.889, 0.914, 0.885, 0.880, 0.892, 0.859, 0.834, 0.887,
-                 0.831, 0.904, 0.866,
-                 0.896, 0.883, 0.882, 0.895, 0.874, 0.887, 0.848, 0.892,
-                 0.902, 0.878, 0.863, 0.889, 0.878, 0.902, 0.889, 0.887,
-                 0.871, 0.831, 0.901,
-                 0.866, 0.888, 0.881, 0.888, 0.913, 0.882, 0.830,
-                 0.000, 0.970, 0.000 } // if 0.000 it's N.A.
- 
+    DetectorSet("GELATIO"),
+    kOrdering(ordering)
 { 
+
     kVerbosity = verbose;
 
     std::ifstream input(pathsFile.c_str());
@@ -119,9 +80,9 @@ DataReader::DataReader( std::string pathsFile , bool verbose ) :
     std::string histName;
     for ( int i = 0; i < 40; ++i ) {
         histName = "energy_";
-        if ( detectorMatrix[i] == 1 ) histName += "BEGe_";
-        if ( detectorMatrix[i] == 2 ) histName += "enrCoax_";
-        if ( detectorMatrix[i] == 3 ) histName += "natCoax_";
+        if ( detectorTypes[i] == 1 ) histName += "BEGe_";
+        if ( detectorTypes[i] == 2 ) histName += "enrCoax_";
+        if ( detectorTypes[i] == 3 ) histName += "natCoax_";
         histName += std::to_string(i);
         energy.emplace_back( histName.c_str(), histName.c_str(), 7500, 0, 7500 );
     }
@@ -176,7 +137,7 @@ bool DataReader::LoadRun( unsigned int runID ) {
     if (kVerbosity) std::cout << "Retrieving detector status...\n";
     std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Get("RunConfiguration")));
        
-    std::vector<unsigned int> detector_status( gtr->GetNDetectors(), 0 );
+    std::vector<int> detector_status( gtr->GetNDetectors(), 0 );
     for ( int i = 0; i < (int)detector_status.size(); ++i ) {
         if      (  gtr->IsTrash(i) ) detector_status[i] = 2;
         else if ( !gtr->IsOn(i)    ) detector_status[i] = 1;
@@ -231,43 +192,37 @@ void DataReader::CreateEnergyHist( std::string opt ) {
     }
     
     int nTP;
-    int nEntries;
-    int multiplicity, isTP, isVetoedInTime;
-    std::vector<int>*    failedFlag  = new std::vector<int>(40);
-    std::vector<double>* energyGauss = new std::vector<double>(40);
-    std::vector<double>* energyZAC   = new std::vector<double>(40);
-    std::vector<double>* energyTot   = new std::vector<double>(40);
+
+    TTreeReader treereader;
+    TTreeReaderValue<int> multiplicity     (treereader, "multiplicity.firedChannels");
+    TTreeReaderValue<int> isTP             (treereader, "isTP.isTP");
+    TTreeReaderValue<int> isVetoedInTime   (treereader, "isVetoedInTime.isvetoedintime");
+    TTreeReaderArray<int> failedFlag       (treereader, "failedFlag");
+    TTreeReaderArray<double> energyGauss   (treereader, "rawEnergyGauss");
+    TTreeReaderArray<double> energyZAC     (treereader, "rawEnergyZAC");
+    TTreeReaderArray<double> energyTot     (treereader, "energy");
 
     for ( const auto& it : dataTreeMap ) {
-        
-        if (kVerbosity) std::cout << "Initialising... " << std::flush;
+       
+        if (kVerbosity) std::cout << "Initializing... " << std::flush;
         nTP = 0;
         auto& chain = it.second;
-        nEntries = chain->GetEntries();
+        treereader.SetTree(chain.get());
 
-        chain->SetBranchAddress("multiplicity"  , &multiplicity);
-        chain->SetBranchAddress("rawEnergyGauss", &energyGauss);
-        if ( opt == "zac" or opt == "ZAC" )
-            { chain->SetBranchAddress("rawEnergyZAC"  , &energyZAC); }
-        chain->SetBranchAddress("energy"        , &energyTot);
-        chain->SetBranchAddress("isTP"          , &isTP);
-        chain->SetBranchAddress("isVetoedInTime", &isVetoedInTime);
-        chain->SetBranchAddress("failedFlag"    , &failedFlag);
-
-        ProgressBar bar(nEntries);
+        ProgressBar bar(chain->GetEntries());
         std::cout << "processing run" << it.first << ": " << std::flush;
         
         auto start = std::chrono::system_clock::now();
 
         bar.Init();
-        for ( int e = 0; e < nEntries; ++e ) {
+        int i = 0;
+        while (treereader.Next()) {
             
-            bar.Update(e);
-            chain->GetEntry(e);
+            bar.Update(i); i++;
 
-            if (isTP) nTP++;
+            if (*isTP) nTP++;
 
-            if ( !isTP and !isVetoedInTime and multiplicity == 1 ) {
+            if ( !*isTP and !*isVetoedInTime and *multiplicity == 1 ) {
                 for ( int det = 0; det < 40; det++ ) {
 
                     if ( opt == "gauss" or opt == "GAUSS" ) {
@@ -279,36 +234,29 @@ void DataReader::CreateEnergyHist( std::string opt ) {
                             energy[det].Fill(energyGauss->at(det));
                         }*/
                     
-                        if ( energyTot->at(det) > 0 and energyTot->at(det) < 10000 ) {
-                            energy[det].Fill(energyTot->at(det));
+                        if ( energyTot[det] > 0 and energyTot[det] < 10000 ) {
+                            energy[det].Fill(energyTot[det]);
                         }
                     }
 
                     else if ( opt == "zac" or opt == "ZAC" ) {
                         
-                        if ( failedFlag->at(det) == 0 and 
+                        if ( failedFlag[det] == 0 and 
                             detectorStatusMap[it.first][det] == 0 and
-                            energyTot->at(det) > 0 and energyTot->at(det) < 10000 ) {
-                            energy[det].Fill(energyZAC->at(det));
+                            energyTot[det] > 0 and energyTot[det] < 10000 ) {
+                            energy[det].Fill(energyZAC[det]);
                         }
 
                     }
                 }
             }
         }
-        chain->ResetBranchAddresses();
         timeMap.insert(std::make_pair(it.first, nTP*20));
 
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
     
-    delete[] failedFlag;
-    delete[] energyGauss;
-    if ( opt == "zac" or opt == "ZAC" ) 
-        { delete[] energyZAC; }
-    delete[] energyTot;
-
     return;
 }
 // -------------------------------------------------------------------------------
@@ -317,6 +265,36 @@ void DataReader::ResetEnergy() {
     for ( auto& it : energy ) it.Reset();
     kMustResetEnergy = false;
     return;
+}
+// -------------------------------------------------------------------------------
+std::vector<TH1D> DataReader::GetEnergyHist() {
+    
+    if ( kOrdering == "MaGeInput" ) {
+        auto v = energy;
+        GERDA::ReorderAsMaGe(v, "input");
+        return v;
+    }
+    else if ( kOrdering == "MaGeOutput" ) {
+        auto v = energy;
+        GERDA::ReorderAsMaGe(v, "output");
+        return v;
+    }
+    else return energy;
+}
+// -------------------------------------------------------------------------------
+std::map<unsigned int, std::vector<int>> DataReader::GetDetectorStatusMap() { 
+     
+    if ( kOrdering == "MaGeInput" ) {
+        auto v = detectorStatusMap;
+        for ( auto& i : v ) GERDA::ReorderAsMaGe(i.second, "input");
+        return v;
+    }
+    else if ( kOrdering == "MaGeOutput" ) {
+        auto v = detectorStatusMap;
+        for ( auto& i : v ) GERDA::ReorderAsMaGe(i.second, "output");
+        return v;
+    }
+    else return detectorStatusMap;
 }
 // -------------------------------------------------------------------------------
 unsigned int DataReader::GetTime() {
@@ -332,7 +310,7 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistBEGe() const {
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
     for ( int i = 0; i < 40; ++i ) {
-        if ( detectorMatrix[i] == 1 ) tmp->Add(&energy[i]);
+        if ( detectorTypes[i] == 1 ) tmp->Add(&energy[i]);
     }
 
     return tmp;
@@ -344,7 +322,7 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistEnrCoax() const {
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
     for ( int i = 0; i < 40; ++i ) {
-        if ( detectorMatrix[i] == 2 ) tmp->Add(&energy[i]);
+        if ( detectorTypes[i] == 2 ) tmp->Add(&energy[i]);
     }
 
     return tmp;
@@ -356,47 +334,9 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistNatCoax() const {
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
     
     for ( int i = 0; i < 40; ++i ) {
-        if ( detectorMatrix[i] == 3 ) tmp->Add(&energy[i]);
+        if ( detectorTypes[i] == 3 ) tmp->Add(&energy[i]);
     }
 
-    return tmp;
-}
-// -------------------------------------------------------------------------------
-std::vector<float> DataReader::GetVolume( std::string opt ) const {
-    
-    std::vector<float> volume;
-    for ( int i = 0 ; i < 37; ++i ) volume.push_back(((float)mass.at(i))/enrGeDensity);
-    for ( int i = 37; i < 40; ++i ) volume.push_back(((float)mass.at(i))/natGeDensity);
-    
-    if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
-    return volume;
-}
-// -------------------------------------------------------------------------------
-std::vector<float> DataReader::GetActiveVolume( std::string opt ) const {
-    
-    std::vector<float> volume;
-    for ( int i = 0 ; i < 37; ++i ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/enrGeDensity);
-    for ( int i = 37; i < 40; ++i ) volume.push_back(((float)mass.at(i))*fractionAV.at(i)/natGeDensity);
-
-    if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
-    return volume;
-}
-// -------------------------------------------------------------------------------
-std::vector<float> DataReader::GetDeadVolume( std::string opt ) const {
-    
-    std::vector<float> volume;
-    for ( int i = 0 ; i < 37; ++i ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/enrGeDensity);
-    for ( int i = 37; i < 40; ++i ) volume.push_back(((float)mass.at(i))*(1-fractionAV.at(i))/natGeDensity);
-
-    if ( opt == "MaGe" ) ReorderAsMaGeInput<float>(volume);
-    return volume;
-}
-// -------------------------------------------------------------------------------
-std::vector<int> DataReader::GetMass( std::string opt ) const {
-    
-    std::vector<int> tmp = mass;
-    
-    if ( opt == "MaGe" ) ReorderAsMaGeInput<int>(tmp);
     return tmp;
 }
 // -------------------------------------------------------------------------------
@@ -427,4 +367,4 @@ std::unique_ptr<TChain> DataReader::MoveTree() {
     if (!dataTree) this->GetTree();
     return std::move(dataTree);
 }
-// -------- end class ------------------------------------------------------------
+// -------- end of class ------------------------------------------------------------

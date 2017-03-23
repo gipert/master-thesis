@@ -39,42 +39,35 @@ int main( int argc, char** argv ) {
     if      ( std::find(args.begin(), args.end(), "--2nbb"  ) != args.end() ) phys = "2nbb";
     else if ( std::find(args.begin(), args.end(), "--2nbbLV") != args.end() ) phys = "2nbbLV";
     else { std::cout << "Please specify --2nbb or --2nbbLV option!\n"; return 0; }
-
+// ----------------------------------------------------------------------------------------------------------
     // infos about runs
     GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false, "MaGeInput");
-   
     // infos on experimental setup
     GERDA::DetectorSet set("MaGeInput");
     
-    // get volumes with MaGe input naming convention
-    std::vector<float> AV = set.GetActiveVolume();
-    std::vector<float> DV = set.GetDeadVolume();
-  
-    // find max volume
-    auto maxvolumeAV = std::max_element(AV.begin()+3, AV.end());
-    auto maxvolumeDV = std::max_element(DV.begin()+3, DV.end());
-    float maxvolume = *maxvolumeAV > *maxvolumeDV ? *maxvolumeAV : *maxvolumeDV;
+    ////// get N76 with MaGe input naming convention [mol]
+    std::vector<float> N76AV = set.GetActiveN76Ge();
+    std::vector<float> N76DV = set.GetDeadN76Ge(); 
+    // number of generated events
+    int Ngen = 10E07;
 
-    // get detectorStatusMap
+    // get detectorStatusMap for selected runs
     auto dsm = reader.GetDetectorStatusMap();
 
-    // get saved live times
+    // get live times saved in out/results.dat and store [yr]
     std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/results.dat";
     std::ifstream timeFile(path.c_str());
-    std::map<unsigned int, unsigned int> timeMap;
+    std::map<int,double> timeMap;
     unsigned int runID, time;
-    while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time));
+    while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time*1./31536000));
 
-    // calculate the total time each detector is ON --> detector status = 0
+    ////// calculate the total time each detector is ON --> detector status = 0
     std::vector<int> totalTime(40, 0);
     for ( const auto& i : dsm ) {
         for ( int j = 0; j < 40; ++j ) {
             if ( i.second[j] == 0 ) totalTime[j] += timeMap[i.first];
         }
     }
-
-    // find max time
-    unsigned int maxtime = *std::max_element(totalTime.begin()+3, totalTime.end());
 
     // define reading objects
     std::unique_ptr<TFile> file;
@@ -84,19 +77,25 @@ int main( int argc, char** argv ) {
     TTreeReaderArray<int>   det_id(treereader, "det_id");
     TTreeReaderArray<float> det_edep(treereader, "det_edep");
 
-    // construct final histograms (MaGeOutput scheme)
+    // construct final histograms (MaGeOutput scheme because we are reading the MaGe output)
     std::vector<TH1F> hist;
     for ( int i = 0; i < 40; ++i ) {
         hist.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);
     }
     
+    std::vector<TH1F> histTot;
+    for ( int i = 0; i < 40; ++i ) {
+        histTot.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);
+    }
+
+
     ProgressBar bar;
     std::string filename;
     std::string display;
     int nentries;
     int size;
-    float corrVol;
-    float corrTime;
+    float corrN;
+    int corrTime;
 
 // -----------------------------------------------------------------------------------------------------
     // lambda to fill histograms
@@ -109,29 +108,29 @@ int main( int argc, char** argv ) {
         if ( genopt == "A_COAX" ) {
             filename += "AV_det11_";
             display += "AV_det11_";
-            corrVol = AV[i-1]/maxvolume;
-            corrTime = (float)totalTime[i-1]/maxtime;
+            corrN = N76AV[i-1]/Ngen;
+            corrTime = totalTime[i-1];
         }
 
         else if ( genopt == "D_COAX" ) {
             filename += "DV_det11_"; 
             display += "DV_det11_";
-            corrVol = DV[i-1]/maxvolume;
-            corrTime = (float)totalTime[i-1]/maxtime;
+            corrN = N76DV[i-1]/Ngen;
+            corrTime = totalTime[i-1];
         }
 
         else if ( genopt == "A_BEGe" ) {
             filename += "AV_det5_";
             display += "AV_det5_";
-            corrVol = AV[i+9]/maxvolume;
-            corrTime = (float)totalTime[i+9]/maxtime;
+            corrN = N76AV[i+9]/Ngen;
+            corrTime = totalTime[i+9];
         }
         
         else if ( genopt == "D_BEGe" ) {
             filename += "DV_det5_"; 
             display += "DV_det5_";
-            corrVol = DV[i+9]/maxvolume;
-            corrTime = (float)totalTime[i+9]/maxtime;
+            corrN = N76DV[i+9]/Ngen;
+            corrTime = totalTime[i+9];
         }
 
         filename += std::to_string(i) + ".root";
@@ -141,14 +140,13 @@ int main( int argc, char** argv ) {
         fTree = dynamic_cast<TTree*>(file->Get("fTree"));
         treereader.SetTree(fTree);       
 
-        // fill with correct entries
-        nentries = treereader.GetEntries(true)*corrVol*corrTime;
-        bar.SetNIter(nentries);
+        // fill with all entries
+        bar.SetNIter(treereader.GetEntries(true));
         std::cout << display;
         bar.Init();
-        for ( int j = 0; j < nentries; ++j ) {
-            bar.Update(j);
-            treereader.Next();
+        int j = 0;
+        while ( treereader.Next() ) {
+            bar.Update(j); j++;
             size = det_id.GetSize();
             for ( int k = 0; k < size; ++k ) {
                 if ( det_id[k] != 0 and det_id[k] != 1 and det_id[k] != 2 ) {
@@ -156,6 +154,13 @@ int main( int argc, char** argv ) {
                 }
             }
         } std::cout << ' ' << nentries << " entries";
+        
+        // scale, add to final histogram, clear
+        for ( int k = 0; k < 40; ++k ) {
+            hist[i].Scale(corrN*corrTime);
+            histTot[i].Add(&hist[i]);
+            hist[i].Reset();
+        }
         file->Close();
         return;
     };
@@ -189,7 +194,7 @@ int main( int argc, char** argv ) {
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7.5);
     TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7.5);
-    TH1F histTot( "energy_total", "global MaGe energy spectrum", 7500, 0, 7.5 );
+    TH1F histTotAll( "energy_total", "global MaGe energy spectrum", 7500, 0, 7.5 );
     
     if ( phys == "2nbb" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbb.root";
     else path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbbLV.root";
@@ -197,7 +202,7 @@ int main( int argc, char** argv ) {
     
     for ( auto& h : hist ) {
         h.Write();
-        histTot.Add(&h);
+        histTotAll.Add(&h);
     }
     
     for ( int i = 0; i < 40; ++i ) {
@@ -208,7 +213,8 @@ int main( int argc, char** argv ) {
     
     histCOAX.Write();
     histBEGe.Write();
-    histTot.Write();
+    histTotAll.Write();
+
     fileout.Close();
 
     return 0;

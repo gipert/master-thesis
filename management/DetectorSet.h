@@ -41,8 +41,9 @@ namespace GERDA {
       std::vector<float> GetVolume()        const;
       std::vector<float> GetActiveVolume()  const;
       std::vector<float> GetDeadVolume()    const;
-      // get number of 76Ge isotopes:
-      std::vector<double> GetN76Ge()        const;
+      // get number of 76Ge isotopes [mol]
+      std::vector<float> GetActiveN76Ge()   const;
+      std::vector<float> GetDeadN76Ge()     const;
 
       protected:
       

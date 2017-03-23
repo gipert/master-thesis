@@ -99,11 +99,13 @@ namespace GERDA {
       // vector with energy histograms for each detector
       // filled by GetEnergyHist();
       std::vector<TH1D> energy;
+      // time in [s]
+      std::map<unsigned int, unsigned int> timeMap;
+ 
       // flag for multiple calling of CreateEnergyhist
       bool kMustResetEnergy;
       const std::string kOrdering;
-      std::map<unsigned int, unsigned int> timeMap;
-    
+   
       // find run configuration in the config list file
       std::string FindRunConfiguration( unsigned int runID );
   }; 

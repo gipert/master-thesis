@@ -77,7 +77,7 @@ int main( int argc, char** argv ) {
     energyEnrCoax->Write();
     energyNatCoax->Write();
     
-    // retrieve time for each run
+    // retrieve time for each run [s]
     auto timeMap = reader.GetTimeMap();
     // write on disk
     for ( const auto& i : timeMap ) textFile << i.first << '\t' << i.second << '\n';

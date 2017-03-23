@@ -17,7 +17,7 @@ GERDALIBS = $(shell gelatio-config --libs) \
 DIRS   = bin lib out
 include misc/vars.mk
 
-all : $(DIRS) bin/getspectra bin/sumspectra bin/runfit
+all : $(DIRS) bin/getspectra bin/processMaGe bin/sumspectra bin/runfit
 
 $(DIRS)) : 
 	-mkdir -p $(DIRS)
@@ -37,8 +37,11 @@ lib/libFit2nbbLV.so : fit/Fit2nbbLV.cxx fit/Fit2nbbLV.h
 bin/getspectra : getspectra.cxx lib/libDataReader.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader
 
+bin/processMaGe : processMaGe.cxx lib/libProgressBar.so
+	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lProgressBar
+
 bin/sumspectra : sumspectra.cxx lib/libDataReader.so lib/libDetectorSet.so
-	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lProgressBar -lDetectorSet
+	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
 
 bin/runfit : fit/runfit.cxx lib/libFit2nbbLV.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) $(shell bat-config --libs) -lFit2nbbLV

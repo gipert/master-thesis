@@ -13,7 +13,6 @@
  *
  */
 
-#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <string>
@@ -22,13 +21,9 @@
 #include <map>
 
 #include "TFile.h"
-#include "TTree.h"
-#include "TTreeReader.h"
-#include "TTreeReaderArray.h"
 #include "TH1F.h"
 
 #include "DataReader.h"
-#include "ProgressBar.h"
 
 int main( int argc, char** argv ) {
 
@@ -72,102 +67,64 @@ int main( int argc, char** argv ) {
         }
     }
 
-    // define reading objects
-    std::unique_ptr<TFile> file;
-    TTree* fTree;
-
-    TTreeReader treereader;
-    TTreeReaderArray<int>   det_id(treereader, "det_id");
-    TTreeReaderArray<float> det_edep(treereader, "det_edep");
-
-    // construct final histograms (MaGeOutput scheme because we are reading the MaGe output)
-    std::vector<TH1F> hist;
-    for ( int i = 0; i < 40; ++i ) {
-        hist.emplace_back(Form("energy_det_tmp_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);
-    }
-    
+    // construct histograms (MaGeOutput scheme because we are reading the MaGe output)
+    std::vector<std::unique_ptr<TH1F>> hist;
+    // final histogram
     std::vector<TH1F> histTot;
     for ( int i = 0; i < 40; ++i ) {
-        histTot.emplace_back(Form("energy_det_id%i", i), Form("global MaGe energy spectrum, det_id = %i", i), 7500, 0, 7.5);
+        histTot.emplace_back(Form("energytot_det_id%i", i), Form("det_id = %i", i), 7500, 0, 7.5);
     }
 
-
-    ProgressBar bar;
     std::string filename;
-    std::string display;
-    int nentries;
-    int size;
-    float corrN;
-    int corrTime;
+    double corrN = 0, corrTime = 0;
 
 // -----------------------------------------------------------------------------------------------------
     // lambda to fill histograms
     auto fillHistos = [&]( int i , std::string genopt , std::string phys ) {
 
-        if      ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/2nbbLV_";
-        else if ( phys == "2nbb"   ) filename = "/home/GERDA/pertoldi/simulations/2nbb/2nbb_";
-        display.clear();
+        if      ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/processed/p_2nbbLV_";
+        else if ( phys == "2nbb"   ) filename = "/home/GERDA/pertoldi/simulations/2nbb/processed/p_2nbb_";
         
         if ( genopt == "A_COAX" ) {
             filename += "AV_det11_";
-            display += "AV_det11_";
             corrN = N76AV[i-1]/Ngen;
             corrTime = totalTime[i-1];
         }
 
         else if ( genopt == "D_COAX" ) {
             filename += "DV_det11_"; 
-            display += "DV_det11_";
             corrN = N76DV[i-1]/Ngen;
             corrTime = totalTime[i-1];
         }
 
         else if ( genopt == "A_BEGe" ) {
             filename += "AV_det5_";
-            display += "AV_det5_";
             corrN = N76AV[i+9]/Ngen;
             corrTime = totalTime[i+9];
         }
         
         else if ( genopt == "D_BEGe" ) {
             filename += "DV_det5_"; 
-            display += "DV_det5_";
             corrN = N76DV[i+9]/Ngen;
             corrTime = totalTime[i+9];
         }
 
         filename += std::to_string(i) + ".root";
-        display += std::to_string(i) + " ";
         
-        file = std::unique_ptr<TFile>{ TFile::Open(filename.c_str(), "READ") };
-        fTree = dynamic_cast<TTree*>(file->Get("fTree"));
-        treereader.SetTree(fTree);       
+        // open file
+        TFile file(filename.c_str(), "READ");
 
-        // fill with all entries
-        if (verbose) { 
-            nentries = treereader.GetEntries(true);
-            bar.SetNIter(nentries);
-            bar.Init(); 
+        // retrieve histograms
+        for ( int i = 0; i < 40; ++i ) {
+            hist.emplace_back( dynamic_cast<TH1F*>(file.Get(Form("energy_det_id%i", i))) );
         }
-        int j = 0;
-        std::cout << display << std::flush;
-        while ( treereader.Next() ) {
-            if (verbose) {bar.Update(j); j++;}
-            size = det_id.GetSize();
-            for ( int k = 0; k < size; ++k ) {
-                if ( det_id[k] != 0 and det_id[k] != 1 and det_id[k] != 2 ) {
-                    hist[det_id[k]].Fill(det_edep[k]);
-                }
-            }
-        } std::cout << ' '; if (verbose) std::cout << nentries << " entries";
-        
         // scale, add to final histogram, clear
         for ( int k = 0; k < 40; ++k ) {
-            hist[i].Scale(corrN*corrTime);
-            histTot[i].Add(&hist[i]);
-            hist[i].Reset();
+            hist[i]->Scale(corrN*corrTime);
+            histTot[i].Add(hist[i].get());
         }
-        file->Close();
+        hist.clear();
+        file.Close();
         return;
     };
 // -----------------------------------------------------------------------------------------------------
@@ -206,15 +163,16 @@ int main( int argc, char** argv ) {
     else path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbbLV.root";
     TFile fileout(path.c_str(), "RECREATE");
     
-    for ( auto& h : hist ) {
+    for ( auto& h : histTot ) {
         h.Write();
         histTotAll.Add(&h);
     }
     
     for ( int i = 0; i < 40; ++i ) {
         if ( i == 0 or i == 1 or i == 2 ) continue;
-        else if ( i == 11 or i == 12 or i == 13 or i == 30 or i == 31 or i == 32 or i == 39 ) histCOAX.Add(&hist[i]);
-        else histBEGe.Add(&hist[i]);
+        else if ( i == 11 or i == 12 or i == 13 or 
+                  i == 30 or i == 31 or i == 32 or i == 39 ) histCOAX.Add(&histTot[i]);
+        else histBEGe.Add(&histTot[i]);
     }
     
     histCOAX.Write();

@@ -76,19 +76,19 @@ int main( int argc, char** argv ) {
 
         else if ( genopt == "D_COAX" ) {
             filename += "DV_det11_"; 
-            outfilename += "AV_det11_";
+            outfilename += "DV_det11_";
             display += "DV_det11_";
         }
 
         else if ( genopt == "A_BEGe" ) {
             filename += "AV_det5_";
-            outfilename += "AV_det11_";
+            outfilename += "AV_det5_";
             display += "AV_det5_";
         }
         
         else if ( genopt == "D_BEGe" ) {
             filename += "DV_det5_"; 
-            outfilename += "AV_det11_";
+            outfilename += "DV_det5_";
             display += "DV_det5_";
         }
 
@@ -119,7 +119,7 @@ int main( int argc, char** argv ) {
         } std::cout << ' '; if (verbose) std::cout << nentries << " entries";
         
         // let's save on disk
-        TFile outfile(filename.c_str(), "RECREATE");
+        TFile outfile(outfilename.c_str(), "RECREATE");
         for ( auto& h : hist ) { 
             h.Write();
             h.Reset();

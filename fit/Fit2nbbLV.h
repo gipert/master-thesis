@@ -42,9 +42,9 @@ class Fit2nbbLV : public BCModel {
     // initialize dataCOAX vector 
     void SetDataCOAX(std::vector<int>& v) { dataCOAX = v; }
     // initialize simBEGe vector
-    void SetSimBEGe(std::vector<std::vector<int>>& v) { simBEGe = v; }
+    void SetSimBEGe(std::vector<std::vector<double>>& v) { simBEGe = v; }
     // initialize simCOAX vector
-    void SetSimCOAX(std::vector<std::vector<int>>& v) { simCOAX = v; }
+    void SetSimCOAX(std::vector<std::vector<double>>& v) { simCOAX = v; }
 
     private:
     
@@ -62,9 +62,8 @@ class Fit2nbbLV : public BCModel {
     std::vector<int> dataCOAX;
 
     // custom model containters (MaGe output)
-    // WARNING: must be normalized
-    std::vector<std::vector<int>> simBEGe;
-    std::vector<std::vector<int>> simCOAX;
+    std::vector<std::vector<double>> simBEGe;
+    std::vector<std::vector<double>> simCOAX;
     // legend:
     // [0] 2bnn
     // [1] 2nbbLV

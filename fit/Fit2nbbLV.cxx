@@ -15,7 +15,10 @@
 // ---------------------------------------------------------
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
    
-    this->AddParameter("2nbb", 0, 0.01, "2nbb activity [Bq/kg]");
+    this->AddParameter("2nbb", 0, 2000, "log2*N_A/Tbb");
+    this->AddParameter("2nbbLV", 0, 2000, "log2*N_A/TbbLV");
+    this->AddParameter("2nbb1", 0, 2000, "log2*N_A/Tbb");
+    this->AddParameter("2nbb2", 0, 2000, "log2*N_A/Tbb");
     this->SetPriorConstantAll();    
 }
 // ---------------------------------------------------------
@@ -58,12 +61,15 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
     
     double logprob = 0.;
     double p2nbb = parameters[0];
+    double p2nbbLV = parameters[1];
     
     for ( int i = downBin; i < upBin; ++i ) {
         // BEGe
-        logprob += dataBEGe[i]*log(p2nbb*simBEGe[0][i]) - p2nbb*simBEGe[0][i] - BCMath::LogFact(dataBEGe[i]);
+        logprob += dataBEGe[i]*log(p2nbb*simBEGe[0][i] + p2nbbLV*simBEGe[1][i]) 
+                   - p2nbb*simBEGe[0][i] - p2nbbLV*simBEGe[1][i];// - BCMath::LogFact(dataBEGe[i]);
         // COAX
-        logprob += dataCOAX[i]*log(p2nbb*simCOAX[0][i]) - p2nbb*simCOAX[0][i] - BCMath::LogFact(dataCOAX[i]);
+        logprob += dataCOAX[i]*log(p2nbb*simCOAX[0][i] + p2nbbLV*simCOAX[1][i]) 
+                   - p2nbb*simCOAX[0][i] - p2nbbLV*simCOAX[1][i];// - BCMath::LogFact(dataCOAX[i]);
 	}
 
     return logprob;

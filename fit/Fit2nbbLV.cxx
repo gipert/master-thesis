@@ -60,28 +60,19 @@ void Fit2nbbLV::SetFitRange(double down, double up) {
 double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
     
     double logprob = 0.;
-    double p2nbb = parameters[0];
-    double p2nbbLV = parameters[1];
+    double f;
+    int size = 2; // <------------ da sistemare poi
     
     for ( int i = downBin; i < upBin; ++i ) {
+
         // BEGe
-        logprob += dataBEGe[i]*log(p2nbb*simBEGe[0][i] + p2nbbLV*simBEGe[1][i]) 
-                   - p2nbb*simBEGe[0][i] - p2nbbLV*simBEGe[1][i];// - BCMath::LogFact(dataBEGe[i]);
+        f = 0; for ( int j = 0; j < size; ++j ) f += parameters[j]*simBEGe[j][i];
+        logprob += dataBEGe[i]*log(f) - f;
+
         // COAX
-        logprob += dataCOAX[i]*log(p2nbb*simCOAX[0][i] + p2nbbLV*simCOAX[1][i]) 
-                   - p2nbb*simCOAX[0][i] - p2nbbLV*simCOAX[1][i];// - BCMath::LogFact(dataCOAX[i]);
+        f = 0; for ( int j = 0; j < size; ++j ) f += parameters[j]*simCOAX[j][i];
+        logprob += dataCOAX[i]*log(f) - f;
 	}
 
     return logprob;
 }
-
-// ---------------------------------------------------------
-// double Fit2nbbLV::LogAPrioriProbability(const std::vector<double> & parameters) {
-// 	// This method returns the logarithm of the prior probability for the
-// 	// parameters p(parameters).
-
-// 	// You need not overload this function, if you are using built-in
-// 	// priors through the function SetPriorGauss, SetPriorConstant, etc.
-// }
-// ---------------------------------------------------------
-

@@ -11,6 +11,7 @@
 #include <string>
 #include <vector>
 #include <chrono>
+#include <algorithm>
 
 #include <BAT/BCLog.h>
 #include <BAT/BCAux.h>
@@ -23,7 +24,7 @@
 int main( int argc, char** argv ) {
 
     // retrieve simulations and data
-    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/results.root";
+    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumData.root";
     TFile fileData(path.c_str(), "READ");
     if (!fileData.IsOpen()) { std::cout << "Zombie fileData!\n"; return -1; }
 
@@ -35,6 +36,7 @@ int main( int argc, char** argv ) {
     TFile fileSim2nbbLV(path.c_str(), "READ");
     if (!fileSim2nbbLV.IsOpen()) { std::cout << "Zombie fileSim2nbbLV!\n"; return -1; }
 
+    // remember: pointers filled with TDirectoryFile::Get are non-owning!
     TH1D* hDataBEGe;   fileData.GetObject("energyBEGeAll", hDataBEGe);
     TH1D* hDataCOAX;   fileData.GetObject("energyEnrCoaxAll", hDataCOAX);
     TH1F* h2nbbBEGe;   fileSim2nbb.GetObject("energy_BEGe", h2nbbBEGe);
@@ -43,7 +45,7 @@ int main( int argc, char** argv ) {
     TH1F* h2nbbLVCOAX; fileSim2nbbLV.GetObject("energy_COAX", h2nbbLVCOAX);
 
     if (!hDataBEGe or !hDataCOAX or !h2nbbBEGe or
-        !h2nbbCOAX or !h2nbbLVBEGe or !h2nbbLVCOAX ) { std::cout << "Zombie TH1D!\n"; return -1; }
+        !h2nbbCOAX or !h2nbbLVBEGe or !h2nbbLVCOAX ) { std::cout << "There's at least one zombie TH1D!\n"; return -1; }
     
     // create binning
     std::vector<int> ubin(7500);
@@ -66,6 +68,10 @@ int main( int argc, char** argv ) {
         vSimCOAX[1].push_back(h2nbbLVCOAX->GetBinContent(i+1));
     }
 
+    fileData.Close();
+    fileSim2nbb.Close();
+    fileSim2nbbLV.Close();
+
 // ------------------------------------------------------------------------------
 	// create Fit2nbbLV object
     Fit2nbbLV m("Fit2nbbLV");
@@ -85,16 +91,16 @@ int main( int argc, char** argv ) {
 	// open log file
 	BCLog::OpenLog("out/logBAT.txt", BCLog::detail, BCLog::detail);
 
-	// set precision
-	m.MCMCSetPrecision(BCEngineMCMC::kMedium);
+	// set precision (number of samples in Markov chain)
+	m.MCMCSetPrecision(BCEngineMCMC::kLow);
     
     // set parameter binning
-    m.SetNbins(100);
+    //m.SetNbins(1000);
 
-	//m.WriteMarkovChain(true);
+	m.WriteMarkovChain(true);
 	// normalize the posterior, i.e. integrate posterior over the full
 	// parameter space
-	m.SetIntegrationMethod(BCIntegrate::kIntDefault);
+	m.SetIntegrationMethod(BCIntegrate::kIntGrid);
 	m.Normalize();
 
     auto start = std::chrono::system_clock::now();

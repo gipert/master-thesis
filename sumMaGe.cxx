@@ -55,7 +55,7 @@ int main( int argc, char** argv ) {
     auto dsm = reader.GetDetectorStatusMap();
 
     // get live times saved in out/results.dat and store [yr]
-    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/results.dat";
+    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumData.dat";
     std::ifstream timeFile(path.c_str());
     std::map<int,double> timeMap;
     unsigned int runID, time;

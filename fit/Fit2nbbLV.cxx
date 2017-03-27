@@ -15,10 +15,15 @@
 // ---------------------------------------------------------
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
    
-    this->AddParameter("2nbb", 0, 2000, "log2*N_A/Tbb");
-    this->AddParameter("2nbbLV", 0, 2000, "log2*N_A/TbbLV");
-    this->AddParameter("2nbb1", 0, 2000, "log2*N_A/Tbb");
-    this->AddParameter("2nbb2", 0, 2000, "log2*N_A/Tbb");
+    // define parameters
+    this->AddParameter("2nbb", 0, 2000);
+    this->AddParameter("2nbbLV", 0, 1);
+
+    //fake
+    this->AddParameter("fake1", 0, 1);
+    this->AddParameter("fake2", 0, 1);
+
+    // priors
     this->SetPriorConstantAll();    
 }
 // ---------------------------------------------------------
@@ -61,16 +66,18 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
     
     double logprob = 0.;
     double f;
-    int size = 2; // <------------ da sistemare poi
+    //int last = parameters.size()-1;
     
     for ( int i = downBin; i < upBin; ++i ) {
 
         // BEGe
-        f = 0; for ( int j = 0; j < size; ++j ) f += parameters[j]*simBEGe[j][i];
+        f = parameters[0]*simBEGe[0][i] + parameters[0]*parameters[1]*corr*simBEGe[1][i]; 
+        //for ( int j = 2; j < last; ++j ) f += parameters[j]*simBEGe[j][i];
         logprob += dataBEGe[i]*log(f) - f;
 
         // COAX
-        f = 0; for ( int j = 0; j < size; ++j ) f += parameters[j]*simCOAX[j][i];
+        f = parameters[0]*simCOAX[0][i] + parameters[0]*parameters[1]*corr*simCOAX[1][i]; 
+        //for ( int j = 2; j < last; ++j ) f += parameters[j]*simCOAX[j][i];
         logprob += dataCOAX[i]*log(f) - f;
 	}
 

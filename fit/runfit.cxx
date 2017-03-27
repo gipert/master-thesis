@@ -97,16 +97,16 @@ int main( int argc, char** argv ) {
     // set parameter binning
     //m.SetNbins(1000);
 
-	m.WriteMarkovChain(true);
 	// normalize the posterior, i.e. integrate posterior over the full
 	// parameter space
-	m.SetIntegrationMethod(BCIntegrate::kIntGrid);
+	m.SetIntegrationMethod(BCIntegrate::kIntDefault);
 	m.Normalize();
 
     auto start = std::chrono::system_clock::now();
 	// run MCMC and marginalize posterior w/r/t all parameters and all
 	// combinations of two parameters
 	m.MarginalizeAll();
+	m.WriteMarkovChain(true);
 
 	// run mode finding; by default using Minuit
 	m.FindMode(m.GetBestFitParameters());

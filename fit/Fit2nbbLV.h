@@ -68,6 +68,9 @@ class Fit2nbbLV : public BCModel {
     // [0] 2bnn
     // [1] 2nbbLV
     // [2] ...
+    //
+
+    const double corr = 134.594580;
 };
 
 #endif

@@ -12,6 +12,7 @@
 #include <vector>
 #include <chrono>
 #include <algorithm>
+#include <memory>
 
 #include <BAT/BCLog.h>
 #include <BAT/BCAux.h>
@@ -25,54 +26,79 @@
 int main( int argc, char** argv ) {
     
     TH1::AddDirectory(false);
+    
+    int nBins = 750;
 
-    // retrieve simulations and data
+    // retrieve data
     std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumData.root";
     TFile fileData(path.c_str(), "READ");
     if (!fileData.IsOpen()) { std::cout << "Zombie fileData!\n"; return -1; }
-
+    
+    // vector holding all sim files
+    std::vector<std::unique_ptr<TFile>> simFile;
+    // [0] 2nbb
+    // [1] 2nbbLV
+    // [2] homLAr
+    
+    // 2nbb
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbb.root";
-    TFile fileSim2nbb(path.c_str(), "READ"); 
-    if (!fileSim2nbb.IsOpen()) { std::cout << "Zombie fileSim2nbb!\n"; return -1; }
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
 
+    // 2nbbLV
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbbLV.root";
-    TFile fileSim2nbbLV(path.c_str(), "READ");
-    if (!fileSim2nbbLV.IsOpen()) { std::cout << "Zombie fileSim2nbbLV!\n"; return -1; }
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
 
-    // remember: pointers filled with TDirectoryFile::Get are non-owning!
+    // homLAr
+    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_homLAr.root";
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+
+    for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
+
     TH1D* hDataBEGe;   fileData.GetObject("energyBEGeAll", hDataBEGe);
     TH1D* hDataCOAX;   fileData.GetObject("energyEnrCoaxAll", hDataCOAX);
-    TH1F* h2nbbBEGe;   fileSim2nbb.GetObject("energy_BEGe", h2nbbBEGe);
-    TH1F* h2nbbCOAX;   fileSim2nbb.GetObject("energy_COAX", h2nbbCOAX);
-    TH1F* h2nbbLVBEGe; fileSim2nbbLV.GetObject("energy_BEGe", h2nbbLVBEGe);
-    TH1F* h2nbbLVCOAX; fileSim2nbbLV.GetObject("energy_COAX", h2nbbLVCOAX);
- 
-    fileData.Close();
-    fileSim2nbb.Close();
-    fileSim2nbbLV.Close();
-
-    if (!hDataBEGe or !hDataCOAX or !h2nbbBEGe or
-        !h2nbbCOAX or !h2nbbLVBEGe or !h2nbbLVCOAX ) { std::cout << "There's at least one zombie TH1D!\n"; return -1; }
     
-    // create binning
-    std::vector<int> ubin(7500);
-    int k = 1;
-    std::generate(ubin.begin(), ubin.end(), [&](){ return k++; } );
+    std::vector<TH1F*> hSimBEGe;
+    std::vector<TH1F*> hSimCOAX;
+    
+    for ( auto& f : simFile ) {
+        hSimBEGe.push_back(dynamic_cast<TH1F*>(f->Get("energy_BEGe")));
+        hSimCOAX.push_back(dynamic_cast<TH1F*>(f->Get("energy_COAX")));
+    }
+
+    fileData.Close();
+    for ( auto& f : simFile ) f->Close();
+
+    if (!hDataBEGe or !hDataCOAX) { std::cout << "There's at least one zombie data hist!\n"; return -1; }
+    for ( auto& h : hSimBEGe ) if (!h) { std::cout << "There's at least one zombie simBEGe hist!\n"; return -1; }
+    for ( auto& h : hSimCOAX ) if (!h) { std::cout << "There's at least one zombie simCOAX hist!\n"; return -1; }
+    
+    // create binning !!!NON-VARIABLE!!!
+    std::vector<int> ubin(nBins);
+    int k = 0;
+    std::generate(ubin.begin(), ubin.end(), [&](){ return k+=7500/nBins; } );
 
     // convert in std::vector
-    // spectrum components
-    const int nComp = 2;
     std::vector<int> vDataBEGe, vDataCOAX;
-    std::vector<std::vector<double>> vSimCOAX(nComp), vSimBEGe(nComp);
+    std::vector<std::vector<double>> vSimCOAX(hSimCOAX.size()), vSimBEGe(hSimBEGe.size());
 
-    for ( int i = 0; i < 7500; ++i ) {
+    // rebin if needed
+    hDataBEGe->Rebin(7500/nBins);
+    hDataCOAX->Rebin(7500/nBins);
+    for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
+        std::cout << "\n\n" << hSimBEGe[i]->GetNbinsX() << ' ';
+        hSimBEGe[i]->Rebin(7500/nBins);
+        std::cout << hSimBEGe[i]->GetNbinsX() << "\n\n";
+        hSimCOAX[i]->Rebin(7500/nBins);
+    }
+
+    for ( int i = 0; i < nBins; ++i ) {
         vDataBEGe.push_back(hDataBEGe->GetBinContent(i+1));
         vDataCOAX.push_back(hDataCOAX->GetBinContent(i+1));
         
-        vSimBEGe[0].push_back(h2nbbBEGe->GetBinContent(i+1));
-        vSimCOAX[0].push_back(h2nbbCOAX->GetBinContent(i+1));
-        vSimBEGe[1].push_back(h2nbbLVBEGe->GetBinContent(i+1));
-        vSimCOAX[1].push_back(h2nbbLVCOAX->GetBinContent(i+1));
+        for ( unsigned int j = 0; j < hSimBEGe.size(); ++j ) {
+            vSimBEGe[j].push_back(hSimBEGe[j]->GetBinContent(i+1));
+            vSimCOAX[j].push_back(hSimCOAX[j]->GetBinContent(i+1));
+        }
     }
 
 // ------------------------------------------------------------------------------
@@ -86,7 +112,7 @@ int main( int argc, char** argv ) {
     m.SetSimBEGe(vSimBEGe);
     m.SetSimCOAX(vSimCOAX);
 
-    m.SetFitRange(600, 1400);
+    m.SetFitRange(550, 2000);
 
     // set nicer style for drawing than the ROOT default
 	BCAux::SetStyle();
@@ -95,7 +121,7 @@ int main( int argc, char** argv ) {
 	BCLog::OpenLog("out/logBAT.txt", BCLog::detail, BCLog::detail);
 
 	// set precision (number of samples in Markov chain)
-	m.MCMCSetPrecision(BCEngineMCMC::kLow);
+	m.MCMCSetPrecision(BCEngineMCMC::kMedium);
     
     // set parameter binning
     //m.SetNbins(1000);
@@ -152,46 +178,51 @@ int main( int argc, char** argv ) {
     hDataCOAX->SetName("hDataCOAX");
     hDataCOAX->Write();
 
-    h2nbbBEGe->Scale(results[0]);
-    h2nbbBEGe->SetBins(7500,0,7500);
-    h2nbbBEGe->SetName("h2nbbBEGe");
-    h2nbbBEGe->Write();
+    hSimBEGe[0]->Scale(results[0]);
+    hSimBEGe[0]->SetBins(nBins,0,7500);
+    hSimBEGe[0]->SetName("h2nbbBEGe");
 
-    h2nbbCOAX->Scale(results[0]);
-    h2nbbCOAX->SetBins(7500,0,7500);
-    h2nbbCOAX->SetName("h2nbbCOAX");
-    h2nbbCOAX->Write();
+    hSimCOAX[0]->Scale(results[0]);
+    hSimCOAX[0]->SetBins(nBins,0,7500);
+    hSimCOAX[0]->SetName("h2nbbCOAX");
 
-    h2nbbLVBEGe->Scale(results[0]*results[1]*m.Getn2n1());
-    h2nbbLVBEGe->SetBins(7500,0,7500);
-    h2nbbLVBEGe->SetName("h2nbbLVBEGe");
-    h2nbbLVBEGe->Write();
+    hSimBEGe[1]->Scale(results[0]*results[1]*m.Getn2n1());
+    hSimBEGe[1]->SetBins(nBins,0,7500);
+    hSimBEGe[1]->SetName("h2nbbLVBEGe");
     
-    h2nbbLVCOAX->Scale(results[0]*results[1]*m.Getn2n1());
-    h2nbbLVCOAX->SetBins(7500,0,7500);
-    h2nbbLVCOAX->SetName("h2nbbLVCOAX");
-    h2nbbLVCOAX->Write();
+    hSimCOAX[1]->Scale(results[0]*results[1]*m.Getn2n1());
+    hSimCOAX[1]->SetBins(nBins,0,7500);
+    hSimCOAX[1]->SetName("h2nbbLVCOAX");
+ 
+    hSimBEGe[2]->Scale(results[2]);
+    hSimBEGe[2]->SetName("hhomLArBEGe");
+    
+    hSimCOAX[2]->Scale(results[2]);
+    hSimCOAX[2]->SetName("hhomLArCOAX");
+    
+    for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
+        hSimBEGe[i]->Write();
+        hSimCOAX[i]->Write();
+    }
 
 // ----------------------------------------------------------------------------------
-    TCanvas tmpBEGe("tmpBEGe", "tmpBEGe", 1);
+    TCanvas tmpBEGe("tmpBEGe", "tmpBEGe", 900, 600);
     tmpBEGe.cd();
     
     hDataBEGe->SetStats(false);
-    hDataBEGe->SetMarkerStyle(6);
+    hDataBEGe->SetMarkerStyle(23);
     //hDataBEGe->SetMarkerColor(kBlack);
-    hDataBEGe->GetXaxis()->SetRange(300,2000);
+    hDataBEGe->GetXaxis()->SetRangeUser(300,2000);
     hDataBEGe->Draw("P");
 
-    h2nbbBEGe->SetLineColor(kBlue);
-    h2nbbBEGe->Draw("SAME");
+    hSimBEGe[0]->SetLineColor(kBlue);
+    hSimBEGe[1]->SetLineColor(kGreen);  
+    hSimBEGe[2]->SetLineColor(kGreen+2);
+
+    for ( auto& h : hSimBEGe ) h->Draw("SAME");
     
-    h2nbbLVBEGe->SetLineColor(kGreen);
-    h2nbbLVBEGe->Draw("SAME");
-    
-    TH1D sumBEGe("sumBEGe", "sumBEGe", 7500, 0, 7500);
-    sumBEGe.Add(h2nbbBEGe);
-    sumBEGe.Add(h2nbbLVBEGe);
-    sumBEGe.SetBins(7500,0,7500);
+    TH1D sumBEGe("sumBEGe", "sumBEGe", nBins, 0, 7500);
+    for ( auto& h : hSimBEGe ) sumBEGe.Add(h);
     sumBEGe.SetLineColor(kRed);
     sumBEGe.Draw("SAME");
 
@@ -199,10 +230,8 @@ int main( int argc, char** argv ) {
 
     delete hDataBEGe;   
     delete hDataCOAX;   
-    delete h2nbbBEGe;   
-    delete h2nbbCOAX;   
-    delete h2nbbLVBEGe;     
-    delete h2nbbLVCOAX; 
+    hSimBEGe.clear();
+    hSimCOAX.clear();
 
     return 0;
 }

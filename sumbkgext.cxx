@@ -44,6 +44,8 @@ int main( int argc, char** argv ) {
     // LAr mass [kg]
     double M = 24563.385;
 
+    // fiber volume = 1.2966741074531858 E60 mm3
+
     // get detectorStatusMap for selected runs
     auto dsm = reader.GetDetectorStatusMap();
 
@@ -71,7 +73,7 @@ int main( int argc, char** argv ) {
 
     for ( int i = 0; i < 40; ++i ) { 
         hist.push_back(dynamic_cast<TH1F*>(infile.Get(Form("h%i", i))));
-        if (hist[i]->IsZombie()) { std::cout << "Zombie h" << std::to_string(i) << std::endl; return -1; }
+        if (hist[i]->IsZombie()) { std::cout << "Zombie h" << std::to_string(i) << "!\n"; return -1; }
     }
     
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_homLAr.root";
@@ -81,9 +83,9 @@ int main( int argc, char** argv ) {
         hist[i]->Write();
     }
 
-    TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 8500, 0, 8500);
-    TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 8500, 0, 8500);
-    TH1F histTotAll("energy_total", "global MaGe energy spectrum", 8500, 0, 8500);
+    TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7500);
+    TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7500);
+    TH1F histTotAll("energy_total", "global MaGe energy spectrum", 7500, 0, 7500);
        
     for ( auto& h : hist ) histTotAll.Add(h);
     

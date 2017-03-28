@@ -17,7 +17,11 @@ GERDALIBS = $(shell gelatio-config --libs) \
 DIRS   = bin lib out
 include misc/vars.mk
 
-all : $(DIRS) bin/processData bin/processMaGe bin/sumMaGe bin/runfit
+all : $(DIRS) bin/processData bin/processbb bin/sumbb bin/sumbkgext bin/runfit
+
+fit : $(DIRS) bin/runfit
+
+sumtools : $(DIRS) bin/sumbb bin/sumbkgext
 
 $(DIRS)) : 
 	-mkdir -p $(DIRS)
@@ -37,10 +41,13 @@ lib/libFit2nbbLV.so : fit/Fit2nbbLV.cxx fit/Fit2nbbLV.h
 bin/processData : processData.cxx lib/libDataReader.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader
 
-bin/processMaGe : processMaGe.cxx lib/libProgressBar.so
+bin/processbb : processbb.cxx lib/libProgressBar.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lProgressBar
 
-bin/sumMaGe : sumMaGe.cxx lib/libDataReader.so lib/libDetectorSet.so
+bin/sumbb : sumbb.cxx lib/libDataReader.so lib/libDetectorSet.so
+	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
+
+bin/sumbkgext : sumbkgext.cxx lib/libDataReader.so lib/libDetectorSet.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
 
 bin/runfit : fit/runfit.cxx lib/libFit2nbbLV.so

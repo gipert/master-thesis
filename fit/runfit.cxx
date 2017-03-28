@@ -20,8 +20,11 @@
 #include "TFile.h"
 #include "TH1D.h"
 #include "TH1F.h"
+#include "TCanvas.h"
 
 int main( int argc, char** argv ) {
+    
+    TH1::AddDirectory(false);
 
     // retrieve simulations and data
     std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumData.root";
@@ -43,6 +46,10 @@ int main( int argc, char** argv ) {
     TH1F* h2nbbCOAX;   fileSim2nbb.GetObject("energy_COAX", h2nbbCOAX);
     TH1F* h2nbbLVBEGe; fileSim2nbbLV.GetObject("energy_BEGe", h2nbbLVBEGe);
     TH1F* h2nbbLVCOAX; fileSim2nbbLV.GetObject("energy_COAX", h2nbbLVCOAX);
+ 
+    fileData.Close();
+    fileSim2nbb.Close();
+    fileSim2nbbLV.Close();
 
     if (!hDataBEGe or !hDataCOAX or !h2nbbBEGe or
         !h2nbbCOAX or !h2nbbLVBEGe or !h2nbbLVCOAX ) { std::cout << "There's at least one zombie TH1D!\n"; return -1; }
@@ -67,10 +74,6 @@ int main( int argc, char** argv ) {
         vSimBEGe[1].push_back(h2nbbLVBEGe->GetBinContent(i+1));
         vSimCOAX[1].push_back(h2nbbLVCOAX->GetBinContent(i+1));
     }
-
-    fileData.Close();
-    fileSim2nbb.Close();
-    fileSim2nbbLV.Close();
 
 // ------------------------------------------------------------------------------
 	// create Fit2nbbLV object
@@ -137,6 +140,69 @@ int main( int argc, char** argv ) {
 	BCLog::CloseLog();
 
     std::cout << "\n\ntime: " << elapsed.count() << "s\n";
-	
+// -----------------------------------------------------------------------------------
+
+    // save results to draw them later
+    std::vector<double> results = m.GetBestFitParameters();
+    
+    TFile outDrawFile("out/outHists.root", "RECREATE");
+    
+    hDataBEGe->SetName("hDataBEGe");
+    hDataBEGe->Write();
+    hDataCOAX->SetName("hDataCOAX");
+    hDataCOAX->Write();
+
+    h2nbbBEGe->Scale(results[0]);
+    h2nbbBEGe->SetBins(7500,0,7500);
+    h2nbbBEGe->SetName("h2nbbBEGe");
+    h2nbbBEGe->Write();
+
+    h2nbbCOAX->Scale(results[0]);
+    h2nbbCOAX->SetBins(7500,0,7500);
+    h2nbbCOAX->SetName("h2nbbCOAX");
+    h2nbbCOAX->Write();
+
+    h2nbbLVBEGe->Scale(results[0]*results[1]*m.Getn2n1());
+    h2nbbLVBEGe->SetBins(7500,0,7500);
+    h2nbbLVBEGe->SetName("h2nbbLVBEGe");
+    h2nbbLVBEGe->Write();
+    
+    h2nbbLVCOAX->Scale(results[0]*results[1]*m.Getn2n1());
+    h2nbbLVCOAX->SetBins(7500,0,7500);
+    h2nbbLVCOAX->SetName("h2nbbLVCOAX");
+    h2nbbLVCOAX->Write();
+
+// ----------------------------------------------------------------------------------
+    TCanvas tmpBEGe("tmpBEGe", "tmpBEGe", 1);
+    tmpBEGe.cd();
+    
+    hDataBEGe->SetStats(false);
+    hDataBEGe->SetMarkerStyle(6);
+    //hDataBEGe->SetMarkerColor(kBlack);
+    hDataBEGe->GetXaxis()->SetRange(300,2000);
+    hDataBEGe->Draw("P");
+
+    h2nbbBEGe->SetLineColor(kBlue);
+    h2nbbBEGe->Draw("SAME");
+    
+    h2nbbLVBEGe->SetLineColor(kGreen);
+    h2nbbLVBEGe->Draw("SAME");
+    
+    TH1D sumBEGe("sumBEGe", "sumBEGe", 7500, 0, 7500);
+    sumBEGe.Add(h2nbbBEGe);
+    sumBEGe.Add(h2nbbLVBEGe);
+    sumBEGe.SetBins(7500,0,7500);
+    sumBEGe.SetLineColor(kRed);
+    sumBEGe.Draw("SAME");
+
+    tmpBEGe.SaveAs("out/BEGe.pdf");
+
+    delete hDataBEGe;   
+    delete hDataCOAX;   
+    delete h2nbbBEGe;   
+    delete h2nbbCOAX;   
+    delete h2nbbLVBEGe;     
+    delete h2nbbLVCOAX; 
+
     return 0;
 }

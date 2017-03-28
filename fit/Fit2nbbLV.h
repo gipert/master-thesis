@@ -33,6 +33,7 @@ class Fit2nbbLV : public BCModel {
     // new methods
     // useful in LogLikelihood, no boundary check for performance reasons
     float GetBinCenter(int i) const { return (float)(ubin[i-1]+ubin[i])/2; }
+    double Getn2n1() const { return n2n1; }
     // initialize ubin vector
     void SetBinning(std::vector<int>& v);
     // set fit boundaries, a=b equals no boundaries
@@ -67,10 +68,11 @@ class Fit2nbbLV : public BCModel {
     // legend:
     // [0] 2bnn
     // [1] 2nbbLV
-    // [2] ...
+    // [2] homLAr
+    // ...
     //
 
-    const double corr = 134.594580;
+    const double n2n1 = 134.594580;
 };
 
 #endif

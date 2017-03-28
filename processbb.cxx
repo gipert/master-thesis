@@ -1,4 +1,4 @@
-/* processMaGe.cxx
+/* processbb.cxx
  *
  * Program to produce MaGe simulations for each detector (AV and DV)
  *

@@ -1,4 +1,4 @@
-/* sumMaGe.cxx
+/* sumbb.cxx
  *
  * Program to sum MaGe simulations for each detector (AV and DV)
  * into global energy spectra.
@@ -49,7 +49,7 @@ int main( int argc, char** argv ) {
     std::vector<float> N76AV = set.GetActiveN76Ge();
     std::vector<float> N76DV = set.GetDeadN76Ge(); 
     // number of generated events
-    int Ngen = 10E07;
+    int Ngen = 1E07;
 
     // get detectorStatusMap for selected runs
     auto dsm = reader.GetDetectorStatusMap();

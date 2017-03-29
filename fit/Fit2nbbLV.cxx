@@ -16,7 +16,7 @@
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
    
     // define parameters
-    this->AddParameter("2nbb", 0, 300);
+    this->AddParameter("2nbb", 200, 300);
     this->AddParameter("2nbbLV", 0, 0.01);
     this->AddParameter("K42homLAr", 0, 0.001);
     this->AddParameter("K40onFiberShroud", 0, 5);

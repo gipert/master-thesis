@@ -29,7 +29,7 @@
 int main( int argc, char** argv ) {
     
 /////////////////////////////////////////////
-    int nBins = 750;
+    int nBins = 1875;
     int rangeUp = 2700;  // [keV]
     int rangeDown = 550; // [keV]
     BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
@@ -47,6 +47,7 @@ int main( int argc, char** argv ) {
     // [1] 2nbbLV
     // [2] homLAr
     // [3] K40onFiberShroud
+    // ...
     
     // 2nbb
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbb.root";
@@ -127,7 +128,7 @@ int main( int argc, char** argv ) {
         }
     }
 
-// ------------------------------------------------------------------------------
+// ==========================================================================================================
 	// create Fit2nbbLV object
     Fit2nbbLV m("Fit2nbbLV");
 
@@ -163,7 +164,7 @@ int main( int argc, char** argv ) {
 	m.MarginalizeAll();
 	m.WriteMarkovChain(true);
 
-	// run mode finding; by default using Minuit
+	// run mode finding, by default using Minuit
 	m.FindMode(m.GetBestFitParameters());
     
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);
@@ -192,10 +193,10 @@ int main( int argc, char** argv ) {
 	BCLog::CloseLog();
 
     std::cout << "\n\ntime: " << elapsed.count() << "s\n";
-// -----------------------------------------------------------------------------------
+// ========================================================================================================
 
     // save results to draw them later
-    std::vector<double> results = m.GetBestFitParameters();
+    auto results = m.GetBestFitParameters();
     
     TFile outDrawFile("out/outHists.root", "RECREATE");
     
@@ -203,12 +204,13 @@ int main( int argc, char** argv ) {
     hDataBEGe->Write();
     hDataCOAX->SetName("hDataCOAX");
     hDataCOAX->Write();
+    
+    for ( auto& p : results ) std::cout << p << ' '; std::cout << '\n';
 
     // 2nbb
     hSimBEGe[0]->Scale(results[0]);
     hSimBEGe[0]->SetBins(nBins,0,7500);
     hSimBEGe[0]->SetName("h2nbbBEGe");
-
     hSimCOAX[0]->Scale(results[0]);
     hSimCOAX[0]->SetBins(nBins,0,7500);
     hSimCOAX[0]->SetName("h2nbbCOAX");
@@ -217,7 +219,6 @@ int main( int argc, char** argv ) {
     hSimBEGe[1]->Scale(results[0]*results[1]*m.Getn2n1());
     hSimBEGe[1]->SetBins(nBins,0,7500);
     hSimBEGe[1]->SetName("h2nbbLVBEGe");
-    
     hSimCOAX[1]->Scale(results[0]*results[1]*m.Getn2n1());
     hSimCOAX[1]->SetBins(nBins,0,7500);
     hSimCOAX[1]->SetName("h2nbbLVCOAX");
@@ -225,42 +226,36 @@ int main( int argc, char** argv ) {
     // K42
     hSimBEGe[2]->Scale(results[2]);
     hSimBEGe[2]->SetName("hK42homLArBEGe");
-    
     hSimCOAX[2]->Scale(results[2]);
     hSimCOAX[2]->SetName("hK42homLArCOAX");
     
     // K40
     hSimBEGe[3]->Scale(results[3]);
     hSimBEGe[3]->SetName("hK40onFiberShroudBEGe");
-    
     hSimCOAX[3]->Scale(results[3]);
     hSimCOAX[3]->SetName("hK40onFiberShroudCOAX");
      
     // Bi212
     hSimBEGe[4]->Scale(results[4]);
     hSimBEGe[4]->SetName("hBi212onFiberShroudBEGe");
-    
     hSimCOAX[4]->Scale(results[4]);
     hSimCOAX[4]->SetName("hBi212onFiberShroudCOAX");
     
     // Tl208
     hSimBEGe[5]->Scale(results[4]*m.GetBrRatioTl());
-    hSimBEGe[5]->SetName("hTl208onFiberShroudBEGe");
-    
+    hSimBEGe[5]->SetName("hTl208onFiberShroudBEGe");    
     hSimCOAX[5]->Scale(results[4]*m.GetBrRatioTl());
     hSimCOAX[5]->SetName("hTl208onFiberShroudCOAX");
     
     // Pb214
     hSimBEGe[6]->Scale(results[5]);
     hSimBEGe[6]->SetName("hPb214onFiberShroudBEGe");
-    
     hSimCOAX[6]->Scale(results[5]);
     hSimCOAX[6]->SetName("hPb214onFiberShroudCOAX");
     
     // Bi214
     hSimBEGe[7]->Scale(results[5]);
     hSimBEGe[7]->SetName("hBi214onFiberShroudBEGe");
-    
     hSimCOAX[7]->Scale(results[5]);
     hSimCOAX[7]->SetName("hBi214onFiberShroudCOAX");
  

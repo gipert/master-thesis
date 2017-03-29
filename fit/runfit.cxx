@@ -22,6 +22,7 @@
 #include "TH1D.h"
 #include "TH1F.h"
 #include "TCanvas.h"
+#include "TLegend.h"
 
 int main( int argc, char** argv ) {
     
@@ -39,6 +40,7 @@ int main( int argc, char** argv ) {
     // [0] 2nbb
     // [1] 2nbbLV
     // [2] homLAr
+    // [3] K40onFiberShroud
     
     // 2nbb
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbb.root";
@@ -52,6 +54,9 @@ int main( int argc, char** argv ) {
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_homLAr.root";
     simFile.emplace_back( new TFile(path.c_str(), "READ") );
 
+    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_K40onFiberShroud.root";
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    
     for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
 
     TH1D* hDataBEGe;   fileData.GetObject("energyBEGeAll", hDataBEGe);
@@ -85,9 +90,7 @@ int main( int argc, char** argv ) {
     hDataBEGe->Rebin(7500/nBins);
     hDataCOAX->Rebin(7500/nBins);
     for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
-        std::cout << "\n\n" << hSimBEGe[i]->GetNbinsX() << ' ';
         hSimBEGe[i]->Rebin(7500/nBins);
-        std::cout << hSimBEGe[i]->GetNbinsX() << "\n\n";
         hSimCOAX[i]->Rebin(7500/nBins);
     }
 
@@ -112,7 +115,7 @@ int main( int argc, char** argv ) {
     m.SetSimBEGe(vSimBEGe);
     m.SetSimCOAX(vSimCOAX);
 
-    m.SetFitRange(550, 2000);
+    m.SetFitRange(550, 2700);
 
     // set nicer style for drawing than the ROOT default
 	BCAux::SetStyle();
@@ -200,33 +203,54 @@ int main( int argc, char** argv ) {
     hSimCOAX[2]->Scale(results[2]);
     hSimCOAX[2]->SetName("hhomLArCOAX");
     
+    hSimBEGe[3]->Scale(results[3]);
+    hSimBEGe[3]->SetName("hK49onFiberShroudBEGe");
+    
+    hSimCOAX[3]->Scale(results[3]);
+    hSimCOAX[3]->SetName("hK40onFiberShroudCOAX");
+    
     for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
         hSimBEGe[i]->Write();
         hSimCOAX[i]->Write();
     }
 
 // ----------------------------------------------------------------------------------
-    TCanvas tmpBEGe("tmpBEGe", "tmpBEGe", 900, 600);
-    tmpBEGe.cd();
     
-    hDataBEGe->SetStats(false);
-    hDataBEGe->SetMarkerStyle(23);
-    //hDataBEGe->SetMarkerColor(kBlack);
-    hDataBEGe->GetXaxis()->SetRangeUser(300,2000);
-    hDataBEGe->Draw("P");
-
-    hSimBEGe[0]->SetLineColor(kBlue);
-    hSimBEGe[1]->SetLineColor(kGreen);  
-    hSimBEGe[2]->SetLineColor(kGreen+2);
-
-    for ( auto& h : hSimBEGe ) h->Draw("SAME");
+    auto draw = [&]( std::vector<TH1F*> v , TH1D* vd ,std::string type ) {
+        
+        TCanvas tmp(type.c_str(), type.c_str(), 900, 600);
+        tmp.cd();
     
-    TH1D sumBEGe("sumBEGe", "sumBEGe", nBins, 0, 7500);
-    for ( auto& h : hSimBEGe ) sumBEGe.Add(h);
-    sumBEGe.SetLineColor(kRed);
-    sumBEGe.Draw("SAME");
+        vd->SetStats(false);
+        vd->SetMarkerStyle(23);
+        vd->GetXaxis()->SetRangeUser(300,2000);
+        vd->Draw("P");
 
-    tmpBEGe.SaveAs("out/BEGe.pdf");
+        v[0]->SetLineColor(kBlue);
+        v[1]->SetLineColor(kBlue+1);  
+        v[2]->SetLineColor(kGreen);
+        v[3]->SetLineColor(kGreen+1);
+
+        for ( auto& h : v ) h->Draw("SAME");
+    
+        std::string name = "sum" + type;
+        TH1D sum(name.c_str(), name.c_str(), nBins, 0, 7500);
+        for ( auto& h : v ) sum.Add(h);
+        sum.SetLineColor(kRed);
+        sum.Draw("SAME");
+
+        TLegend leg(0.8,0.8,1,1);
+        for ( auto& h : v ) leg.AddEntry(h,h->GetName(),"l");
+        leg.AddEntry(&sum,sum.GetName(),"l");
+        leg.Draw();
+        
+        tmp.SetLogy();
+        name = "out/" + type + ".pdf";
+        tmp.SaveAs(name.c_str());
+    };
+
+    draw( hSimBEGe, hDataBEGe, "BEGe" );
+    draw( hSimCOAX, hDataCOAX, "COAX" );
 
     delete hDataBEGe;   
     delete hDataCOAX;   

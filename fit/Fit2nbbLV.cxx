@@ -17,13 +17,15 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
    
     // define parameters
     this->AddParameter("2nbb", 0, 500);
-    this->AddParameter("2nbbLV", 0, 0.001);
+    this->AddParameter("2nbbLV", 0, 0.01);
     this->AddParameter("homLAr", 0, 0.001);
+    this->AddParameter("K40onFiberShroud", 0, 10);
 
     // priors
     this->SetPriorGauss(0,217,11);
     this->SetPriorConstant(1);
     this->SetPriorConstant(2);    
+    this->SetPriorConstant(3);    
 }
 // ---------------------------------------------------------
 void Fit2nbbLV::SetBinning(std::vector<int>& v) {

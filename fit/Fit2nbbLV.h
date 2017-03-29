@@ -69,7 +69,7 @@ class Fit2nbbLV : public BCModel {
     // [0] 2bnn
     // [1] 2nbbLV
     // [2] homLAr
-    // ...
+    // [3] K40onFiberShroud
     //
 
     const double n2n1 = 134.594580;

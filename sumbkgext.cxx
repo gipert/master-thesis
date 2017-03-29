@@ -34,7 +34,11 @@ int main( int argc, char** argv ) {
     std::string phys;
     if      ( std::find(args.begin(), args.end(), "--K42" ) != args.end() ) phys = "K42";
     else if ( std::find(args.begin(), args.end(), "--K40" ) != args.end() ) phys = "K40";
-    else    { std::cout << "Specify --K42 or --K40!\n"; return -1; }
+    else if ( std::find(args.begin(), args.end(), "--Bi212" ) != args.end() ) phys = "Bi212";
+    else if ( std::find(args.begin(), args.end(), "--Tl208" ) != args.end() ) phys = "Tl208";
+    else if ( std::find(args.begin(), args.end(), "--Bi214" ) != args.end() ) phys = "Bi214";
+    else if ( std::find(args.begin(), args.end(), "--Pb214" ) != args.end() ) phys = "Pb214";
+    else    { std::cout << "Specify\n --K42\n --K40\n --Bi212\n --Tl208\n --Bi214\n --Pb214"; return -1; }
 // ----------------------------------------------------------------------------------------------------------
     
     // infos about runs
@@ -48,7 +52,9 @@ int main( int argc, char** argv ) {
         Ngen = 5E09;
         M = 24563.385; // LAr mass [kg]
     }
-    if ( phys == "K40" ) {
+    if ( phys == "K40" or phys == "Bi212" or 
+         phys == "Tl208"  or phys == "Bi214" or
+         phys == "Pb214" ) {
         Ngen = 1E08;
         M = 1.3615078; // fiber's mass [kg]
     }
@@ -79,6 +85,10 @@ int main( int argc, char** argv ) {
     // get original spectra
     if ( phys == "K42" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/K42_homLAr_5E09.root";
     if ( phys == "K40" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/K40_onFiberShroud_1E08.root";
+    if ( phys == "Bi212" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/Bi212_onFiberShroud_1E08.root";
+    if ( phys == "Tl208" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/Tl208_onFiberShroud_1E08.root";
+    if ( phys == "Bi214" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/Bi214_onFiberShroud_1E08.root";
+    if ( phys == "Pb214" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/Pb214_onFiberShroud_1E08.root";
     TFile infile(path.c_str(), "READ"); 
     if (!infile.IsOpen()) { std::cerr << "Zombie infile!\n"; return -1; }
 
@@ -89,6 +99,10 @@ int main( int argc, char** argv ) {
     
     if ( phys == "K42" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_homLAr.root";
     if ( phys == "K40" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_K40onFiberShroud.root";
+    if ( phys == "Bi212" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Bi212onFiberShroud.root";
+    if ( phys == "Tl208" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Tl208onFiberShroud.root";
+    if ( phys == "Bi214" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Bi214onFiberShroud.root";
+    if ( phys == "Pb214" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Pb214onFiberShroud.root";
     TFile outfile(path.c_str(), "RECREATE");
     for ( int i = 0; i < 40; ++i ) {
         hist[i]->Scale(totalTime[i]*M/Ngen);

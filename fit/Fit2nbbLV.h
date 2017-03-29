@@ -34,6 +34,7 @@ class Fit2nbbLV : public BCModel {
     // useful in LogLikelihood, no boundary check for performance reasons
     float GetBinCenter(int i) const { return (float)(ubin[i-1]+ubin[i])/2; }
     double Getn2n1() const { return n2n1; }
+    double GetBrRatioTl() const { return BrTl; }
     // initialize ubin vector
     void SetBinning(std::vector<int>& v);
     // set fit boundaries, a=b equals no boundaries
@@ -65,14 +66,21 @@ class Fit2nbbLV : public BCModel {
     // custom model containters (MaGe output)
     std::vector<std::vector<double>> simBEGe;
     std::vector<std::vector<double>> simCOAX;
-    // legend:
+    //
+    //// LEGEND:
+    //
     // [0] 2bnn
     // [1] 2nbbLV
-    // [2] homLAr
+    // [2] K42homLAr
     // [3] K40onFiberShroud
+    // [4] Bi212onFiberShroud
+    // [5] Tl208onFiberShroud
+    // [6] Pb214onFiberShroud
+    // [7] Bi214onFiberShroud
     //
 
     const double n2n1 = 134.594580;
+    const double BrTl = 0.3539;
 };
 
 #endif

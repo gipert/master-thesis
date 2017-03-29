@@ -22,14 +22,20 @@
 #include "TH1D.h"
 #include "TH1F.h"
 #include "TCanvas.h"
+#include "TPad.h"
+#include "TFrame.h"
 #include "TLegend.h"
 
 int main( int argc, char** argv ) {
     
-    TH1::AddDirectory(false);
-    
+/////////////////////////////////////////////
     int nBins = 750;
+    int rangeUp = 2700;  // [keV]
+    int rangeDown = 550; // [keV]
+    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
+/////////////////////////////////////////////
 
+    TH1::AddDirectory(false);
     // retrieve data
     std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumData.root";
     TFile fileData(path.c_str(), "READ");
@@ -53,10 +59,27 @@ int main( int argc, char** argv ) {
     // homLAr
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_homLAr.root";
     simFile.emplace_back( new TFile(path.c_str(), "READ") );
-
+    
+    // K40onFiberShroud
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_K40onFiberShroud.root";
     simFile.emplace_back( new TFile(path.c_str(), "READ") );
     
+    // Bi212onFiberShroud
+    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Bi212onFiberShroud.root";
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    
+    // Tl208onFiberShroud
+    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Tl208onFiberShroud.root";
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+
+    // Pb214onFiberShroud
+    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Pb214onFiberShroud.root";
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    
+    // Bi214onFiberShroud
+    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Bi214onFiberShroud.root";
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+ 
     for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
 
     TH1D* hDataBEGe;   fileData.GetObject("energyBEGeAll", hDataBEGe);
@@ -115,7 +138,7 @@ int main( int argc, char** argv ) {
     m.SetSimBEGe(vSimBEGe);
     m.SetSimCOAX(vSimCOAX);
 
-    m.SetFitRange(550, 2700);
+    m.SetFitRange(rangeDown, rangeUp);
 
     // set nicer style for drawing than the ROOT default
 	BCAux::SetStyle();
@@ -124,7 +147,7 @@ int main( int argc, char** argv ) {
 	BCLog::OpenLog("out/logBAT.txt", BCLog::detail, BCLog::detail);
 
 	// set precision (number of samples in Markov chain)
-	m.MCMCSetPrecision(BCEngineMCMC::kMedium);
+	m.MCMCSetPrecision(level);
     
     // set parameter binning
     //m.SetNbins(1000);
@@ -181,6 +204,7 @@ int main( int argc, char** argv ) {
     hDataCOAX->SetName("hDataCOAX");
     hDataCOAX->Write();
 
+    // 2nbb
     hSimBEGe[0]->Scale(results[0]);
     hSimBEGe[0]->SetBins(nBins,0,7500);
     hSimBEGe[0]->SetName("h2nbbBEGe");
@@ -188,7 +212,8 @@ int main( int argc, char** argv ) {
     hSimCOAX[0]->Scale(results[0]);
     hSimCOAX[0]->SetBins(nBins,0,7500);
     hSimCOAX[0]->SetName("h2nbbCOAX");
-
+    
+    // 2nbbLV
     hSimBEGe[1]->Scale(results[0]*results[1]*m.Getn2n1());
     hSimBEGe[1]->SetBins(nBins,0,7500);
     hSimBEGe[1]->SetName("h2nbbLVBEGe");
@@ -196,19 +221,49 @@ int main( int argc, char** argv ) {
     hSimCOAX[1]->Scale(results[0]*results[1]*m.Getn2n1());
     hSimCOAX[1]->SetBins(nBins,0,7500);
     hSimCOAX[1]->SetName("h2nbbLVCOAX");
- 
+    
+    // K42
     hSimBEGe[2]->Scale(results[2]);
-    hSimBEGe[2]->SetName("hhomLArBEGe");
+    hSimBEGe[2]->SetName("hK42homLArBEGe");
     
     hSimCOAX[2]->Scale(results[2]);
-    hSimCOAX[2]->SetName("hhomLArCOAX");
+    hSimCOAX[2]->SetName("hK42homLArCOAX");
     
+    // K40
     hSimBEGe[3]->Scale(results[3]);
-    hSimBEGe[3]->SetName("hK49onFiberShroudBEGe");
+    hSimBEGe[3]->SetName("hK40onFiberShroudBEGe");
     
     hSimCOAX[3]->Scale(results[3]);
     hSimCOAX[3]->SetName("hK40onFiberShroudCOAX");
+     
+    // Bi212
+    hSimBEGe[4]->Scale(results[4]);
+    hSimBEGe[4]->SetName("hBi212onFiberShroudBEGe");
     
+    hSimCOAX[4]->Scale(results[4]);
+    hSimCOAX[4]->SetName("hBi212onFiberShroudCOAX");
+    
+    // Tl208
+    hSimBEGe[5]->Scale(results[4]*m.GetBrRatioTl());
+    hSimBEGe[5]->SetName("hTl208onFiberShroudBEGe");
+    
+    hSimCOAX[5]->Scale(results[4]*m.GetBrRatioTl());
+    hSimCOAX[5]->SetName("hTl208onFiberShroudCOAX");
+    
+    // Pb214
+    hSimBEGe[6]->Scale(results[5]);
+    hSimBEGe[6]->SetName("hPb214onFiberShroudBEGe");
+    
+    hSimCOAX[6]->Scale(results[5]);
+    hSimCOAX[6]->SetName("hPb214onFiberShroudCOAX");
+    
+    // Bi214
+    hSimBEGe[7]->Scale(results[5]);
+    hSimBEGe[7]->SetName("hBi214onFiberShroudBEGe");
+    
+    hSimCOAX[7]->Scale(results[5]);
+    hSimCOAX[7]->SetName("hBi214onFiberShroudCOAX");
+ 
     for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
         hSimBEGe[i]->Write();
         hSimCOAX[i]->Write();
@@ -218,18 +273,29 @@ int main( int argc, char** argv ) {
     
     auto draw = [&]( std::vector<TH1F*> v , TH1D* vd ,std::string type ) {
         
-        TCanvas tmp(type.c_str(), type.c_str(), 900, 600);
+        TCanvas tmp(type.c_str(), type.c_str(), 1200, 700);
+        TPad pad("pad", "pad", 0.0, 0.0, 1, 1);
+        pad.SetMargin(0.07,0.05,0.1,0.05);
         tmp.cd();
+        pad.Draw();
+        pad.cd();
     
         vd->SetStats(false);
         vd->SetMarkerStyle(23);
-        vd->GetXaxis()->SetRangeUser(300,2000);
+        vd->GetXaxis()->SetRangeUser(rangeDown,rangeUp);
+        vd->GetXaxis()->SetTitle("energy [keV]");
+        vd->GetYaxis()->SetTitle("counts");
+        vd->GetYaxis()->SetNdivisions(10);
         vd->Draw("P");
 
         v[0]->SetLineColor(kBlue);
-        v[1]->SetLineColor(kBlue+1);  
+        v[1]->SetLineColor(kBlue+2);  
         v[2]->SetLineColor(kGreen);
         v[3]->SetLineColor(kGreen+1);
+        v[4]->SetLineColor(kGreen+2);
+        v[5]->SetLineColor(kGreen+3);
+        v[6]->SetLineColor(kGreen+4);
+        v[7]->SetLineColor(kBlack);
 
         for ( auto& h : v ) h->Draw("SAME");
     
@@ -239,12 +305,13 @@ int main( int argc, char** argv ) {
         sum.SetLineColor(kRed);
         sum.Draw("SAME");
 
-        TLegend leg(0.8,0.8,1,1);
+        TLegend leg(0.7,0.7,0.95,0.95);
         for ( auto& h : v ) leg.AddEntry(h,h->GetName(),"l");
         leg.AddEntry(&sum,sum.GetName(),"l");
         leg.Draw();
         
-        tmp.SetLogy();
+        pad.SetLogy();
+        pad.SetGrid();
         name = "out/" + type + ".pdf";
         tmp.SaveAs(name.c_str());
     };

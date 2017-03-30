@@ -3,6 +3,15 @@
  * Author: Luigi Pertoldi - luigi.pertoldi@pd.infn.it
  * Created: 24/03/2017
  *
+ * Variable binning:
+ *   4 keV general binning, for the following gamma lines:
+ *
+ *   569    583    609    911    969    1001    1063
+ *   1120   1173   1238   1332   1461   1525    1764
+ *   2204   2614
+ *
+ *   we merge bins around +- 4keV
+ *
  */
 
 #include "Fit2nbbLV.h"
@@ -29,7 +38,6 @@
 int main( int argc, char** argv ) {
     
 /////////////////////////////////////////////
-    int nBins = 1875;
     int rangeUp = 2700;  // [keV]
     int rangeDown = 550; // [keV]
     BCEngineMCMC::Precision level(BCEngineMCMC::kLow);

@@ -31,7 +31,7 @@ class Fit2nbbLV : public BCModel {
 	//double LogAPrioriProbability(const std::vector<double> & parameters);
     
     // new methods
-    // useful in LogLikelihood, no boundary check for performance reasons
+    // no boundary check for performance reasons
     float GetBinCenter(int i) const { return (float)(ubin[i-1]+ubin[i])/2; }
     double Getn2n1() const { return n2n1; }
     double GetBrRatioTl() const { return BrTl; }
@@ -77,6 +77,7 @@ class Fit2nbbLV : public BCModel {
     // [5] Tl208onFiberShroud
     // [6] Pb214onFiberShroud
     // [7] Bi214onFiberShroud
+    // [8] alpha
     //
 
     const double n2n1 = 134.594580;

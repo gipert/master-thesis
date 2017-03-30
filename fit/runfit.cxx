@@ -19,6 +19,7 @@
 #include <BAT/BCSummaryTool.h>
 
 #include "TFile.h"
+#include "TH1.h"
 #include "TH1D.h"
 #include "TH1F.h"
 #include "TCanvas.h"
@@ -30,7 +31,7 @@ int main( int argc, char** argv ) {
     
 /////////////////////////////////////////////
     int nBins = 1875;
-    int rangeUp = 2700;  // [keV]
+    int rangeUp = 5300;  // [keV]
     int rangeDown = 550; // [keV]
     BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
 /////////////////////////////////////////////
@@ -47,7 +48,12 @@ int main( int argc, char** argv ) {
     // [1] 2nbbLV
     // [2] homLAr
     // [3] K40onFiberShroud
-    // ...
+    // [4] Bi212
+    // [5] Tl208
+    // [6] Pb214
+    // [7] Bi214
+    // [8] alphas
+    //
     
     // 2nbb
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbb.root";
@@ -80,23 +86,31 @@ int main( int argc, char** argv ) {
     // Bi214onFiberShroud
     path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Bi214onFiberShroud.root";
     simFile.emplace_back( new TFile(path.c_str(), "READ") );
+
+    // alpha
+    path = std::string(std::getenv("GERDACPTDIR")) + "/out/alpha_model_run53-74.root";
+    simFile.emplace_back( new TFile(path.c_str(), "READ") );
  
     for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
 
-    TH1D* hDataBEGe;   fileData.GetObject("energyBEGeAll", hDataBEGe);
-    TH1D* hDataCOAX;   fileData.GetObject("energyEnrCoaxAll", hDataCOAX);
+    TH1* hDataBEGe;   fileData.GetObject("energyBEGeAll", hDataBEGe);
+    TH1* hDataCOAX;   fileData.GetObject("energyEnrCoaxAll", hDataCOAX);
     
-    std::vector<TH1F*> hSimBEGe;
-    std::vector<TH1F*> hSimCOAX;
+    std::vector<TH1*> hSimBEGe;
+    std::vector<TH1*> hSimCOAX;
+
+    TH1* tmp;
     
     for ( auto& f : simFile ) {
-        hSimBEGe.push_back(dynamic_cast<TH1F*>(f->Get("energy_BEGe")));
-        hSimCOAX.push_back(dynamic_cast<TH1F*>(f->Get("energy_COAX")));
+        f->GetObject("energy_BEGe", tmp);
+        hSimBEGe.push_back(tmp);
+        f->GetObject("energy_COAX", tmp);
+        hSimCOAX.push_back(tmp);
     }
 
     fileData.Close();
     for ( auto& f : simFile ) f->Close();
-
+    
     if (!hDataBEGe or !hDataCOAX) { std::cout << "There's at least one zombie data hist!\n"; return -1; }
     for ( auto& h : hSimBEGe ) if (!h) { std::cout << "There's at least one zombie simBEGe hist!\n"; return -1; }
     for ( auto& h : hSimCOAX ) if (!h) { std::cout << "There's at least one zombie simCOAX hist!\n"; return -1; }
@@ -117,6 +131,10 @@ int main( int argc, char** argv ) {
         hSimBEGe[i]->Rebin(7500/nBins);
         hSimCOAX[i]->Rebin(7500/nBins);
     }
+
+    // normalize alphas
+    hSimBEGe[8]->Scale(1./hSimBEGe[8]->Integral());
+    hSimCOAX[8]->Scale(1./hSimCOAX[8]->Integral());
 
     for ( int i = 0; i < nBins; ++i ) {
         vDataBEGe.push_back(hDataBEGe->GetBinContent(i+1));
@@ -258,7 +276,13 @@ int main( int argc, char** argv ) {
     hSimBEGe[7]->SetName("hBi214onFiberShroudBEGe");
     hSimCOAX[7]->Scale(results[5]);
     hSimCOAX[7]->SetName("hBi214onFiberShroudCOAX");
- 
+
+    // alphas
+    hSimBEGe[8]->Scale(results[6]);
+    hSimBEGe[8]->SetName("hAlphaBEGe");
+    hSimCOAX[8]->Scale(results[7]);
+    hSimCOAX[8]->SetName("hAlphaCOAX");
+
     for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
         hSimBEGe[i]->Write();
         hSimCOAX[i]->Write();
@@ -266,9 +290,9 @@ int main( int argc, char** argv ) {
 
 // ----------------------------------------------------------------------------------
     
-    auto draw = [&]( std::vector<TH1F*> v , TH1D* vd ,std::string type ) {
+    auto draw = [&]( std::vector<TH1*> v , TH1* vd ,std::string type ) {
         
-        TCanvas tmp(type.c_str(), type.c_str(), 1200, 700);
+        TCanvas tmp(type.c_str(), type.c_str(), 2700, 700);
         TPad pad("pad", "pad", 0.0, 0.0, 1, 1);
         pad.SetMargin(0.07,0.05,0.1,0.05);
         tmp.cd();
@@ -291,14 +315,15 @@ int main( int argc, char** argv ) {
         v[5]->SetLineColor(kGreen+3);
         v[6]->SetLineColor(kGreen+4);
         v[7]->SetLineColor(kBlack);
+        v[8]->SetLineColor(kRed+2);
 
-        for ( auto& h : v ) h->Draw("SAME");
+        for ( auto& h : v ) h->Draw("HISTSAME");
     
-        std::string name = "sum" + type;
+        std::string name = "hsum" + type;
         TH1D sum(name.c_str(), name.c_str(), nBins, 0, 7500);
         for ( auto& h : v ) sum.Add(h);
         sum.SetLineColor(kRed);
-        sum.Draw("SAME");
+        sum.Draw("HISTSAME");
 
         TLegend leg(0.7,0.7,0.95,0.95);
         for ( auto& h : v ) leg.AddEntry(h,h->GetName(),"l");

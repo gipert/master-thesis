@@ -16,14 +16,14 @@
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
    
     // define parameters
-    /* [0] */ this->AddParameter("2nbb", 0, 230);
-    /* [1] */ this->AddParameter("2nbbLV", 0, 0.003);
+    /* [0] */ this->AddParameter("2nbb", 200, 280);
+    /* [1] */ this->AddParameter("2nbbLV", 0, 0.001);
     /* [2] */ this->AddParameter("K42homLAr", 0, 0.0003);
-    /* [3] */ this->AddParameter("K40onFiberShroud", 0, 1.5);
-    /* [4] */ this->AddParameter("Bi212onFiberShroud", 0, 0.05);
-    /* [5] */ this->AddParameter("Bi214onFiberShroud", 0, 0.07);
-    /* [6] */ this->AddParameter("alphaBEGe", 1000, 2000);
-    /* [7] */ this->AddParameter("alphaCOAX", 2000, 3000);
+    /* [3] */ this->AddParameter("K40onFiberShroud", 0, 2);
+    /* [4] */ this->AddParameter("Bi212onFiberShroud", 0, 0.1);
+    /* [5] */ this->AddParameter("Bi214onFiberShroud", 0, 0.1);
+    /* [6] */ this->AddParameter("alphaBEGe", 0, 2000);
+    /* [7] */ this->AddParameter("alphaCOAX", 0, 2600);
     //
     //// LEGEND
     //
@@ -47,34 +47,37 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     this->SetPriorConstantAll();
 }
 // ---------------------------------------------------------
-void Fit2nbbLV::SetBinning(std::vector<int>& v) {
-    ubin = v;
+void Fit2nbbLV::SetBinning(std::vector<double>& v) {
+    dbin = v;
     downBin = 0;
-    upBin = v.size()-1;
+    upBin = v.size()-2;
     return;
 }
 // ---------------------------------------------------------
 void Fit2nbbLV::SetFitRange(double down, double up) {
     
-    if (ubin.empty()) {
+    if (dbin.empty()) {
         std::cerr << "Error: you must call Fit2nbbLV::SetBinning first!\n" << std::flush;
         return;
     }
 
     int idown = 0; 
     int iup   = 0;
-    int ubinsize = ubin.size();
+    int dbinsize = dbin.size();
     
     // maybe this needs some pre-testing
-    for ( int i = 0; i < ubinsize; ++i ) {
-        if ( (double)ubin[i] <= down ) idown++;
-        if ( (double)ubin[i] <  up   ) iup++;
+    for ( int i = 0; i < dbinsize; ++i ) {
+        if ( (double)dbin[i] <  down ) idown++;
+        if ( (double)dbin[i] <= up   ) iup++;
     }
 
-    if ( idown != 0 and iup != 0 and iup > idown ) {
+    if ( (idown != 0 or iup != 0) and iup > idown ) {
         kUseRange = true;
         downBin = idown;
         upBin = iup;
+
+        std::cout << "\nUsing range: from dbin[" << idown << "] = " << dbin[idown]
+                  << " to dbin[" << iup << "] = " << dbin[iup] << '\n';
     }
 
     else std::cout << "Fit2nbbLV::SetFitRange: something went wrong...\n";
@@ -86,7 +89,6 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
     
     double logprob = 0.;
     double f;
-    //int last = parameters.size()-1;
     
     for ( int i = downBin; i < upBin; ++i ) {
 
@@ -96,6 +98,7 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
         f += parameters[4]*(simBEGe[4][i] + BrTl*simBEGe[5][i]);
         f += parameters[5]*(simBEGe[6][i] +      simBEGe[7][i]);
         f += parameters[6]*simBEGe[8][i];
+        
         logprob += dataBEGe[i]*log(f) - f;// - BCMath::LogFact(dataBEGe[i]);
 
         // COAX
@@ -104,6 +107,7 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
         f += parameters[4]*(simCOAX[4][i] + BrTl*simCOAX[5][i]);
         f += parameters[5]*(simCOAX[6][i] +      simCOAX[7][i]);
         f += parameters[7]*simCOAX[8][i];
+        
         logprob += dataCOAX[i]*log(f) - f;// - BCMath::LogFact(dataCOAX[i]);
 	}
 

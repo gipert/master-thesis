@@ -10,7 +10,7 @@
  *   1120   1173   1238   1332   1461   1525    1764
  *   2204   2614
  *
- *   we merge bins around +- 4keV
+ *   we merge bins around +- 4keV ==> 1847 bins
  *
  */
 
@@ -20,7 +20,6 @@
 #include <string>
 #include <vector>
 #include <chrono>
-#include <algorithm>
 #include <memory>
 
 #include <BAT/BCLog.h>
@@ -39,9 +38,8 @@
 int main( int argc, char** argv ) {
     
 /////////////////////////////////////////////
-    int nBins = 1875;
-    int rangeUp = 5300;  // [keV]
-    int rangeDown = 550; // [keV]
+    const int rangeUp = 5300;  // [keV]
+    const int rangeDown = 550; // [keV]
     BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
 /////////////////////////////////////////////
 
@@ -102,52 +100,86 @@ int main( int argc, char** argv ) {
  
     for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
 
-    TH1* hDataBEGe;   fileData.GetObject("energyBEGeAll", hDataBEGe);
-    TH1* hDataCOAX;   fileData.GetObject("energyEnrCoaxAll", hDataCOAX);
+    TH1D* hDataBEGetmp;   fileData.GetObject("energyBEGeAll", hDataBEGetmp);
+    TH1D* hDataCOAXtmp;   fileData.GetObject("energyEnrCoaxAll", hDataCOAXtmp);
     
-    std::vector<TH1*> hSimBEGe;
-    std::vector<TH1*> hSimCOAX;
+    std::vector<TH1*> hSimBEGetmp;
+    std::vector<TH1*> hSimCOAXtmp;
 
     TH1* tmp;
     
     for ( auto& f : simFile ) {
         f->GetObject("energy_BEGe", tmp);
-        hSimBEGe.push_back(tmp);
+        hSimBEGetmp.push_back(tmp);
         f->GetObject("energy_COAX", tmp);
-        hSimCOAX.push_back(tmp);
+        hSimCOAXtmp.push_back(tmp);
     }
-
+    
     fileData.Close();
     for ( auto& f : simFile ) f->Close();
+
+    for ( auto& h : hSimBEGetmp ) if (!h) { std::cout << "There's at least one zombie simBEGe hist!\n"; return -1; }
+    for ( auto& h : hSimCOAXtmp ) if (!h) { std::cout << "There's at least one zombie simCOAX hist!\n"; return -1; }
     
-    if (!hDataBEGe or !hDataCOAX) { std::cout << "There's at least one zombie data hist!\n"; return -1; }
-    for ( auto& h : hSimBEGe ) if (!h) { std::cout << "There's at least one zombie simBEGe hist!\n"; return -1; }
-    for ( auto& h : hSimCOAX ) if (!h) { std::cout << "There's at least one zombie simCOAX hist!\n"; return -1; }
+    // create !!!VARIABLE!!! binning
     
-    // create binning !!!NON-VARIABLE!!!
-    std::vector<int> ubin(nBins);
-    int k = 0;
-    std::generate(ubin.begin(), ubin.end(), [&](){ return k+=7500/nBins; } );
+    const int nBins = 1847;
+    std::vector<int> avoid = { 568, 572, 580, 584, 608, 612, 908, 
+                               912, 968, 972, 1000, 1004, 1060, 1064, 
+                               1120, 1172, 1176, 1236, 1240, 1332, 1460, 
+                               1464, 1524, 1528, 1764, 2204, 2612, 2616 };
+
+    std::vector<double> dbin(nBins+1);
+    int k = 0, i = 0;
+    while (1) { 
+        if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) { 
+            dbin[i] = k; 
+            i++; 
+        }
+        k += 4;
+        if ( k > 7500 ) break;
+    }
+
+    hSimBEGetmp[0]->SetBins(7500,0,7500);
+    hSimCOAXtmp[0]->SetBins(7500,0,7500);
+    hSimBEGetmp[1]->SetBins(7500,0,7500);
+    hSimCOAXtmp[1]->SetBins(7500,0,7500);
+    
+    // rebin the histograms
+    // new histograms
+    TH1D* hDataBEGe = dynamic_cast<TH1D*>(hDataBEGetmp->Rebin(nBins, "hDataBEGetmp", &dbin[0]));
+    TH1D* hDataCOAX = dynamic_cast<TH1D*>(hDataBEGetmp->Rebin(nBins, "hDataCOAXtmp", &dbin[0]));
+    
+    std::vector<TH1*> hSimBEGe;
+    std::vector<TH1*> hSimCOAX;
+
+    for ( unsigned int i = 0; i < hSimBEGetmp.size(); ++i ) {
+        if ( i == 8 ) {
+            hSimBEGe.push_back(dynamic_cast<TH1D*>(hSimBEGetmp[i]->Rebin(nBins, Form("hSimBEGe%i", i), &dbin[0])));
+            hSimCOAX.push_back(dynamic_cast<TH1D*>(hSimCOAXtmp[i]->Rebin(nBins, Form("hSimCOAX%i", i), &dbin[0])));
+        }
+        else {
+            hSimBEGe.push_back(dynamic_cast<TH1F*>(hSimBEGetmp[i]->Rebin(nBins, Form("hSimBEGe%i", i), &dbin[0])));
+            hSimCOAX.push_back(dynamic_cast<TH1F*>(hSimCOAXtmp[i]->Rebin(nBins, Form("hSimCOAX%i", i), &dbin[0])));
+        }
+    }
+
+    delete hDataBEGetmp;   
+    delete hDataCOAXtmp;   
+    hSimBEGetmp.clear();
+    hSimCOAXtmp.clear();
 
     // convert in std::vector
-    std::vector<int> vDataBEGe, vDataCOAX;
+    std::vector<int> vDataBEGe(nBins), vDataCOAX(nBins);
     std::vector<std::vector<double>> vSimCOAX(hSimCOAX.size()), vSimBEGe(hSimBEGe.size());
-
-    // rebin if needed
-    hDataBEGe->Rebin(7500/nBins);
-    hDataCOAX->Rebin(7500/nBins);
-    for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
-        hSimBEGe[i]->Rebin(7500/nBins);
-        hSimCOAX[i]->Rebin(7500/nBins);
-    }
 
     // normalize alphas
     hSimBEGe[8]->Scale(1./hSimBEGe[8]->Integral());
     hSimCOAX[8]->Scale(1./hSimCOAX[8]->Integral());
 
     for ( int i = 0; i < nBins; ++i ) {
-        vDataBEGe.push_back(hDataBEGe->GetBinContent(i+1));
-        vDataCOAX.push_back(hDataCOAX->GetBinContent(i+1));
+        vDataBEGe[i] = hDataBEGe->GetBinContent(i+1);
+        vDataCOAX[i] = hDataCOAX->GetBinContent(i+1);
         
         for ( unsigned int j = 0; j < hSimBEGe.size(); ++j ) {
             vSimBEGe[j].push_back(hSimBEGe[j]->GetBinContent(i+1));
@@ -160,7 +192,7 @@ int main( int argc, char** argv ) {
     Fit2nbbLV m("Fit2nbbLV");
 
     // set data
-    m.SetBinning(ubin);
+    m.SetBinning(dbin);
     m.SetDataBEGe(vDataBEGe);
     m.SetDataCOAX(vDataCOAX);
     m.SetSimBEGe(vSimBEGe);
@@ -232,22 +264,16 @@ int main( int argc, char** argv ) {
     hDataCOAX->SetName("hDataCOAX");
     hDataCOAX->Write();
     
-    for ( auto& p : results ) std::cout << p << ' '; std::cout << '\n';
-
     // 2nbb
     hSimBEGe[0]->Scale(results[0]);
-    hSimBEGe[0]->SetBins(nBins,0,7500);
     hSimBEGe[0]->SetName("h2nbbBEGe");
     hSimCOAX[0]->Scale(results[0]);
-    hSimCOAX[0]->SetBins(nBins,0,7500);
     hSimCOAX[0]->SetName("h2nbbCOAX");
     
     // 2nbbLV
     hSimBEGe[1]->Scale(results[0]*results[1]*m.Getn2n1());
-    hSimBEGe[1]->SetBins(nBins,0,7500);
     hSimBEGe[1]->SetName("h2nbbLVBEGe");
     hSimCOAX[1]->Scale(results[0]*results[1]*m.Getn2n1());
-    hSimCOAX[1]->SetBins(nBins,0,7500);
     hSimCOAX[1]->SetName("h2nbbLVCOAX");
     
     // K42
@@ -309,13 +335,14 @@ int main( int argc, char** argv ) {
         pad.cd();
     
         vd->SetStats(false);
-        vd->SetMarkerStyle(23);
+        vd->SetMarkerStyle(6);
         vd->GetXaxis()->SetRangeUser(rangeDown,rangeUp);
         vd->GetXaxis()->SetTitle("energy [keV]");
         vd->GetYaxis()->SetTitle("counts");
         vd->GetYaxis()->SetNdivisions(10);
         vd->Draw("P");
-
+        
+        for ( auto& h : v ) h->SetLineWidth(1);
         v[0]->SetLineColor(kBlue);
         v[1]->SetLineColor(kBlue+2);  
         v[2]->SetLineColor(kGreen);
@@ -329,19 +356,21 @@ int main( int argc, char** argv ) {
         for ( auto& h : v ) h->Draw("HISTSAME");
     
         std::string name = "hsum" + type;
-        TH1D sum(name.c_str(), name.c_str(), nBins, 0, 7500);
+        TH1D sum(name.c_str(), name.c_str(), nBins, &dbin[0]);
         for ( auto& h : v ) sum.Add(h);
         sum.SetLineColor(kRed);
         sum.Draw("HISTSAME");
 
-        TLegend leg(0.7,0.7,0.95,0.95);
+        TLegend leg(0.84,0.64,0.95,0.95);
         for ( auto& h : v ) leg.AddEntry(h,h->GetName(),"l");
         leg.AddEntry(&sum,sum.GetName(),"l");
         leg.Draw();
         
         pad.SetLogy();
         pad.SetGrid();
-        name = "out/" + type + ".pdf";
+        name = std::string(std::getenv("GERDACPTDIR")) + "/out/" + type + ".pdf";
+        tmp.SaveAs(name.c_str());
+        name = std::string(std::getenv("GERDACPTDIR")) + "/out/" + type + ".C";
         tmp.SaveAs(name.c_str());
     };
 

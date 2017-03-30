@@ -32,11 +32,10 @@ class Fit2nbbLV : public BCModel {
     
     // new methods
     // no boundary check for performance reasons
-    float GetBinCenter(int i) const { return (float)(ubin[i-1]+ubin[i])/2; }
     double Getn2n1() const { return n2n1; }
     double GetBrRatioTl() const { return BrTl; }
     // initialize ubin vector
-    void SetBinning(std::vector<int>& v);
+    void SetBinning(std::vector<double>& v);
     // set fit boundaries, a=b equals no boundaries
     void SetFitRange(double down, double up);
     // initialize dataBEGe vector
@@ -52,8 +51,8 @@ class Fit2nbbLV : public BCModel {
     
     // new custom data containers (variable binning)
     // WARNING: integer values
-    // upper bin bounds
-    std::vector<int> ubin;
+    // lower bin bounds
+    std::vector<double> dbin;
     // upper and lower fit limits
     bool kUseRange;
     int downBin;

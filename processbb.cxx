@@ -104,7 +104,6 @@ int main( int argc, char** argv ) {
         if (verbose) { 
             nentries = treereader.GetEntries(true);
             bar.SetNIter(nentries);
-            bar.Init(); 
         }
         int j = 0;
         std::cout << display << std::flush;

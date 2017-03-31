@@ -27,13 +27,17 @@ class Fit2nbbLV : public BCModel {
 	Fit2nbbLV(std::string name = "Fit2nbbLV");
 
 	// methods from BCModel to be overloaded
-	double LogLikelihood(const std::vector<double> & parameters);
+	double LogLikelihood(const std::vector<double>& parameters);
 	//double LogAPrioriProbability(const std::vector<double> & parameters);
     
     // new methods
     // no boundary check for performance reasons
+    int GetNbins() { return dbin.size()-1; }
+    int GetDownBin() { return downBin; }
+    int GetUpBin() { return upBin; }
     double Getn2n1() const { return n2n1; }
     double GetBrRatioTl() const { return BrTl; }
+    std::vector<double> GetFittedFnc();
     // initialize ubin vector
     void SetBinning(std::vector<double>& v);
     // set fit boundaries, a=b equals no boundaries
@@ -51,7 +55,7 @@ class Fit2nbbLV : public BCModel {
     
     // new custom data containers (variable binning)
     // WARNING: integer values
-    // lower bin bounds
+    // lower bin bounds, size = nbins+1
     std::vector<double> dbin;
     // upper and lower fit limits
     bool kUseRange;

@@ -214,7 +214,6 @@ void DataReader::CreateEnergyHist( std::string opt ) {
         
         auto start = std::chrono::system_clock::now();
 
-        bar.Init();
         int i = 0;
         while (treereader.Next()) {
             

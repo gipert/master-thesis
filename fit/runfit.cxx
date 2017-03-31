@@ -25,6 +25,7 @@
 #include <BAT/BCLog.h>
 #include <BAT/BCAux.h>
 #include <BAT/BCSummaryTool.h>
+#include <BAT/BCModelOutput.h>
 
 #include "TFile.h"
 #include "TH1.h"
@@ -35,11 +36,13 @@
 #include "TFrame.h"
 #include "TLegend.h"
 
+double GetPValue(Fit2nbbLV& m);
+
 int main( int argc, char** argv ) {
     
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
-    const int rangeDown = 550; // [keV]
+    const int rangeDown = 570; // [keV] above 39Ar Q-value
     BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
 /////////////////////////////////////////////
 
@@ -139,7 +142,8 @@ int main( int argc, char** argv ) {
         k += 4;
         if ( k > 7500 ) break;
     }
-
+    
+    // my simulations are in MeV...
     hSimBEGetmp[0]->SetBins(7500,0,7500);
     hSimCOAXtmp[0]->SetBins(7500,0,7500);
     hSimBEGetmp[1]->SetBins(7500,0,7500);
@@ -188,74 +192,77 @@ int main( int argc, char** argv ) {
     }
 
 // ==========================================================================================================
-	// create Fit2nbbLV object
-    Fit2nbbLV m("Fit2nbbLV");
-
-    // set data
-    m.SetBinning(dbin);
-    m.SetDataBEGe(vDataBEGe);
-    m.SetDataCOAX(vDataCOAX);
-    m.SetSimBEGe(vSimBEGe);
-    m.SetSimCOAX(vSimCOAX);
-
-    m.SetFitRange(rangeDown, rangeUp);
-
+	
+    // create Fit2nbbLV object
+    Fit2nbbLV model("Fit2nbbLV");
+	// create a new summary tool object
+	BCSummaryTool summary(&model);
+    // create output class
+    BCModelOutput output(&model, "out/markowChains.root");
+    model.WriteMarkovChain(true);
+    
     // set nicer style for drawing than the ROOT default
 	BCAux::SetStyle();
 
 	// open log file
-	BCLog::OpenLog("out/logBAT.txt", BCLog::detail, BCLog::detail);
+    BCLog::SetLogLevelFile(BCLog::detail);
+    BCLog::SetLogLevelScreen(BCLog::summary);
+	BCLog::OpenLog("out/logBAT.txt");
 
 	// set precision (number of samples in Markov chain)
-	m.MCMCSetPrecision(level);
+	model.MCMCSetPrecision(level);
     
+    // set data
+    model.SetBinning(dbin);
+    model.SetDataBEGe(vDataBEGe);
+    model.SetDataCOAX(vDataCOAX);
+    model.SetSimBEGe(vSimBEGe);
+    model.SetSimCOAX(vSimCOAX);
+    model.SetFitRange(rangeDown, rangeUp);
+
     // set parameter binning
     //m.SetNbins(1000);
-
-	// normalize the posterior, i.e. integrate posterior over the full
-	// parameter space
-	m.SetIntegrationMethod(BCIntegrate::kIntDefault);
-	m.Normalize();
-
-    auto start = std::chrono::system_clock::now();
+    
 	// run MCMC and marginalize posterior w/r/t all parameters and all
 	// combinations of two parameters
-	m.MarginalizeAll();
-	m.WriteMarkovChain(true);
+    auto start = std::chrono::system_clock::now();
+	model.MarginalizeAll();
+    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);	
+    std::cout << "Summary : Time spent: " << elapsed.count() << "s.\n";
 
 	// run mode finding, by default using Minuit
-	m.FindMode(m.GetBestFitParameters());
+    BCLog::SetLogLevelScreen(BCLog::detail);
+	model.FindMode(model.GetBestFitParameters());
+    BCLog::SetLogLevelScreen(BCLog::summary);
     
-    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);
+    std::cout << std::endl;
+    double pvalue = GetPValue(model);
+    std::cout << "\nSummary : pValue = " << pvalue << std::endl;
 
+    // OUTPUT
+	// print results of the analysis into a text file
+	model.PrintResults("out/Fit2nbbLV_results.txt");
 	// draw all marginalized distributions into a PDF file
-	m.PrintAllMarginalized("out/Fit2nbbLV_plots.pdf");
-
-	// create a new summary tool object, to print change from prior -> posterior
-	BCSummaryTool summary(&m);
-	summary.PrintKnowledgeUpdatePlots("out/Fit2nbbLV_update.pdf");
+	model.PrintAllMarginalized("out/Fit2nbbLV_plots.pdf");
 
     // print all summary plots
 	summary.PrintParameterPlot("out/Fit2nbbLV_parameters.pdf");
 	summary.PrintCorrelationPlot("out/Fit2nbbLV_correlation.pdf");
 	summary.PrintCorrelationMatrix("out/Fit2nbbLV_correlationMatrix.pdf");
-
-	// calculate p-value
-	// m -> CalculatePValue( m->GetBestFitParameters() );
-
-	// print results of the analysis into a text file
-	m.PrintResults("out/Fit2nbbLV_results.txt");
-
-	BCLog::OutSummary("Exiting");
-
+    // this will re-run the analysis without the LogLikelihood information
+    BCLog::OutSummary("Building knowledge-update plots.");
+    BCLog::SetLogLevelScreen(BCLog::warning);
+	summary.PrintKnowledgeUpdatePlots("out/Fit2nbbLV_update.pdf");
+    BCLog::SetLogLevelScreen(BCLog::summary);
+	
+    BCLog::OutSummary("Exiting");
 	// close log file
 	BCLog::CloseLog();
 
-    std::cout << "\n\ntime: " << elapsed.count() << "s\n";
 // ========================================================================================================
 
     // save results to draw them later
-    auto results = m.GetBestFitParameters();
+    auto results = model.GetBestFitParameters();
     
     TFile outDrawFile("out/outHists.root", "RECREATE");
     
@@ -271,9 +278,9 @@ int main( int argc, char** argv ) {
     hSimCOAX[0]->SetName("h2nbbCOAX");
     
     // 2nbbLV
-    hSimBEGe[1]->Scale(results[0]*results[1]*m.Getn2n1());
+    hSimBEGe[1]->Scale(results[0]*results[1]*model.Getn2n1());
     hSimBEGe[1]->SetName("h2nbbLVBEGe");
-    hSimCOAX[1]->Scale(results[0]*results[1]*m.Getn2n1());
+    hSimCOAX[1]->Scale(results[0]*results[1]*model.Getn2n1());
     hSimCOAX[1]->SetName("h2nbbLVCOAX");
     
     // K42
@@ -295,9 +302,9 @@ int main( int argc, char** argv ) {
     hSimCOAX[4]->SetName("hBi212onFiberShroudCOAX");
     
     // Tl208
-    hSimBEGe[5]->Scale(results[4]*m.GetBrRatioTl());
+    hSimBEGe[5]->Scale(results[4]*model.GetBrRatioTl());
     hSimBEGe[5]->SetName("hTl208onFiberShroudBEGe");    
-    hSimCOAX[5]->Scale(results[4]*m.GetBrRatioTl());
+    hSimCOAX[5]->Scale(results[4]*model.GetBrRatioTl());
     hSimCOAX[5]->SetName("hTl208onFiberShroudCOAX");
     
     // Pb214

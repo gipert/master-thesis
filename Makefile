@@ -50,8 +50,8 @@ bin/sumbb : sumbb.cxx lib/libDataReader.so lib/libDetectorSet.so
 bin/sumbkgext : sumbkgext.cxx lib/libDataReader.so lib/libDetectorSet.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
 
-bin/runfit : fit/runfit.cxx lib/libFit2nbbLV.so
-	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) $(shell bat-config --libs) -lFit2nbbLV
+bin/runfit : fit/runfit.cxx fit/pvalue.cxx lib/libFit2nbbLV.so lib/libProgressBar.so
+	$(CC) $(CFLAGS) -o $@ $< fit/pvalue.cxx $(ROOTLIBS) $(shell bat-config --libs) -lFit2nbbLV -lProgressBar
 
 .PHONY : clean
 clean :

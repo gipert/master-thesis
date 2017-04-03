@@ -49,7 +49,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     this->SetPriorConstantAll();
 }
 // ---------------------------------------------------------
-std::vector<double> Fit2nbbLV::GetFittedFnc() {
+std::vector<double> Fit2nbbLV::GetFittedFncBEGe() {
 
     auto bestpar = this->GetBestFitParameters();
     
@@ -64,9 +64,24 @@ std::vector<double> Fit2nbbLV::GetFittedFnc() {
           + bestpar[2]*simBEGe[2][i] + bestpar[3]*simBEGe[3][i]
           + bestpar[4]*(simBEGe[4][i] + BrTl*simBEGe[5][i])
           + bestpar[5]*(simBEGe[6][i] +      simBEGe[7][i])
-          + bestpar[6]*simBEGe[8][i]
+          + bestpar[6]*simBEGe[8][i];
+    }
+
+    return totfnc;
+}
+// ---------------------------------------------------------
+std::vector<double> Fit2nbbLV::GetFittedFncCOAX() {
+
+    auto bestpar = this->GetBestFitParameters();
+    
+    int nbins = this->GetNbins();
+    std::vector<double> totfnc(nbins, 0);
+
+    for ( int i = downBin; i <= upBin; ++i ) {
+
+        totfnc[i] = 
             // COAX
-          + bestpar[0]*simCOAX[0][i] + bestpar[0]*bestpar[1]*n2n1*simCOAX[1][i]
+            bestpar[0]*simCOAX[0][i] + bestpar[0]*bestpar[1]*n2n1*simCOAX[1][i]
           + bestpar[2]*simCOAX[2][i] + bestpar[3]*simCOAX[3][i]
           + bestpar[4]*(simCOAX[4][i] + BrTl*simCOAX[5][i])
           + bestpar[5]*(simCOAX[6][i] +      simCOAX[7][i])

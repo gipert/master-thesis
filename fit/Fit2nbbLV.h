@@ -37,7 +37,8 @@ class Fit2nbbLV : public BCModel {
     int GetUpBin() { return upBin; }
     double Getn2n1() const { return n2n1; }
     double GetBrRatioTl() const { return BrTl; }
-    std::vector<double> GetFittedFnc();
+    std::vector<double> GetFittedFncBEGe();
+    std::vector<double> GetFittedFncCOAX();
     // initialize ubin vector
     void SetBinning(std::vector<double>& v);
     // set fit boundaries, a=b equals no boundaries

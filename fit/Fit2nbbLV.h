@@ -59,6 +59,9 @@ class Fit2nbbLV : public BCModel {
     // initialize simCOAX vector
     void SetSimCOAX(std::vector<std::vector<double>>& v) { simCOAX = v; }
 
+    // write histos on file
+    void WriteHistosOnFile(std::string filename);
+
     private:
     
     // new custom data containers (variable binning)

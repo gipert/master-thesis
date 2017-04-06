@@ -28,15 +28,10 @@
 #include <BAT/BCModelOutput.h>
 
 #include "TFile.h"
-#include "TH1.h"
 #include "TH1D.h"
 #include "TH1F.h"
-#include "TCanvas.h"
-#include "TPad.h"
-#include "TFrame.h"
-#include "TLegend.h"
 
-double GetPValue(Fit2nbbLV& m);
+double GetPValue(Fit2nbbLV& m, bool save = false);
 
 int main( int argc, char** argv ) {
     
@@ -191,6 +186,11 @@ int main( int argc, char** argv ) {
         }
     }
 
+    delete hDataBEGe;   
+    delete hDataCOAX;   
+    hSimBEGe.clear();
+    hSimCOAX.clear();
+
 // ==========================================================================================================
 	
     // create Fit2nbbLV object
@@ -254,141 +254,12 @@ int main( int argc, char** argv ) {
     BCLog::SetLogLevelScreen(BCLog::warning);
 	summary.PrintKnowledgeUpdatePlots("out/Fit2nbbLV_update.pdf");
     BCLog::SetLogLevelScreen(BCLog::summary);
+
+    model.WriteHistosOnFile(std::string(std::getenv("GERDACPTDIR")) + "/out/");
 	
     BCLog::OutSummary("Exiting");
 	// close log file
 	BCLog::CloseLog();
-
-// ========================================================================================================
-
-    // save results to draw them later
-    auto results = model.GetBestFitParameters();
-    
-    TFile outDrawFile("out/outHists.root", "RECREATE");
-    
-    hDataBEGe->SetName("hDataBEGe");
-    hDataBEGe->Write();
-    hDataCOAX->SetName("hDataCOAX");
-    hDataCOAX->Write();
-    
-    // 2nbb
-    hSimBEGe[0]->Scale(results[0]);
-    hSimBEGe[0]->SetName("h2nbbBEGe");
-    hSimCOAX[0]->Scale(results[0]);
-    hSimCOAX[0]->SetName("h2nbbCOAX");
-    
-    // 2nbbLV
-    hSimBEGe[1]->Scale(results[0]*results[1]*model.Getn2n1());
-    hSimBEGe[1]->SetName("h2nbbLVBEGe");
-    hSimCOAX[1]->Scale(results[0]*results[1]*model.Getn2n1());
-    hSimCOAX[1]->SetName("h2nbbLVCOAX");
-    
-    // K42
-    hSimBEGe[2]->Scale(results[2]);
-    hSimBEGe[2]->SetName("hK42homLArBEGe");
-    hSimCOAX[2]->Scale(results[2]);
-    hSimCOAX[2]->SetName("hK42homLArCOAX");
-    
-    // K40
-    hSimBEGe[3]->Scale(results[3]);
-    hSimBEGe[3]->SetName("hK40onFiberShroudBEGe");
-    hSimCOAX[3]->Scale(results[3]);
-    hSimCOAX[3]->SetName("hK40onFiberShroudCOAX");
-     
-    // Bi212
-    hSimBEGe[4]->Scale(results[4]);
-    hSimBEGe[4]->SetName("hBi212onFiberShroudBEGe");
-    hSimCOAX[4]->Scale(results[4]);
-    hSimCOAX[4]->SetName("hBi212onFiberShroudCOAX");
-    
-    // Tl208
-    hSimBEGe[5]->Scale(results[4]*model.GetBrRatioTl());
-    hSimBEGe[5]->SetName("hTl208onFiberShroudBEGe");    
-    hSimCOAX[5]->Scale(results[4]*model.GetBrRatioTl());
-    hSimCOAX[5]->SetName("hTl208onFiberShroudCOAX");
-    
-    // Pb214
-    hSimBEGe[6]->Scale(results[5]);
-    hSimBEGe[6]->SetName("hPb214onFiberShroudBEGe");
-    hSimCOAX[6]->Scale(results[5]);
-    hSimCOAX[6]->SetName("hPb214onFiberShroudCOAX");
-    
-    // Bi214
-    hSimBEGe[7]->Scale(results[5]);
-    hSimBEGe[7]->SetName("hBi214onFiberShroudBEGe");
-    hSimCOAX[7]->Scale(results[5]);
-    hSimCOAX[7]->SetName("hBi214onFiberShroudCOAX");
-
-    // alphas
-    hSimBEGe[8]->Scale(results[6]);
-    hSimBEGe[8]->SetName("hAlphaBEGe");
-    hSimCOAX[8]->Scale(results[7]);
-    hSimCOAX[8]->SetName("hAlphaCOAX");
-
-    for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
-        hSimBEGe[i]->Write();
-        hSimCOAX[i]->Write();
-    }
-
-// ----------------------------------------------------------------------------------
-    
-    auto draw = [&]( std::vector<TH1*> v , TH1* vd ,std::string type ) {
-        
-        TCanvas tmp(type.c_str(), type.c_str(), 2700, 700);
-        TPad pad("pad", "pad", 0.0, 0.0, 1, 1);
-        pad.SetMargin(0.07,0.05,0.1,0.05);
-        tmp.cd();
-        pad.Draw();
-        pad.cd();
-    
-        vd->SetStats(false);
-        vd->SetMarkerStyle(6);
-        vd->GetXaxis()->SetRangeUser(rangeDown,rangeUp);
-        vd->GetXaxis()->SetTitle("energy [keV]");
-        vd->GetYaxis()->SetTitle("counts");
-        vd->GetYaxis()->SetNdivisions(10);
-        vd->Draw("P");
-        
-        for ( auto& h : v ) h->SetLineWidth(1);
-        v[0]->SetLineColor(kBlue);
-        v[1]->SetLineColor(kBlue+2);  
-        v[2]->SetLineColor(kGreen);
-        v[3]->SetLineColor(kGreen+1);
-        v[4]->SetLineColor(kGreen+2);
-        v[5]->SetLineColor(kGreen+3);
-        v[6]->SetLineColor(kGreen+4);
-        v[7]->SetLineColor(kBlack);
-        v[8]->SetLineColor(kRed+2);
-
-        for ( auto& h : v ) h->Draw("HISTSAME");
-    
-        std::string name = "hsum" + type;
-        TH1D sum(name.c_str(), name.c_str(), nBins, &dbin[0]);
-        for ( auto& h : v ) sum.Add(h);
-        sum.SetLineColor(kRed);
-        sum.Draw("HISTSAME");
-        sum.Write();
-
-        TLegend leg(0.84,0.64,0.95,0.95);
-        for ( auto& h : v ) leg.AddEntry(h,h->GetName(),"l");
-        leg.AddEntry(&sum,sum.GetName(),"l");
-        leg.Draw();
-        
-        pad.SetLogy();
-        pad.SetGrid();
-        name = std::string(std::getenv("GERDACPTDIR")) + "/out/" + type + ".pdf";
-        tmp.SaveAs(name.c_str());
-        name = std::string(std::getenv("GERDACPTDIR")) + "/out/" + type + ".C";
-        tmp.SaveAs(name.c_str());
-    };
-
-    draw( hSimBEGe, hDataBEGe, "BEGe" );
-    draw( hSimCOAX, hDataCOAX, "COAX" );
-
-    delete hDataBEGe;   
-    delete hDataCOAX;   
-    hSimBEGe.clear();
-    hSimCOAX.clear();
 
     return 0;
 }

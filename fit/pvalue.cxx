@@ -23,7 +23,7 @@
 #include "BAT/BCMath.h"
 #include "Fit2nbbLV.h"
 
-double GetPValue(Fit2nbbLV& model) {
+double GetPValue(Fit2nbbLV& model, bool save) {
 
     omp_set_num_threads(4);
     
@@ -61,9 +61,11 @@ double GetPValue(Fit2nbbLV& model) {
     
     // write logPs on file (for each thread)
     std::vector<std::unique_ptr<std::ofstream>> f;
-    for ( int i = 0; i < 4; i++ ) { 
-        std::string str = std::string(std::getenv("GERDACPTDIR")) + "/out/thread" + std::to_string(i) + ".out";
-        f.emplace_back( new std::ofstream(str.c_str()));
+    if (save) {
+        for ( int i = 0; i < 4; i++ ) { 
+            std::string str = std::string(std::getenv("GERDACPTDIR")) + "/out/thread" + std::to_string(i) + ".out";
+            f.emplace_back( new std::ofstream(str.c_str()));
+        }
     }
   
     int k = 0;
@@ -112,7 +114,7 @@ double GetPValue(Fit2nbbLV& model) {
             logP += BCMath::LogPoisson(lCountsCOAX[j], meanCOAX[j]);
         } 
         
-        *f[omp_get_thread_num()] << logP << std::endl;
+        if (save) *f[omp_get_thread_num()] << logP << std::endl;
         // test
         if ( logP < logP0 ) pv++;
     } 

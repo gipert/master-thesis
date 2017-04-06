@@ -367,6 +367,7 @@ int main( int argc, char** argv ) {
         for ( auto& h : v ) sum.Add(h);
         sum.SetLineColor(kRed);
         sum.Draw("HISTSAME");
+        sum.Write();
 
         TLegend leg(0.84,0.64,0.95,0.95);
         for ( auto& h : v ) leg.AddEntry(h,h->GetName(),"l");

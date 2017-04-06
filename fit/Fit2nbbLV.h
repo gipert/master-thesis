@@ -30,15 +30,22 @@ class Fit2nbbLV : public BCModel {
 	double LogLikelihood(const std::vector<double>& parameters);
 	//double LogAPrioriProbability(const std::vector<double> & parameters);
     
-    // new methods
-    // no boundary check for performance reasons
+    // GET
+    // binning
+    std::vector<double> GetBinning() const { return dbin; }
     int GetNbins() { return dbin.size()-1; }
     int GetDownBin() { return downBin; }
     int GetUpBin() { return upBin; }
+    // functions
+    std::vector<double> GetFittedFncBEGe(std::vector<double>& bestpar);
+    std::vector<double> GetFittedFncCOAX(std::vector<double>& bestpar);
+    std::vector<int> GetDataBEGe() const { return dataBEGe; }
+    std::vector<int> GetDataCOAX() const { return dataCOAX; }
+    // misc
     double Getn2n1() const { return n2n1; }
     double GetBrRatioTl() const { return BrTl; }
-    std::vector<double> GetFittedFncBEGe();
-    std::vector<double> GetFittedFncCOAX();
+   
+    // SET
     // initialize ubin vector
     void SetBinning(std::vector<double>& v);
     // set fit boundaries, a=b equals no boundaries

@@ -49,9 +49,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     this->SetPriorConstantAll();
 }
 // ---------------------------------------------------------
-std::vector<double> Fit2nbbLV::GetFittedFncBEGe() {
-
-    auto bestpar = this->GetBestFitParameters();
+std::vector<double> Fit2nbbLV::GetFittedFncBEGe(std::vector<double>& bestpar) {
     
     int nbins = this->GetNbins();
     std::vector<double> totfnc(nbins, 0);
@@ -70,9 +68,7 @@ std::vector<double> Fit2nbbLV::GetFittedFncBEGe() {
     return totfnc;
 }
 // ---------------------------------------------------------
-std::vector<double> Fit2nbbLV::GetFittedFncCOAX() {
-
-    auto bestpar = this->GetBestFitParameters();
+std::vector<double> Fit2nbbLV::GetFittedFncCOAX(std::vector<double>& bestpar) {
     
     int nbins = this->GetNbins();
     std::vector<double> totfnc(nbins, 0);

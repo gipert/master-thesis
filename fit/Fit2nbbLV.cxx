@@ -252,7 +252,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         
         TCanvas tmp(type.c_str(), type.c_str(), 2700, 700);
         TPad pad("pad", "pad", 0.0, 0.0, 1, 1);
-        pad.SetMargin(0.07,0.05,0.1,0.05);
+        pad.SetMargin(0.032,0.015,0.1,0.05);
         tmp.cd();
         pad.Draw();
         pad.cd();
@@ -263,6 +263,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         vd.GetXaxis()->SetTitle("energy [keV]");
         vd.GetYaxis()->SetTitle("counts");
         vd.GetYaxis()->SetNdivisions(10);
+        vd.GetYaxis()->SetTickLength(0.01);
         vd.Draw("P");
         
         for ( auto& h : v ) h.SetLineWidth(1);
@@ -277,7 +278,8 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         v[8].SetLineColor(kRed+2);
 
         for ( auto& h : v ) h.Draw("HISTSAME");
-    
+        
+        // summed histogram
         std::string name = "hsum" + type;
         TH1D sum(name.c_str(), name.c_str(), nbins, &dbin[0]);
         for ( auto& h : v ) sum.Add(&h);
@@ -285,17 +287,54 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         sum.Draw("HISTSAME");
         sum.Write();
 
-        TLegend leg(0.84,0.64,0.95,0.95);
+        TLegend leg(0.87,0.64,0.98,0.95);
         for ( auto& h : v ) leg.AddEntry(&h,h.GetName(),"l");
         leg.AddEntry(&sum,sum.GetName(),"l");
         leg.Draw();
         
         pad.SetLogy();
         pad.SetGrid();
-        name = path + "/" + type + ".pdf";
-        tmp.SaveAs(name.c_str());
+        //name = path + "/" + type + ".pdf";
+        //tmp.SaveAs(name.c_str());
         name = path + "/" + type + ".C";
         tmp.SaveAs(name.c_str());
+
+        // create brazilian plot
+        TCanvas brascan(type.c_str(), type.c_str(), 2700, 700);
+        TPad pad1("pad", "pad", 0.0, 0.0, 1, 1);
+        pad1.SetMargin(0.032,0.015,0.1,0.05);
+        brascan.cd();
+        pad1.Draw();
+        pad1.cd();
+        pad1.SetGrid();
+        pad1.SetLogy();
+         
+        sum.SetStats(false);
+        sum.GetXaxis()->SetRange(downBin,upBin);
+        sum.GetXaxis()->SetTitle("energy [keV]");
+        sum.GetYaxis()->SetTitle("counts");
+        sum.GetYaxis()->SetNdivisions(10);
+        sum.GetYaxis()->SetTickLength(0.01);
+
+        for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 2*sum.GetBinError(i));
+        sum.SetMarkerStyle(0);
+        sum.SetFillColor(kYellow);
+        sum.SetFillStyle(3001);
+        sum.DrawCopy("E2");
+
+        for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 0.5*sum.GetBinError(i));
+        sum.SetFillColor(kGreen);
+        sum.DrawCopy("E2 SAME");
+        
+        for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 0.0001);
+        sum.SetFillStyle(0);
+        sum.SetFillColor(0);
+        sum.DrawCopy("E SAME");
+
+        vd.DrawCopy("P SAME");
+        
+        name = path + "/brasilian" + type + ".C";
+        brascan.SaveAs(name.c_str());
     };
 
     drawpdf( hSimBEGe, hDataBEGe, "BEGe" );

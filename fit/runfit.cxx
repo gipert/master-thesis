@@ -234,11 +234,11 @@ int main( int argc, char** argv ) {
     BCLog::SetLogLevelScreen(BCLog::detail);
 	model.FindMode(model.GetBestFitParameters());
     BCLog::SetLogLevelScreen(BCLog::summary);
-
+/*
     std::cout << std::endl;
     double pvalue = GetPValue(model);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
-
+*/
     // OUTPUT
 	// print results of the analysis into a text file
 	model.PrintResults("out/Fit2nbbLV_results.txt");

@@ -44,7 +44,20 @@ int main( int argc, char** argv ) {
     
     std::vector<std::string> args(argc);
     for ( int i = 0; i < argc; ++i ) args[i] = argv[i];
-    
+ 
+    if ( std::find(args.begin(), args.end(), "--help"   ) != args.end() ) {
+        std::cout << "Available sources:\n\n"
+                  << "homLAr:\n"
+                  << "    K42\n\n"
+                  << "on fibers:\n"
+                  << "    K40, Bi212, Bi214, Pb214, Tl208\n\n"
+                  << " on contacts (p and n):\n"
+                  << "    K42\n\n"
+                  << " on holder:\n"
+                  << "    K40, Ac228, Bi212, Bi214, Co60, Pb214, Tl208\n";
+        return 0;
+    }
+   
     std::string phys, place;
     if      ( std::find(args.begin(), args.end(), "--homLAr"   ) != args.end() ) place = "homLAr";
     else if ( std::find(args.begin(), args.end(), "--fibers"   ) != args.end() ) place = "fibers";

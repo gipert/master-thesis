@@ -94,11 +94,19 @@ class Fit2nbbLV : public BCModel {
     // [8] alpha
     // [9] nPlus
     // [10] pPlus
-    // [11] Ac228holder
+    // [11] Ac228holder 
     // [12] Co60holder
     // [13] K40holder
-    // [14] Bi212holder
-    // [15] Tl208holder
+    // [14] Bi212holder 
+    // [15] Tl208holder 
+    // [16] Pb214holder 
+    // [17] Bi214holder 
+    // [18] K40cables
+    // [19] Bi212cables
+    // [20] Tl208cables
+    // [21] Pb214cables
+    // [22] Bi214cables
+    //
 
     const double n2n1 = 134.594580;
     const double BrTl = 0.3539;

@@ -85,6 +85,12 @@ int main( int argc, char** argv ) {
     simpath.push_back(path + "sumMaGe_Tl208holder.root"); 
     simpath.push_back(path + "sumMaGe_Pb214holder.root"); 
     simpath.push_back(path + "sumMaGe_Bi214holder.root"); 
+    simpath.push_back(path + "sumMaGe_K40cables.root"); 
+    simpath.push_back(path + "sumMaGe_Bi212cables.root"); 
+    simpath.push_back(path + "sumMaGe_Tl208cables.root"); 
+    simpath.push_back(path + "sumMaGe_Pb214cables.root"); 
+    simpath.push_back(path + "sumMaGe_Bi214cables.root"); 
+
     // TODO: push_back new files here
 
     for ( const auto& p : simpath ) simFile.emplace_back( new TFile(p.c_str(), "READ") );

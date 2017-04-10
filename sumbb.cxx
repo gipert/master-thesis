@@ -1,7 +1,7 @@
 /* sumbb.cxx
  *
  * Program to sum MaGe simulations for each detector (AV and DV)
- * into global energy spectra.
+ * into global energy spectra to be used in the fit
  *
  * state-of-arts: enrCOAX are not summed, neither the events with
  * vertex into them nor energy deposition into them. Different
@@ -55,7 +55,7 @@ int main( int argc, char** argv ) {
     auto dsm = reader.GetDetectorStatusMap();
 
     // get live times saved in out/results.dat and store [yr]
-    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumData.dat";
+    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumData.dat";
     std::ifstream timeFile(path.c_str());
     std::map<int,double> timeMap;
     unsigned int runID, time;
@@ -161,8 +161,8 @@ int main( int argc, char** argv ) {
     TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7.5);
     TH1F histTotAll( "energy_total", "global MaGe energy spectrum", 7500, 0, 7.5 );
     
-    if ( phys == "2nbb" ) path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbb.root";
-    else path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbbLV.root";
+    if ( phys == "2nbb" ) path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbb.root";
+    else path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbbLV.root";
     TFile fileout(path.c_str(), "RECREATE");
     
     for ( auto& h : histTot ) {

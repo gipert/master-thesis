@@ -45,7 +45,7 @@ int main( int argc, char** argv ) {
         std::cerr << "Please provide a valid .root output filename.\n";
         return -1;
     }
-    filename = std::string(std::getenv("GERDACPTDIR")) + "/out/" + filename;
+    filename = std::string(std::getenv("GERDACPTDIR")) + "/data/" + filename;
 
     std::string opt = "gauss";
     if ( std::find(args.begin(), args.end(), "--energy=zac") != args.end() or
@@ -68,7 +68,8 @@ int main( int argc, char** argv ) {
     
     // retrieve energy spectrum
     std::vector<TH1D> energy;
-    reader.CreateEnergyHist(opt);
+    int result = reader.CreateEnergyHist(opt);
+    if ( result != 0 ) return -1;
     energy = reader.GetEnergyHist();
 
     auto energyBEGe    = reader.GetEnergyHistBEGe();

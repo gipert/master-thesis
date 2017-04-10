@@ -23,15 +23,19 @@
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
    
     // define parameters
-    /* [0] */ this->AddParameter("2nbb", 200, 280);
-    /* [1] */ this->AddParameter("2nbbLV", 0, 0.001);
-    /* [2] */ this->AddParameter("K42homLAr", 0, 0.0003);
-    /* [3] */ this->AddParameter("K40onFiberShroud", 0, 2);
-    /* [4] */ this->AddParameter("Bi212onFiberShroud", 0, 0.1);
-    /* [5] */ this->AddParameter("Bi214onFiberShroud", 0, 0.1);
-    /* [6] */ this->AddParameter("alphaBEGe", 0, 2000);
-    /* [7] */ this->AddParameter("alphaCOAX", 0, 2600);
-    //
+    /* [0] */  this->AddParameter("2nbb", 200, 280);
+    /* [1] */  this->AddParameter("2nbbLV", 0, 4E-04);
+    /* [2] */  this->AddParameter("K42homLAr", 0, 0.0003);
+    /* [3] */  this->AddParameter("K40onFiberShroud", 0, 2);
+    /* [4] */  this->AddParameter("Bi212onFiberShroud", 0, 0.02);
+    /* [5] */  this->AddParameter("Bi214onFiberShroud", 0, 0.1);
+    /* [6] */  this->AddParameter("alphaBEGe", 0, 2000);
+    /* [7] */  this->AddParameter("alphaCOAX", 0, 2600);
+    /* [8] */  this->AddParameter("K42nPlusBEGe", 0, 0.001);
+    /* [9] */  this->AddParameter("K42nPlusCOAX", 0, 0.1);
+    /* [10] */ this->AddParameter("K42pPlusBEGe", 0, 0.005);
+    /* [11] */ this->AddParameter("K42pPlusCOAX", 0, 0.005);
+    // TODO: add new parameters here
     //// LEGEND
     //
     // [0] 2nbb
@@ -42,17 +46,13 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     // [5] Pb214 + Bi214 in fibers
     // [6] alphaBEGe
     // [7] alphaCOAX
-    //
+    // [8] K42 nPlus BEGe
+    // [9] K42 nPlus COAX
+    // [10] K42 pPlus BEGe
+    // [11] K42 pPlus COAX
 
     // priors
-    /*this->SetPriorGauss(0,217,11);
-    this->SetPriorConstant(1);
-    this->SetPriorConstant(2);    
-    this->SetPriorConstant(3);    
-    this->SetPriorConstant(4);    
-    this->SetPriorConstant(5);
-    this->SetPriorConstant(6);
-    this->SetPriorConstant(7);*/
+    //this->SetPriorGauss(0,217,11);
     this->SetPriorConstantAll();
 }
 // ---------------------------------------------------------
@@ -69,6 +69,8 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
         f += parameters[4]*(simBEGe[4][i] + BrTl*simBEGe[5][i]);
         f += parameters[5]*(simBEGe[6][i] +      simBEGe[7][i]);
         f += parameters[6]*simBEGe[8][i];
+        f += parameters[8]*simBEGe[9][i] + parameters[10]*simBEGe[10][i];
+        // TODO: update loglikelihood here
         
         //logprob += dataBEGe[i]*log(f) - f - BCMath::LogFact(dataBEGe[i]);
         logprob += BCMath::LogPoisson(dataBEGe[i], f);
@@ -79,6 +81,8 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
         f += parameters[4]*(simCOAX[4][i] + BrTl*simCOAX[5][i]);
         f += parameters[5]*(simCOAX[6][i] +      simCOAX[7][i]);
         f += parameters[7]*simCOAX[8][i];
+        f += parameters[9]*simCOAX[9][i] + parameters[11]*simCOAX[10][i];
+        // TODO: update loglikelihood here
         
         //logprob += dataCOAX[i]*log(f) - f - BCMath::LogFact(dataCOAX[i]);
         logprob += BCMath::LogPoisson(dataCOAX[i], f);
@@ -100,7 +104,9 @@ std::vector<double> Fit2nbbLV::GetFittedFncBEGe(std::vector<double>& bestpar) {
           + bestpar[2]*simBEGe[2][i] + bestpar[3]*simBEGe[3][i]
           + bestpar[4]*(simBEGe[4][i] + BrTl*simBEGe[5][i])
           + bestpar[5]*(simBEGe[6][i] +      simBEGe[7][i])
-          + bestpar[6]*simBEGe[8][i];
+          + bestpar[6]*simBEGe[8][i]
+          + bestpar[8]*simBEGe[9][i] + bestpar[10]*simBEGe[10][i];
+          // TODO: update fitting func here
     }
 
     return totfnc;
@@ -119,7 +125,9 @@ std::vector<double> Fit2nbbLV::GetFittedFncCOAX(std::vector<double>& bestpar) {
           + bestpar[2]*simCOAX[2][i] + bestpar[3]*simCOAX[3][i]
           + bestpar[4]*(simCOAX[4][i] + BrTl*simCOAX[5][i])
           + bestpar[5]*(simCOAX[6][i] +      simCOAX[7][i])
-          + bestpar[7]*simCOAX[8][i];
+          + bestpar[7]*simCOAX[8][i]
+          + bestpar[9]*simCOAX[9][i] + bestpar[11]*simCOAX[10][i];
+        // TODO: update fitting func here
     }
 
     return totfnc;
@@ -247,7 +255,22 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
     hSimBEGe[8].SetName("hAlphaBEGe");
     hSimCOAX[8].Scale(results[7]);
     hSimCOAX[8].SetName("hAlphaCOAX");
+
+    // nPlus 
+    hSimBEGe[9].Scale(results[8]);
+    hSimBEGe[9].SetName("hK42nPlusBEGe");
+    hSimCOAX[9].Scale(results[9]);
+    hSimCOAX[9].SetName("hK42nPlusCOAX");
     
+    // pPlus 
+    hSimBEGe[10].Scale(results[10]);
+    hSimBEGe[10].SetName("hK42pPlusBEGe");
+    hSimCOAX[10].Scale(results[11]);
+    hSimCOAX[10].SetName("hK42pPlusCOAX");
+
+    // TODO: add new sources here
+    // ...
+
     auto drawpdf = [&]( std::vector<TH1D>& v , TH1D& vd ,std::string type ) {
         
         TCanvas tmp(type.c_str(), type.c_str(), 2700, 700);
@@ -276,6 +299,9 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         v[6].SetLineColor(kGreen+4);
         v[7].SetLineColor(kBlack);
         v[8].SetLineColor(kRed+2);
+        v[9].SetLineColor(kYellow);
+        v[10].SetLineColor(kYellow+1);
+        // TODO: define color
 
         for ( auto& h : v ) h.Draw("HISTSAME");
         
@@ -315,12 +341,16 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         sum.GetYaxis()->SetTitle("counts");
         sum.GetYaxis()->SetNdivisions(10);
         sum.GetYaxis()->SetTickLength(0.01);
-
-        for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 2*sum.GetBinError(i));
+        
+        for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 3*sum.GetBinError(i));
         sum.SetMarkerStyle(0);
-        sum.SetFillColor(kYellow);
+        sum.SetFillColor(kOrange-3);
         sum.SetFillStyle(3001);
         sum.DrawCopy("E2");
+ 
+        for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 2*sum.GetBinError(i)/3);
+        sum.SetFillColor(kYellow);
+        sum.DrawCopy("E2 SAME");
 
         for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 0.5*sum.GetBinError(i));
         sum.SetFillColor(kGreen);

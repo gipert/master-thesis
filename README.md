@@ -4,9 +4,11 @@
 * `progressbar/`    : simple progress bar for c++ loops (git submodule)
 * `misc/`
     * `drawspectra.C`: ROOT macro to draw theoretical 2bb spectra
+    * `shorten.C`    : ROOT macro to shrink histograms from 8500 to 7500 keV
     * `help`: contains instructions for main program
     * `runconfiguration_mod.db`: modified `runconfiguration.db` from `gerda-metadata` repo
 * `fit/`            : class and runfit.cxx to perform the fit
+* `data/`           : data needed for the fit
 * `Makefile`        : master makefile to compile all the project
 * `processData.cxx` : construct energy spectra from data
 * `processbb.cxx`   : produce 40 files (in which only one detector acts as a source) containing
@@ -20,3 +22,4 @@
 # NOTES #
 
 * clone with `--recursive` to include ProgressBar submodule
+* use Arch only to perform the fit!

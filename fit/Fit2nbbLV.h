@@ -92,7 +92,8 @@ class Fit2nbbLV : public BCModel {
     // [6] Pb214onFiberShroud
     // [7] Bi214onFiberShroud
     // [8] alpha
-    //
+    // [9] nPlus
+    // [10] pPlus
 
     const double n2n1 = 134.594580;
     const double BrTl = 0.3539;

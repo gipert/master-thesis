@@ -43,8 +43,9 @@ int main( int argc, char** argv ) {
 
     TH1::AddDirectory(false);
     // retrieve data
-    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumData.root";
-    TFile fileData(path.c_str(), "READ");
+    std::string path = std::string(std::getenv("GERDACPTDIR")) + "/data/";
+    std::string filepath = path + "sumData.root";
+    TFile fileData(filepath.c_str(), "READ");
     if (!fileData.IsOpen()) { std::cout << "Zombie fileData!\n"; return -1; }
     
     // vector holding all sim files
@@ -58,43 +59,55 @@ int main( int argc, char** argv ) {
     // [6] Pb214
     // [7] Bi214
     // [8] alphas
+    // [9] nPlus
+    // [10] pPlus
     //
     
     // 2nbb
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbb.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "sumMaGe_2nbb.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
 
     // 2nbbLV
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_2nbbLV.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "sumMaGe_2nbbLV.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
 
     // homLAr
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_homLAr.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "sumMaGe_K42homLAr.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
     
     // K40onFiberShroud
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_K40onFiberShroud.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "sumMaGe_K40fibers.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
     
     // Bi212onFiberShroud
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Bi212onFiberShroud.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "sumMaGe_Bi212fibers.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
     
     // Tl208onFiberShroud
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Tl208onFiberShroud.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "sumMaGe_Tl208fibers.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
 
     // Pb214onFiberShroud
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Pb214onFiberShroud.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "sumMaGe_Pb214fibers.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
     
     // Bi214onFiberShroud
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/sumMaGe_Bi214onFiberShroud.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "sumMaGe_Bi214fibers.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
 
     // alpha
-    path = std::string(std::getenv("GERDACPTDIR")) + "/out/alpha_model_run53-74.root";
-    simFile.emplace_back( new TFile(path.c_str(), "READ") );
+    filepath = path + "alpha_model_run53-74.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
+
+    // nPlus
+    filepath = path + "sumMaGe_K42nPlus.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
+ 
+    // pPlus
+    filepath = path + "sumMaGe_K42pPlus.root";
+    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );   
+    
+    // TODO: add new files here
  
     for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
 

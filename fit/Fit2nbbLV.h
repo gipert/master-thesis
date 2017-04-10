@@ -86,14 +86,19 @@ class Fit2nbbLV : public BCModel {
     // [0] 2bnn
     // [1] 2nbbLV
     // [2] K42homLAr
-    // [3] K40onFiberShroud
-    // [4] Bi212onFiberShroud
-    // [5] Tl208onFiberShroud
-    // [6] Pb214onFiberShroud
-    // [7] Bi214onFiberShroud
+    // [3] K40fibers
+    // [4] Bi212fibers
+    // [5] Tl208fibers
+    // [6] Pb214fibers
+    // [7] Bi214fibers
     // [8] alpha
     // [9] nPlus
     // [10] pPlus
+    // [11] Ac228holder
+    // [12] Co60holder
+    // [13] K40holder
+    // [14] Bi212holder
+    // [15] Tl208holder
 
     const double n2n1 = 134.594580;
     const double BrTl = 0.3539;

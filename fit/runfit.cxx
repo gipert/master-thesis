@@ -61,53 +61,33 @@ int main( int argc, char** argv ) {
     // [8] alphas
     // [9] nPlus
     // [10] pPlus
-    //
+    // [11] Ac228holder
+    // [12] Co60holder
+    // [13] K40holder
     
-    // 2nbb
-    filepath = path + "sumMaGe_2nbb.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
+    std::vector<std::string> simpath;
 
-    // 2nbbLV
-    filepath = path + "sumMaGe_2nbbLV.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
+    simpath.push_back(path + "sumMaGe_2nbb.root");
+    simpath.push_back(path + "sumMaGe_2nbbLV.root");
+    simpath.push_back(path + "sumMaGe_K42homLAr.root");    
+    simpath.push_back(path + "sumMaGe_K40fibers.root");    
+    simpath.push_back(path + "sumMaGe_Bi212fibers.root");    
+    simpath.push_back(path + "sumMaGe_Tl208fibers.root");
+    simpath.push_back(path + "sumMaGe_Pb214fibers.root");   
+    simpath.push_back(path + "sumMaGe_Bi214fibers.root");
+    simpath.push_back(path + "alpha_model_run53-74.root");
+    simpath.push_back(path + "sumMaGe_K42nPlus.root"); 
+    simpath.push_back(path + "sumMaGe_K42pPlus.root");    
+    simpath.push_back(path + "sumMaGe_Ac228holder.root");
+    simpath.push_back(path + "sumMaGe_Co60holder.root"); 
+    simpath.push_back(path + "sumMaGe_K40holder.root"); 
+    simpath.push_back(path + "sumMaGe_Bi212holder.root"); 
+    simpath.push_back(path + "sumMaGe_Tl208holder.root"); 
+    simpath.push_back(path + "sumMaGe_Pb214holder.root"); 
+    simpath.push_back(path + "sumMaGe_Bi214holder.root"); 
+    // TODO: push_back new files here
 
-    // homLAr
-    filepath = path + "sumMaGe_K42homLAr.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
-    
-    // K40onFiberShroud
-    filepath = path + "sumMaGe_K40fibers.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
-    
-    // Bi212onFiberShroud
-    filepath = path + "sumMaGe_Bi212fibers.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
-    
-    // Tl208onFiberShroud
-    filepath = path + "sumMaGe_Tl208fibers.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
-
-    // Pb214onFiberShroud
-    filepath = path + "sumMaGe_Pb214fibers.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
-    
-    // Bi214onFiberShroud
-    filepath = path + "sumMaGe_Bi214fibers.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
-
-    // alpha
-    filepath = path + "alpha_model_run53-74.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
-
-    // nPlus
-    filepath = path + "sumMaGe_K42nPlus.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );
- 
-    // pPlus
-    filepath = path + "sumMaGe_K42pPlus.root";
-    simFile.emplace_back( new TFile(filepath.c_str(), "READ") );   
-    
-    // TODO: add new files here
+    for ( const auto& p : simpath ) simFile.emplace_back( new TFile(p.c_str(), "READ") );
  
     for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
 

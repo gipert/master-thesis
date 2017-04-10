@@ -15,10 +15,14 @@
  *   on contacts (p and n):
  *   K42
  *
- *   on Holder
+ *   on Holder:
  *   K40 Ac228 Bi212 
  *   Bi214 Co60 Pb214
  *   Tl208
+ *
+ *   on cables:
+ *   K40 Bi212 Bi214 
+ *   Pb214 Tl208
  *
  * state-of-arts: enrCOAX are not summed. Different live times 
  * of the detectors (depending on the considered runs) are taken 
@@ -54,7 +58,9 @@ int main( int argc, char** argv ) {
                   << " on contacts (p and n):\n"
                   << "    K42\n\n"
                   << " on holder:\n"
-                  << "    K40, Ac228, Bi212, Bi214, Co60, Pb214, Tl208\n";
+                  << "    K40, Ac228, Bi212, Bi214, Co60, Pb214, Tl208\n\n"
+                  << " on cables:\n"
+                  << "    K40, Bi212, Bi214, Tl208, Pb214\n";
         return 0;
     }
    
@@ -63,7 +69,8 @@ int main( int argc, char** argv ) {
     else if ( std::find(args.begin(), args.end(), "--fibers"   ) != args.end() ) place = "fibers";
     else if ( std::find(args.begin(), args.end(), "--contacts" ) != args.end() ) place = "contacts";
     else if ( std::find(args.begin(), args.end(), "--holder"   ) != args.end() ) place = "holder";
-    else { std::cout << "Please pecify place: --homLAr, --fibers, --contacts, --holder\n"; return -1; }
+    else if ( std::find(args.begin(), args.end(), "--cables"   ) != args.end() ) place = "cables";
+    else { std::cout << "Please pecify place: --homLAr, --fibers, --contacts, --holder, --cables\n"; return -1; }
     
     if      ( std::find(args.begin(), args.end(), "--K42" ) != args.end() ) phys = "K42";
     else if ( std::find(args.begin(), args.end(), "--K40" ) != args.end() ) phys = "K40";
@@ -115,6 +122,11 @@ int main( int argc, char** argv ) {
     else if ( place == "holder" ) {
         Ngen = 1E07;
         M = 0.658988; // holder's mass [kg]
+    }
+
+    else if ( place == "cables" ) {
+        Ngen = 1E07;
+        M = 0.0309831; // total cables' mass
     }
 
 // -------------------------------------------------------------------------------------------------------------------    

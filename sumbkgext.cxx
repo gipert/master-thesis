@@ -136,7 +136,7 @@ int main( int argc, char** argv ) {
         // simulation are already normalized to number of generated events
         //long int Ngen;
         double MBEGe_n = 0.07423; // [Kg]
-        double MBEGe_p = 0.001; // [Kg] <----------- FAKE
+        double MBEGe_p = 5.4007716E-07; // [Kg]
         double MCOAX_n = 0.29962; // [Kg]
         double MCOAX_p = 0.0021176; // [Kg]
      

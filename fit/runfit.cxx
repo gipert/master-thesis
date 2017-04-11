@@ -253,14 +253,13 @@ int main( int argc, char** argv ) {
 	summary.PrintParameterPlot("out/Fit2nbbLV_parameters.pdf");
 	summary.PrintCorrelationPlot("out/Fit2nbbLV_correlation.pdf");
 	summary.PrintCorrelationMatrix("out/Fit2nbbLV_correlationMatrix.pdf");
+    model.WriteHistosOnFile(std::string(std::getenv("GERDACPTDIR")) + "/out/");
     // this will re-run the analysis without the LogLikelihood information
     BCLog::OutSummary("Building knowledge-update plots.");
     BCLog::SetLogLevelScreen(BCLog::warning);
-	//summary.PrintKnowledgeUpdatePlots("out/Fit2nbbLV_update.pdf");
+	summary.PrintKnowledgeUpdatePlots("out/Fit2nbbLV_update.pdf");
     BCLog::SetLogLevelScreen(BCLog::summary);
 
-    model.WriteHistosOnFile(std::string(std::getenv("GERDACPTDIR")) + "/out/");
-	
     BCLog::OutSummary("Exiting");
 	// close log file
 	BCLog::CloseLog();

@@ -32,7 +32,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [6] */  this->AddParameter("alphaBEGe", 0, 2000);
     /* [7] */  this->AddParameter("alphaCOAX", 0, 2600);
     /* [8] */  this->AddParameter("K42nPlusBEGe", 0, 1E-04);
-    /* [9] */  this->AddParameter("K42nPlusCOAX", 0, 5E-03);
+    /* [9] */  this->AddParameter("K42nPlusCOAX", 0, 2E-03);
     /* [10] */ this->AddParameter("K42pPlusBEGe", 0, 5E-01);
     /* [11] */ this->AddParameter("K42pPlusCOAX", 0, 5E-04);
     /* [12] */ this->AddParameter("Ac228holder", 0, 5E-04);
@@ -43,7 +43,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [17] */ this->AddParameter("K40cable", 0, 1E-01);
     /* [18] */ this->AddParameter("Bi212Tl208cables", 0, 5E-02);
     /* [19] */ this->AddParameter("Bi214Pb214cables", 0, 500);
-    /* [20] */ this->AddParameter("K40minishroud", 0, 5E-01);
+    /* [20] */ this->AddParameter("K40minishroud", 0, 2E-01);
     /* [21] */ this->AddParameter("Pa234minishroud", 0, 2E-01);
     /* [22] */ this->AddParameter("Bi207minishroud", 0, 1E-02);
     /* [23] */ this->AddParameter("Bi207cables", 0, 5E-02);
@@ -532,7 +532,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         name = path + "/" + type + ".C";
         tmp.SaveAs(name.c_str());
 
-        // create brazilian plot
+////////// create brazilian plot
         TCanvas brascan(type.c_str(), type.c_str(), 2700, 700);
         TPad pad1("pad", "pad", 0.0, 0.0, 1, 1);
         pad1.SetMargin(0.032,0.015,0.1,0.05);
@@ -548,6 +548,15 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         sum.GetYaxis()->SetTitle("counts");
         sum.GetYaxis()->SetNdivisions(10);
         sum.GetYaxis()->SetTickLength(0.01);
+        
+        TH1D resdraw(sum);
+        TH1D datares(vd);
+
+        for ( int i = 1; i <= nbins; ++i ) {
+            resdraw.SetBinContent(i, 0);
+            resdraw.SetBinError(i, sum.GetBinError(i));
+            datares.SetBinContent(i, vd.GetBinContent(i) - sum.GetBinContent(i));
+        }
         
         for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 3*sum.GetBinError(i));
         sum.SetMarkerStyle(0);
@@ -572,6 +581,34 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         
         name = path + "/brasilian" + type + ".C";
         brascan.SaveAs(name.c_str());
+
+///////// create residuals plot
+        for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 3*resdraw.GetBinError(i));
+        resdraw.SetMarkerStyle(0);
+        resdraw.SetFillColor(kOrange-3);
+        resdraw.SetFillStyle(3001);
+        pad1.Draw();
+        pad1.cd();
+        pad1.SetLogy(false);
+        resdraw.DrawCopy("E2");
+ 
+        for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 2*resdraw.GetBinError(i)/3);
+        resdraw.SetFillColor(kYellow);
+        resdraw.DrawCopy("E2 SAME");
+
+        for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 0.5*resdraw.GetBinError(i));
+        resdraw.SetFillColor(kGreen);
+        resdraw.DrawCopy("E2 SAME");
+        
+        for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 0.0001);
+        resdraw.SetFillStyle(0);
+        resdraw.SetFillColor(0);
+        resdraw.DrawCopy("E SAME");
+
+        datares.DrawCopy("P SAME");
+        
+        name = path + "/residuals" + type + ".C";
+        brascan.SaveAs(name.c_str());
     };
 
     drawpdf( hSimBEGe, hDataBEGe, "BEGe" );
@@ -579,7 +616,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
 
     hDataBEGe.Write();
     hDataCOAX.Write();
-    for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
+    for ( unsigned int i = 1; i < hSimBEGe.size(); ++i ) {
         hSimBEGe[i].Write();
         hSimCOAX[i].Write();
     }

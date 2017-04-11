@@ -58,11 +58,11 @@ int main( int argc, char** argv ) {
                   << " on contacts (p and n):\n"
                   << "    K42\n\n"
                   << " on holder:\n"
-                  << "    K40, Ac228, Bi212, Bi214, Co60, Pb214, Tl208\n\n"
+                  << "    K40, Ac228, Bi212, Bi214, Co60, Pb214, Tl208, Bi207\n\n"
                   << " on cables:\n"
-                  << "    K40, Bi212, Bi214, Tl208, Pb214\n\n"
+                  << "    K40, Bi212, Bi214, Tl208, Pb214, Bi207\n\n"
                   << " on mini shroud:\n"
-                  << "    K40, Pa234\n\n"
+                  << "    K40, Pa234, Bi207\n\n"
                   << " on mini shroud surface:\n"
                   << "    K42\n";
         return 0;
@@ -87,7 +87,8 @@ int main( int argc, char** argv ) {
     else if ( std::find(args.begin(), args.end(), "--Ac228" ) != args.end() ) phys = "Ac228";
     else if ( std::find(args.begin(), args.end(), "--Co60" ) != args.end() ) phys = "Co60";
     else if ( std::find(args.begin(), args.end(), "--Pa234" ) != args.end() ) phys = "Pa234";
-    else    { std::cout << "Please specify source: --K42, --K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60, --Pa234\n"; return -1; }
+    else if ( std::find(args.begin(), args.end(), "--Bi207" ) != args.end() ) phys = "Bi207";
+    else    { std::cout << "Please specify source: --K42, --K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60, --Pa234, --Bi207\n"; return -1; }
     // TODO: add sources here
 // ----------------------------------------------------------------------------------------------------------
     

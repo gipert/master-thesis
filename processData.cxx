@@ -58,7 +58,7 @@ int main( int argc, char** argv ) {
     // main reader object
     bool verbose = false;
     if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) verbose = true;
-    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", verbose );    
+    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", verbose );
 
     // create output ROOT file and .txt file
     TFile file( filename.c_str(), "RECREATE" );
@@ -68,8 +68,7 @@ int main( int argc, char** argv ) {
     
     // retrieve energy spectrum
     std::vector<TH1D> energy;
-    int result = reader.CreateEnergyHist(opt);
-    if ( result != 0 ) return -1;
+    reader.CreateEnergyHist(opt);
     energy = reader.GetEnergyHist();
 
     auto energyBEGe    = reader.GetEnergyHistBEGe();

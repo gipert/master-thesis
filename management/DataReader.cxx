@@ -89,6 +89,13 @@ DataReader::DataReader( std::string pathsFile, bool verbose, std::string orderin
     kMustResetEnergy = false;
 
     for ( auto& n : runsToProcess ) this->LoadRun(n);
+    
+        std::cout << "Loaded runs: ";
+        for ( const auto& it : dataTreeMap ) std::cout << it.first << ' ';
+        std::cout << ". Continue? [y/n, default=y] ";
+        std::string line;
+        std::getline( std::cin, line );
+        if( !line.empty() and line != "y" ) { std::cout << "Aborting...\n"; throw -1; }
 }
 // -------------------------------------------------------------------------------
 std::string DataReader::FindRunConfiguration( unsigned int runID ) {
@@ -179,22 +186,16 @@ bool DataReader::LoadRun( unsigned int runID ) {
     return true;
 }
 // -------------------------------------------------------------------------------
-int DataReader::CreateEnergyHist( std::string opt ) {
-    
-    std::cout << "Selected runs: ";
-    for ( const auto& it : dataTreeMap ) std::cout << it.first << ' ';
-    std::cout << ". Continue? [y/n]";
-    char entry; std::cin >> entry;
-    if ( entry != 'y' ) { std::cout << "Aborting...\n"; return -1; }
+void DataReader::CreateEnergyHist( std::string opt ) {
 
     if ( opt != "zac" and opt != "ZAC" and opt != "gauss" and opt != "GAUSS" ) {
         std::cout << opt << ": Unknown option, aborting...\n";
-        return -1;
+        return;
     }
    
     if (kMustResetEnergy) {
         std::cout << "Warning: the energy vector is non-empty, call DataReader::ResetEnergy. Aborting...\n"; 
-        return -1;
+        return;
     }
     
     int nTP;
@@ -262,7 +263,7 @@ int DataReader::CreateEnergyHist( std::string opt ) {
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
     
-    return 0;
+    return;
 }
 // -------------------------------------------------------------------------------
 void DataReader::ResetEnergy() {

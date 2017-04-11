@@ -1,4 +1,5 @@
 *.swp
+*.bsub
 
 out/
 lib/

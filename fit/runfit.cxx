@@ -38,14 +38,15 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
 /////////////////////////////////////////////
+    
+    auto c_str = [](std::string s) { return s.c_str(); };
 
     TH1::AddDirectory(false);
     // retrieve data
     std::string path = std::string(std::getenv("GERDACPTDIR")) + "/data/";
-    std::string filepath = path + "sumData.root";
-    TFile fileData(filepath.c_str(), "READ");
+    TFile fileData(c_str(path + "sumData.root"), "READ");
     if (!fileData.IsOpen()) { std::cout << "Zombie fileData!\n"; return -1; }
     
     // vector holding all sim files
@@ -202,7 +203,8 @@ int main( int argc, char** argv ) {
 	// create a new summary tool object
 	BCSummaryTool summary(&model);
     // create output class
-    BCModelOutput output(&model, "out/markowChains.root");
+    path = std::string(std::getenv("GERDACPTDIR")) + "/";
+    BCModelOutput output(&model, c_str(path + "out/markowChains.root"));
     model.WriteMarkovChain(true);
     
     // set nicer style for drawing than the ROOT default
@@ -211,7 +213,7 @@ int main( int argc, char** argv ) {
 	// open log file
     BCLog::SetLogLevelFile(BCLog::detail);
     BCLog::SetLogLevelScreen(BCLog::summary);
-	BCLog::OpenLog("out/logBAT.txt");
+	BCLog::OpenLog(c_str(path + "/out/logBAT.txt"));
 
 	// set precision (number of samples in Markov chain)
 	model.MCMCSetPrecision(level);
@@ -238,26 +240,26 @@ int main( int argc, char** argv ) {
     BCLog::SetLogLevelScreen(BCLog::detail);
 	model.FindMode(model.GetBestFitParameters());
     BCLog::SetLogLevelScreen(BCLog::summary);
-/*
+
     std::cout << std::endl;
     double pvalue = GetPValue(model);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
-*/
+
     // OUTPUT
 	// print results of the analysis into a text file
-	model.PrintResults("out/Fit2nbbLV_results.txt");
+	model.PrintResults(c_str(path + "out/Fit2nbbLV_results.txt"));
 	// draw all marginalized distributions into a PDF file
-	model.PrintAllMarginalized("out/Fit2nbbLV_plots.pdf");
+	model.PrintAllMarginalized(c_str(path + "out/Fit2nbbLV_plots.pdf"));
 
     // print all summary plots
-	summary.PrintParameterPlot("out/Fit2nbbLV_parameters.pdf");
-	summary.PrintCorrelationPlot("out/Fit2nbbLV_correlation.pdf");
-	summary.PrintCorrelationMatrix("out/Fit2nbbLV_correlationMatrix.pdf");
-    model.WriteHistosOnFile(std::string(std::getenv("GERDACPTDIR")) + "/out/");
+	summary.PrintParameterPlot(c_str(path + "out/Fit2nbbLV_parameters.pdf"));
+	summary.PrintCorrelationPlot(c_str(path + "out/Fit2nbbLV_correlation.pdf"));
+	summary.PrintCorrelationMatrix(c_str(path + "out/Fit2nbbLV_correlationMatrix.pdf"));
+    model.WriteHistosOnFile(path + "out/");
     // this will re-run the analysis without the LogLikelihood information
     BCLog::OutSummary("Building knowledge-update plots.");
     BCLog::SetLogLevelScreen(BCLog::warning);
-	summary.PrintKnowledgeUpdatePlots("out/Fit2nbbLV_update.pdf");
+	summary.PrintKnowledgeUpdatePlots(c_str(path + "out/Fit2nbbLV_update.pdf"));
     BCLog::SetLogLevelScreen(BCLog::summary);
 
     BCLog::OutSummary("Exiting");

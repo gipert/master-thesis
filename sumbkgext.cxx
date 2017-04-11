@@ -49,7 +49,7 @@ int main( int argc, char** argv ) {
     std::vector<std::string> args(argc);
     for ( int i = 0; i < argc; ++i ) args[i] = argv[i];
  
-    if ( std::find(args.begin(), args.end(), "--help"   ) != args.end() ) {
+    if ( argc == 1 or std::find(args.begin(), args.end(), "--help" ) != args.end() ) {
         std::cout << "Available sources:\n\n"
                   << "homLAr:\n"
                   << "    K42\n\n"
@@ -60,7 +60,11 @@ int main( int argc, char** argv ) {
                   << " on holder:\n"
                   << "    K40, Ac228, Bi212, Bi214, Co60, Pb214, Tl208\n\n"
                   << " on cables:\n"
-                  << "    K40, Bi212, Bi214, Tl208, Pb214\n";
+                  << "    K40, Bi212, Bi214, Tl208, Pb214\n\n"
+                  << " on mini shroud:\n"
+                  << "    K40, Pa234\n\n"
+                  << " on mini shroud surface:\n"
+                  << "    K42\n";
         return 0;
     }
    
@@ -70,7 +74,9 @@ int main( int argc, char** argv ) {
     else if ( std::find(args.begin(), args.end(), "--contacts" ) != args.end() ) place = "contacts";
     else if ( std::find(args.begin(), args.end(), "--holder"   ) != args.end() ) place = "holder";
     else if ( std::find(args.begin(), args.end(), "--cables"   ) != args.end() ) place = "cables";
-    else { std::cout << "Please pecify place: --homLAr, --fibers, --contacts, --holder, --cables\n"; return -1; }
+    else if ( std::find(args.begin(), args.end(), "--minishroud") != args.end() ) place = "minishroud";
+    else if ( std::find(args.begin(), args.end(), "--minishroudsurface") != args.end() ) place = "minishroudsurface";
+    else { std::cout << "Please pecify place: --homLAr, --fibers, --contacts, --holder, --cables, --minishroud, --minishroudsurface\n"; return -1; }
     
     if      ( std::find(args.begin(), args.end(), "--K42" ) != args.end() ) phys = "K42";
     else if ( std::find(args.begin(), args.end(), "--K40" ) != args.end() ) phys = "K40";
@@ -80,7 +86,9 @@ int main( int argc, char** argv ) {
     else if ( std::find(args.begin(), args.end(), "--Pb214" ) != args.end() ) phys = "Pb214";
     else if ( std::find(args.begin(), args.end(), "--Ac228" ) != args.end() ) phys = "Ac228";
     else if ( std::find(args.begin(), args.end(), "--Co60" ) != args.end() ) phys = "Co60";
-    else    { std::cout << "Please specify source: --K42, --K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60\n"; return -1; }
+    else if ( std::find(args.begin(), args.end(), "--Pa234" ) != args.end() ) phys = "Pa234";
+    else    { std::cout << "Please specify source: --K42, --K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60, --Pa234\n"; return -1; }
+    // TODO: add sources here
 // ----------------------------------------------------------------------------------------------------------
     
     std::string rootpath = std::string(std::getenv("GERDACPTDIR"));
@@ -114,6 +122,7 @@ int main( int argc, char** argv ) {
         Ngen = 5E09;
         M = 24563.385; // LAr mass [kg]
     }
+
     else if ( place == "fibers" ) {
         Ngen = 1E08;
         M = 1.3615078; // fibers' mass [kg]
@@ -128,6 +137,12 @@ int main( int argc, char** argv ) {
         Ngen = 1E07;
         M = 0.0309831; // total cables' mass
     }
+
+    else if ( place == "minishroud" ) {
+        Ngen = 1E08;
+        M = 0.09251623; // total mini shroud's mass
+    }
+    // TODO: complete here
 
 // -------------------------------------------------------------------------------------------------------------------    
     // SPECIAL CASE: contacts

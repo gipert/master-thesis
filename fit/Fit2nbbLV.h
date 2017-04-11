@@ -86,7 +86,7 @@ class Fit2nbbLV : public BCModel {
     // [0] 2bnn
     // [1] 2nbbLV
     // [2] K42homLAr
-    // [3] K40fibers
+    // [3] K40fibers <-----
     // [4] Bi212fibers
     // [5] Tl208fibers
     // [6] Pb214fibers
@@ -94,18 +94,23 @@ class Fit2nbbLV : public BCModel {
     // [8] alpha
     // [9] nPlus
     // [10] pPlus
-    // [11] Ac228holder 
+    // [11] Ac228holder <----- 
     // [12] Co60holder
     // [13] K40holder
     // [14] Bi212holder 
     // [15] Tl208holder 
     // [16] Pb214holder 
     // [17] Bi214holder 
-    // [18] K40cables
+    // [18] K40cables  <-----
     // [19] Bi212cables
     // [20] Tl208cables
     // [21] Pb214cables
     // [22] Bi214cables
+    // [23] K40minishroud <-----
+    // [24] Pa234minishroud
+    // [25] Bi207minishroud
+    // [26] Bi207cables
+    // [27] Bi207holder
     //
 
     const double n2n1 = 134.594580;

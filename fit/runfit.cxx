@@ -90,6 +90,11 @@ int main( int argc, char** argv ) {
     simpath.push_back(path + "sumMaGe_Tl208cables.root"); 
     simpath.push_back(path + "sumMaGe_Pb214cables.root"); 
     simpath.push_back(path + "sumMaGe_Bi214cables.root"); 
+    simpath.push_back(path + "sumMaGe_K40minishroud.root"); 
+    simpath.push_back(path + "sumMaGe_Pa234minishroud.root"); 
+    simpath.push_back(path + "sumMaGe_Bi207minishroud.root"); 
+    simpath.push_back(path + "sumMaGe_Bi207cables.root"); 
+    simpath.push_back(path + "sumMaGe_Bi207holder.root"); 
 
     // TODO: push_back new files here
 
@@ -251,7 +256,7 @@ int main( int argc, char** argv ) {
     // this will re-run the analysis without the LogLikelihood information
     BCLog::OutSummary("Building knowledge-update plots.");
     BCLog::SetLogLevelScreen(BCLog::warning);
-	summary.PrintKnowledgeUpdatePlots("out/Fit2nbbLV_update.pdf");
+	//summary.PrintKnowledgeUpdatePlots("out/Fit2nbbLV_update.pdf");
     BCLog::SetLogLevelScreen(BCLog::summary);
 
     model.WriteHistosOnFile(std::string(std::getenv("GERDACPTDIR")) + "/out/");

@@ -32,8 +32,8 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [6] */  this->AddParameter("alphaBEGe", 0, 2000);
     /* [7] */  this->AddParameter("alphaCOAX", 0, 2600);
     /* [8] */  this->AddParameter("K42nPlusBEGe", 0, 1E-04);
-    /* [9] */  this->AddParameter("K42nPlusCOAX", 0, 1E-02);
-    /* [10] */ this->AddParameter("K42pPlusBEGe", 0, 5E-04);
+    /* [9] */  this->AddParameter("K42nPlusCOAX", 0, 5E-03);
+    /* [10] */ this->AddParameter("K42pPlusBEGe", 0, 5E-01);
     /* [11] */ this->AddParameter("K42pPlusCOAX", 0, 5E-04);
     /* [12] */ this->AddParameter("Ac228holder", 0, 5E-04);
     /* [13] */ this->AddParameter("Co60holder", 0, 1E-04);
@@ -43,6 +43,11 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [17] */ this->AddParameter("K40cable", 0, 1E-01);
     /* [18] */ this->AddParameter("Bi212Tl208cables", 0, 5E-02);
     /* [19] */ this->AddParameter("Bi214Pb214cables", 0, 500);
+    /* [20] */ this->AddParameter("K40minishroud", 0, 5E-01);
+    /* [21] */ this->AddParameter("Pa234minishroud", 0, 2E-01);
+    /* [22] */ this->AddParameter("Bi207minishroud", 0, 1E-02);
+    /* [23] */ this->AddParameter("Bi207cables", 0, 5E-02);
+    /* [24] */ this->AddParameter("Bi207holder", 0, 1E-02);
    
     // TODO: add new parameters here
     //// LEGEND
@@ -67,7 +72,11 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     // [17] K40cables
     // [18] Bi212 + Tl208 in cables
     // [19] Pb214 + Bi214 in cables
-    //
+    // [20] K40minishroud
+    // [21] Pa234 minishroud
+    // [22] Bi207minishroud
+    // [23] Bi207cables
+    // [24] Bi207holder
 
     // priors
     //this->SetPriorGauss(0,217,11);
@@ -96,6 +105,11 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
         f += parameters[17]*simBEGe[18][i];
         f += parameters[18]*(simBEGe[19][i] + BrTl*simBEGe[20][i]);
         f += parameters[19]*(simBEGe[21][i] +      simBEGe[22][i]);
+        f += parameters[20]*simBEGe[23][i];
+        f += parameters[21]*simBEGe[24][i];
+        f += parameters[22]*simBEGe[25][i];
+        f += parameters[23]*simBEGe[26][i];
+        f += parameters[24]*simBEGe[27][i];
         // TODO: update loglikelihood here
         
         //logprob += dataBEGe[i]*log(f) - f - BCMath::LogFact(dataBEGe[i]);
@@ -116,6 +130,11 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
         f += parameters[17]*simCOAX[18][i];
         f += parameters[18]*(simCOAX[19][i] + BrTl*simCOAX[20][i]);
         f += parameters[19]*(simCOAX[21][i] +      simCOAX[22][i]);
+        f += parameters[20]*simCOAX[23][i];
+        f += parameters[21]*simCOAX[24][i];
+        f += parameters[22]*simCOAX[25][i];
+        f += parameters[23]*simCOAX[26][i];
+        f += parameters[24]*simCOAX[27][i];
         // TODO: update loglikelihood here
         
         //logprob += dataCOAX[i]*log(f) - f - BCMath::LogFact(dataCOAX[i]);
@@ -148,6 +167,11 @@ std::vector<double> Fit2nbbLV::GetFittedFncBEGe(std::vector<double>& bestpar) {
           + bestpar[17]*simBEGe[18][i]
           + bestpar[18]*(simBEGe[19][i] + BrTl*simBEGe[20][i])
           + bestpar[19]*(simBEGe[21][i] + BrTl*simBEGe[22][i])
+          + bestpar[20]*simBEGe[23][i]
+          + bestpar[21]*simBEGe[24][i]
+          + bestpar[22]*simBEGe[25][i]
+          + bestpar[23]*simBEGe[26][i]
+          + bestpar[24]*simBEGe[27][i]
           ;
           // TODO: update fitting func here
     }
@@ -178,6 +202,11 @@ std::vector<double> Fit2nbbLV::GetFittedFncCOAX(std::vector<double>& bestpar) {
           + bestpar[17]*simCOAX[18][i]
           + bestpar[18]*(simCOAX[19][i] + BrTl*simCOAX[20][i])
           + bestpar[19]*(simCOAX[21][i] +      simCOAX[22][i])
+          + bestpar[20]*simCOAX[23][i]
+          + bestpar[21]*simCOAX[24][i]
+          + bestpar[22]*simCOAX[25][i]
+          + bestpar[23]*simCOAX[26][i]
+          + bestpar[24]*simCOAX[27][i]
           ;
         // TODO: update fitting func here
     }
@@ -391,6 +420,36 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
     hSimBEGe[22].SetName("hBi214cablesBEGe");
     hSimCOAX[22].Scale(results[19]);
     hSimCOAX[22].SetName("hBi214cablesCOAX");
+     
+    // K40minishroud
+    hSimBEGe[23].Scale(results[20]);
+    hSimBEGe[23].SetName("hK40minishroudBEGe");
+    hSimCOAX[23].Scale(results[20]);
+    hSimCOAX[23].SetName("hK40minishroudCOAX");
+    
+    // Pa234minishroud
+    hSimBEGe[24].Scale(results[21]);
+    hSimBEGe[24].SetName("hPa234minishroudBEGe");
+    hSimCOAX[24].Scale(results[21]);
+    hSimCOAX[24].SetName("hPa234minishroudCOAX");
+    
+    // Bi207minishroud
+    hSimBEGe[25].Scale(results[22]);
+    hSimBEGe[25].SetName("hBi207minishroudBEGe");
+    hSimCOAX[25].Scale(results[22]);
+    hSimCOAX[25].SetName("hBi207minishroudCOAX");
+     
+    // Bi207cables
+    hSimBEGe[26].Scale(results[23]);
+    hSimBEGe[26].SetName("hBi207cablesBEGe");
+    hSimCOAX[26].Scale(results[23]);
+    hSimCOAX[26].SetName("hBi207cablesCOAX");
+    
+    // Bi207holder
+    hSimBEGe[27].Scale(results[24]);
+    hSimBEGe[27].SetName("hBi207holderBEGe");
+    hSimCOAX[27].Scale(results[24]);
+    hSimCOAX[27].SetName("hBi207holderCOAX");
  
     // TODO: add new sources here
     // ...
@@ -442,6 +501,13 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         v[20].SetLineColor(kOrange);
         v[21].SetLineColor(kOrange);
         v[22].SetLineColor(kOrange);
+        // minishroud
+        v[23].SetLineColor(kGray);
+        v[24].SetLineColor(kGray);
+        v[25].SetLineColor(kGray);
+        
+        v[26].SetLineColor(kOrange);  // cables
+        v[27].SetLineColor(kYellow);  // holder
         // TODO: define color
 
         for ( auto& h : v ) h.Draw("HISTSAME");

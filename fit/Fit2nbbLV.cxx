@@ -15,37 +15,39 @@
 #include "TCanvas.h"
 #include "TPad.h"
 #include "TLegend.h"
+#include "TText.h"
 
 #include <BAT/BCMath.h>
 #include <BAT/BCLog.h>
+#include <BAT/BCParameter.h>
 
 // ---------------------------------------------------------
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
    
     // define parameters
     /* [0] */  this->AddParameter("2nbb", 200, 280);
-    /* [1] */  this->AddParameter("2nbbLV", 0, 4E-04);
+    /* [1] */  this->AddParameter("2nbbLV", 0, 5E-04);
     /* [2] */  this->AddParameter("K42homLAr", 0, 0.0003);
     /* [3] */  this->AddParameter("K40fibers", 0, 2);
     /* [4] */  this->AddParameter("Bi212Tl208fibers", 0, 0.02);
     /* [5] */  this->AddParameter("Bi214Pb214fibers", 0, 0.1);
     /* [6] */  this->AddParameter("alphaBEGe", 0, 2000);
-    /* [7] */  this->AddParameter("alphaCOAX", 0, 2600);
+    /* [7] */  this->AddParameter("alphaCOAX", 0, 3500);
     /* [8] */  this->AddParameter("K42nPlusBEGe", 0, 1E-04);
-    /* [9] */  this->AddParameter("K42nPlusCOAX", 0, 2E-03);
+    /* [9] */  this->AddParameter("K42nPlusCOAX", 0, 2E-04);
     /* [10] */ this->AddParameter("K42pPlusBEGe", 0, 5E-01);
     /* [11] */ this->AddParameter("K42pPlusCOAX", 0, 5E-04);
     /* [12] */ this->AddParameter("Ac228holder", 0, 5E-04);
     /* [13] */ this->AddParameter("Co60holder", 0, 1E-04);
-    /* [14] */ this->AddParameter("K40holder", 0, 5E-03);
+    /* [14] */ this->AddParameter("K40holder", 0, 1E-02);
     /* [15] */ this->AddParameter("Bi212Tl208holder", 0, 5E-04);
     /* [16] */ this->AddParameter("Bi214Pb214holder", 0, 10);
-    /* [17] */ this->AddParameter("K40cable", 0, 1E-01);
+    /* [17] */ this->AddParameter("K40cable", 0, 5E-01);
     /* [18] */ this->AddParameter("Bi212Tl208cables", 0, 5E-02);
     /* [19] */ this->AddParameter("Bi214Pb214cables", 0, 500);
     /* [20] */ this->AddParameter("K40minishroud", 0, 2E-01);
     /* [21] */ this->AddParameter("Pa234minishroud", 0, 2E-01);
-    /* [22] */ this->AddParameter("Bi207minishroud", 0, 1E-02);
+    /* [22] */ this->AddParameter("Bi207minishroud", 0, 5E-03);
     /* [23] */ this->AddParameter("Bi207cables", 0, 5E-02);
     /* [24] */ this->AddParameter("Bi207holder", 0, 1E-02);
    
@@ -81,6 +83,9 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     // priors
     //this->SetPriorGauss(0,217,11);
     this->SetPriorConstantAll();
+
+    //fix
+    //for ( int i = 5; i <= 24; ++i ) this->GetParameter(i)->Fix(0);
 }
 // ---------------------------------------------------------
 double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
@@ -274,7 +279,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
     // fill ROOT objects
     for ( int i = 0; i < nbins; ++i ) {
         hDataBEGe.SetBinContent(i+1, dataBEGe[i]);
-        hDataCOAX.SetBinContent(i+1, dataBEGe[i]);
+        hDataCOAX.SetBinContent(i+1, dataCOAX[i]);
         
         for ( unsigned int j = 0; j < simBEGe.size(); ++j ) {
             hSimBEGe[j].SetBinContent(i+1, simBEGe[j][i]);
@@ -524,6 +529,10 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         for ( auto& h : v ) leg.AddEntry(&h,h.GetName(),"l");
         leg.AddEntry(&sum,sum.GetName(),"l");
         leg.Draw();
+
+        TText text(0.5, 0.7, type.c_str());
+        text.SetNDC();
+        text.Draw();
         
         pad.SetLogy();
         pad.SetGrid();
@@ -578,6 +587,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         sum.DrawCopy("E SAME");
 
         vd.DrawCopy("P SAME");
+        text.Draw();
         
         name = path + "/brasilian" + type + ".C";
         brascan.SaveAs(name.c_str());
@@ -606,7 +616,8 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         resdraw.DrawCopy("E SAME");
 
         datares.DrawCopy("P SAME");
-        
+        text.Draw();
+
         name = path + "/residuals" + type + ".C";
         brascan.SaveAs(name.c_str());
     };

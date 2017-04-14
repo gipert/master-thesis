@@ -152,7 +152,7 @@ int main( int argc, char** argv ) {
     // rebin the histograms
     // new histograms
     TH1D* hDataBEGe = dynamic_cast<TH1D*>(hDataBEGetmp->Rebin(nBins, "hDataBEGetmp", &dbin[0]));
-    TH1D* hDataCOAX = dynamic_cast<TH1D*>(hDataBEGetmp->Rebin(nBins, "hDataCOAXtmp", &dbin[0]));
+    TH1D* hDataCOAX = dynamic_cast<TH1D*>(hDataCOAXtmp->Rebin(nBins, "hDataCOAXtmp", &dbin[0]));
     
     std::vector<TH1*> hSimBEGe;
     std::vector<TH1*> hSimCOAX;

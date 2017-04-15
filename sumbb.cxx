@@ -130,7 +130,7 @@ int main( int argc, char** argv ) {
     // loop over enrCOAX files
     for ( int i = 1; i <= 10; ++i ) {
         // NOTE: skipping GTFs
-        if ( i == 1 or i == 2 or i == 3 ) continue;
+        //if ( i == 1 or i == 2 or i == 3 ) continue;
         
         // run
         fillHistos(i, "A_COAX", phys);

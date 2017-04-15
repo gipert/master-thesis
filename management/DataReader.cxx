@@ -217,6 +217,7 @@ void DataReader::CreateEnergyHist( std::string opt ) {
         treereader.SetTree(chain.get());
 
         ProgressBar bar(chain->GetEntries());
+        if (!kVerbosity) bar.ShowBar(false);
         std::cout << "processing run" << it.first << ": " << std::flush;
         
         auto start = std::chrono::system_clock::now();

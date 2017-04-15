@@ -94,7 +94,7 @@ int main( int argc, char** argv ) {
 
         filename += std::to_string(i) + ".root";
         outfilename += std::to_string(i) + ".root";
-        display += std::to_string(i) + " ";
+        display += std::to_string(i) + ": ";
         
         file = std::unique_ptr<TFile>{ TFile::Open(filename.c_str(), "READ") };
         fTree = dynamic_cast<TTree*>(file->Get("fTree"));
@@ -125,12 +125,15 @@ int main( int argc, char** argv ) {
         }
         outfile.Close();
         file->Close();
+        std::cout << "done. \n";
         return;
     };
 // -----------------------------------------------------------------------------------------------------
     
     // loop over enrCOAX files
-    for ( int i = 4; i <= 10; ++i ) {
+    for ( int i = 1; i <= 10; ++i ) {
+        // NOTE: skipping GTFs
+        if ( i == 1 or i == 2 or i == 3 ) { std::cout << "AV_det11_" << i << ": skipped\n" << "DV_det11_" << i << ": skipped\n"; continue; }
         
         auto start = std::chrono::system_clock::now();
         

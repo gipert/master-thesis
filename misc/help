@@ -1,9 +1,10 @@
 
-The program produces the energy spectra (saved in a .root file)
-of the 40 detectors installed in Gerda given a set of runIDs.
+The program produces the energy spectra (saved in data/sumData.root)
+and the total livetimes for each run (saved in data/sumData.dat) of
+the 40 detectors installed in Gerda given a set of runIDs.
 
 USAGE:
-  ./main [OPTIONS] <output file name>.root
+  ./main [OPTIONS]
 
 There must be a file named 'paths.txt' in the same location of
 the executable formatted as the following:

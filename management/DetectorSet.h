@@ -32,7 +32,7 @@ namespace GERDA {
       DetectorSet& operator=(DetectorSet&&)      = default;
 
       
-      std::vector<std::string> GetNames()   const { return names; }
+      std::vector<std::string> GetDetectorNames()   const { return names; }
       // 1 = BEGe, 2 = enrCOAX, 3 = natCOAX
       std::vector<int>   GetDetectorTypes() const { return detectorTypes; }
       // get mass [g]

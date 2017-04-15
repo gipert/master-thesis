@@ -38,7 +38,7 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
 /////////////////////////////////////////////
     
     auto c_str = [](std::string s) { return s.c_str(); };

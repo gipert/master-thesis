@@ -16,7 +16,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <chrono>
 #include <map>
 #include <memory>
 
@@ -31,9 +30,6 @@ int main( int argc, char** argv ) {
 
     std::vector<std::string> args(argc);
     for ( int i = 0; i < argc; ++i ) args[i] = argv[i];
-    
-    bool verbose = false;
-    if ( std::find(args.begin(), args.end(), "--verbose"  ) != args.end() ) verbose = true;
     
     std::string phys;
     if      ( std::find(args.begin(), args.end(), "--2nbb"  ) != args.end() ) phys = "2nbb";
@@ -132,29 +128,21 @@ int main( int argc, char** argv ) {
 // -----------------------------------------------------------------------------------------------------
     
     // loop over enrCOAX files
-    for ( int i = 4; i <= 10; ++i ) {
-        
-        auto start = std::chrono::system_clock::now();
+    for ( int i = 1; i <= 10; ++i ) {
+        // NOTE: skipping GTFs
+        if ( i == 1 or i == 2 or i == 3 ) continue;
         
         // run
-        fillHistos(i, "A_COAX", phys); if (verbose) std::cout << std::endl;
+        fillHistos(i, "A_COAX", phys);
         fillHistos(i, "D_COAX", phys);
-        
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
-        if (verbose) std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
 
     // loop over BEGe
     for ( int i = 1; i <= 30; ++i ) {
 
-        auto start = std::chrono::system_clock::now();
-        
         // run
-        fillHistos(i, "A_BEGe", phys); if (verbose) std::cout << std::endl;
+        fillHistos(i, "A_BEGe", phys);
         fillHistos(i, "D_BEGe", phys);
-
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
-        if (verbose) std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7.5);

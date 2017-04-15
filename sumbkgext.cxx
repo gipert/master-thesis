@@ -18,11 +18,17 @@
  *   on Holder:
  *   K40 Ac228 Bi212 
  *   Bi214 Co60 Pb214
- *   Tl208
+ *   Tl208 Bi207
  *
  *   on cables:
  *   K40 Bi212 Bi214 
- *   Pb214 Tl208
+ *   Pb214 Tl208 Bi207
+ *
+ *   on mini shroud:
+ *   K40, Pa234, Bi207
+ *
+ *   on mini shroud surface:
+ *   K42
  *
  * state-of-arts: enrCOAX are not summed. Different live times 
  * of the detectors (depending on the considered runs) are taken 
@@ -36,7 +42,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <chrono>
 #include <map>
 
 #include "TFile.h"
@@ -78,17 +83,27 @@ int main( int argc, char** argv ) {
     else if ( std::find(args.begin(), args.end(), "--minishroudsurface") != args.end() ) place = "minishroudsurface";
     else { std::cout << "Please pecify place: --homLAr, --fibers, --contacts, --holder, --cables, --minishroud, --minishroudsurface\n"; return -1; }
     
-    if      ( std::find(args.begin(), args.end(), "--K42" ) != args.end() ) phys = "K42";
-    else if ( std::find(args.begin(), args.end(), "--K40" ) != args.end() ) phys = "K40";
+    if      ( std::find(args.begin(), args.end(), "--K42" ) != args.end() )   phys = "K42";
+    else if ( std::find(args.begin(), args.end(), "--K40" ) != args.end() )   phys = "K40";
     else if ( std::find(args.begin(), args.end(), "--Bi212" ) != args.end() ) phys = "Bi212";
     else if ( std::find(args.begin(), args.end(), "--Tl208" ) != args.end() ) phys = "Tl208";
     else if ( std::find(args.begin(), args.end(), "--Bi214" ) != args.end() ) phys = "Bi214";
     else if ( std::find(args.begin(), args.end(), "--Pb214" ) != args.end() ) phys = "Pb214";
     else if ( std::find(args.begin(), args.end(), "--Ac228" ) != args.end() ) phys = "Ac228";
-    else if ( std::find(args.begin(), args.end(), "--Co60" ) != args.end() ) phys = "Co60";
+    else if ( std::find(args.begin(), args.end(), "--Co60" ) != args.end() )  phys = "Co60";
     else if ( std::find(args.begin(), args.end(), "--Pa234" ) != args.end() ) phys = "Pa234";
     else if ( std::find(args.begin(), args.end(), "--Bi207" ) != args.end() ) phys = "Bi207";
-    else    { std::cout << "Please specify source: --K42, --K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60, --Pa234, --Bi207\n"; return -1; }
+    else {
+        std::cout << "Please specify source: ";
+        if ( place == "homLAr" )            std::cout << "--K42\n";
+        if ( place == "fibers" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214\n";
+        if ( place == "contacts" )          std::cout << "--K42\n";
+        if ( place == "holder" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60, --Bi207\n";
+        if ( place == "cables" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214, --Bi207\n";
+        if ( place == "minishroud" )        std::cout << "--K40, --Pa234, --Bi207\n";
+        if ( place == "minishroudsurface" ) std::cout << "--K42\n";
+        return -1;
+    }
     // TODO: add sources here
 // ----------------------------------------------------------------------------------------------------------
     

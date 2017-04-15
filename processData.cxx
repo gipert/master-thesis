@@ -31,7 +31,7 @@ int main( int argc, char** argv ) {
         else std::cerr << "help file not found!\n";
         return 0;
     }
-
+/*
     // get output filename
     std::string filename;
     for ( auto& str : args ) {
@@ -45,7 +45,8 @@ int main( int argc, char** argv ) {
         std::cerr << "Please provide a valid .root output filename.\n";
         return -1;
     }
-    filename = std::string(std::getenv("GERDACPTDIR")) + "/data/" + filename;
+*/    
+    std::string filename = std::string(std::getenv("GERDACPTDIR")) + "/data/sumData.root";
 
     std::string opt = "gauss";
     if ( std::find(args.begin(), args.end(), "--energy=zac") != args.end() or

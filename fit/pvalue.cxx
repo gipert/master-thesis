@@ -28,6 +28,7 @@ double GetPValue(Fit2nbbLV& model, bool save) {
     omp_set_num_threads(4);
     
     long int Niter = 1E05;
+
     std::cout << "Summary : Calculate p-value with 4 threads (" << Niter << " iterations).\nSummary : " << std::flush;
     // get loglikelihood after marginalization
     auto bestpar = model.GetBestFitParameters();

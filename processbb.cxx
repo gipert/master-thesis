@@ -157,6 +157,9 @@ int main( int argc, char** argv ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
         if (verbose) std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
+    
+    std::string command = "telegram-send \"processbb --" + phys + ": completed.\"";
+    std::system(command.c_str());
 
     return 0;
 }

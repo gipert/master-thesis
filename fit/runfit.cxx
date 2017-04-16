@@ -266,5 +266,10 @@ int main( int argc, char** argv ) {
 	// close log file
 	BCLog::CloseLog();
 
+    if ( level != BCEngineMCMC::kLow ) {
+        std::string command = "telegram-send \"runfit: completed\"";
+        std::system(command.c_str());
+    }
+
     return 0;
 }

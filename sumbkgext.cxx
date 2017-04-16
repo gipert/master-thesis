@@ -244,7 +244,7 @@ int main( int argc, char** argv ) {
     
     for ( int i = 0; i < 40; ++i ) {
         // NOTE: excluding GTFs and GD02D
-        if      ( set.GetDetectorTypes()[i] == 1 or
+        if      ( set.GetDetectorTypes()[i] == 1 and
                   set.GetDetectorNames()[i] != "GD02D" ) {
             histBEGe.Add(hist[i]);
             hist[i]->Write();
@@ -254,7 +254,7 @@ int main( int argc, char** argv ) {
             hist[i]->Write();
         }
     }
-    
+ 
     histCOAX.Write();
     histBEGe.Write();
 

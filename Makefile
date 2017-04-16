@@ -39,7 +39,7 @@ lib/libFit2nbbLV.so : fit/Fit2nbbLV.cxx fit/Fit2nbbLV.h
 	$(CC) -fPIC -shared $(CFLAGS) -o $@ $< $(shell bat-config --libs)
 # ------------------------------------------------------------------------
 bin/processData : processData.cxx lib/libDataReader.so
-	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader
+	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
 
 bin/processbb : processbb.cxx lib/libProgressBar.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lProgressBar
@@ -52,6 +52,16 @@ bin/sumbkgext : sumbkgext.cxx lib/libDataReader.so lib/libDetectorSet.so
 
 bin/runfit : fit/runfit.cxx fit/pvalue.cxx lib/libFit2nbbLV.so lib/libProgressBar.so
 	$(CC) $(CFLAGS) -o $@ $< fit/pvalue.cxx $(ROOTLIBS) $(shell bat-config --libs) -lFit2nbbLV -lProgressBar
+# ------------------------------------------------------------------------
+
+rundata : 
+	( bin/processData && misc/sumallbkgext.sh ) &;
+	( bin/processbb --2nbb && bin/sumbb --2nbb ) &;
+	( bin/processbb --2nbbLV && bin/sumbb --2nbbLV ) &;
+
+run : rundata
+	bin/runfit
+	telegram-send "make run: task completed"
 
 .PHONY : clean
 clean :

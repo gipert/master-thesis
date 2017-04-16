@@ -59,7 +59,8 @@ int main( int argc, char** argv ) {
     // main reader object
     bool verbose = false;
     if ( std::find(args.begin(), args.end(), "--verbose") != args.end() ) verbose = true;
-    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", verbose );
+    GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", verbose, "GELATIO" );
+    GERDA::DetectorSet set("GELATIO");
 
     // create output ROOT file and .txt file
     TFile file( filename.c_str(), "RECREATE" );
@@ -72,13 +73,22 @@ int main( int argc, char** argv ) {
     reader.CreateEnergyHist(opt);
     energy = reader.GetEnergyHist();
 
-    auto energyBEGe    = reader.GetEnergyHistBEGe();
+    TH1D energyBEGe("energyBEGeAll", "energyBEGeAll", 7500, 0, 7500);
     auto energyEnrCoax = reader.GetEnergyHistEnrCoax();
     auto energyNatCoax = reader.GetEnergyHistNatCoax();
+
+    for ( int i = 0; i < 40; ++i ) {
+        // NOTE: excluding GTFs and GD02D
+        if ( set.GetDetectorTypes()[i] == 1 and
+             set.GetDetectorNames()[i] != "GD02D" ) {
+            energyBEGe.Add(&energy[i]);
+            energy[i].Write();
+        }
+        if ( set.GetDetectorTypes()[i] == 2 ) energy[i].Write();
+    }
    
     // write on disk
-    for ( const auto& it : energy ) it.Write();
-    energyBEGe->Write();
+    energyBEGe.Write();
     energyEnrCoax->Write();
     energyNatCoax->Write();
     

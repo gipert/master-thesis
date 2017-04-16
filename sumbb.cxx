@@ -129,8 +129,6 @@ int main( int argc, char** argv ) {
     
     // loop over enrCOAX files
     for ( int i = 1; i <= 10; ++i ) {
-        // NOTE: skipping GTFs
-        //if ( i == 1 or i == 2 or i == 3 ) continue;
         
         // run
         fillHistos(i, "A_COAX", phys);
@@ -147,27 +145,27 @@ int main( int argc, char** argv ) {
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7.5);
     TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7.5);
-    TH1F histTotAll( "energy_total", "global MaGe energy spectrum", 7500, 0, 7.5 );
     
     if ( phys == "2nbb" ) path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbb.root";
     else path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbbLV.root";
     TFile fileout(path.c_str(), "RECREATE");
     
-    for ( auto& h : histTot ) {
-        h.Write();
-        histTotAll.Add(&h);
-    }
-    
     for ( int i = 0; i < 40; ++i ) {
-        if ( i == 0 or i == 1 or i == 2 ) continue;
-        else if ( i == 11 or i == 12 or i == 13 or 
-                  i == 30 or i == 31 or i == 32 or i == 39 ) histCOAX.Add(&histTot[i]);
-        else histBEGe.Add(&histTot[i]);
+        // NOTE: excluding GTFs and GD02D
+        if      ( set.GetDetectorTypes()[i] == 3 or 
+                  set.GetDetectorNames()[i] == "GD02D" ) continue;
+        else if ( set.GetDetectorTypes()[i] == 2 ) {
+            histCOAX.Add(&histTot[i]);
+            histTot[i].Write();
+        }
+        else { 
+            histBEGe.Add(&histTot[i]);
+            histTot[i].Write();
+        }
     }
     
     histCOAX.Write();
     histBEGe.Write();
-    histTotAll.Write();
 
     fileout.Close();
 

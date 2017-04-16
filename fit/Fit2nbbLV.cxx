@@ -26,8 +26,8 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
    
     // define parameters
     /* [0] */  this->AddParameter("2nbb",             200, 280);
-    /* [1] */  this->AddParameter("2nbbLV",           0, 5E-04);
-    /* [2] */  this->AddParameter("K42homLAr",        0, 0.0003);
+    /* [1] */  this->AddParameter("2nbbLV",           0, 1E-03);
+    /* [2] */  this->AddParameter("K42homLAr",        1E-04, 3E-04);
     /* [3] */  this->AddParameter("K40fibers",        0, 2);
     /* [4] */  this->AddParameter("Bi212Tl208fibers", 0, 0.02);
     /* [5] */  this->AddParameter("Bi214Pb214fibers", 0, 0.1);
@@ -38,18 +38,18 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [10] */ this->AddParameter("K42pPlusBEGe",     0, 5E-01);
     /* [11] */ this->AddParameter("K42pPlusCOAX",     0, 5E-04);
     /* [12] */ this->AddParameter("Ac228holder",      0, 5E-04);
-    /* [13] */ this->AddParameter("Co60holder",       0, 1E-04);
-    /* [14] */ this->AddParameter("K40holder",        0, 1E-02);
+    /* [13] */ this->AddParameter("Co60holder",       0, 5E-04);
+    /* [14] */ this->AddParameter("K40holder",        0, 5E-02);
     /* [15] */ this->AddParameter("Bi212Tl208holder", 0, 5E-04);
     /* [16] */ this->AddParameter("Bi214Pb214holder", 0, 10);
-    /* [17] */ this->AddParameter("K40cable",         0, 5E-01);
+    /* [17] */ this->AddParameter("K40cable",         0, 1E-00);
     /* [18] */ this->AddParameter("Bi212Tl208cables", 0, 5E-02);
     /* [19] */ this->AddParameter("Bi214Pb214cables", 0, 500);
     /* [20] */ this->AddParameter("K40minishroud",    0, 2E-01);
     /* [21] */ this->AddParameter("Pa234minishroud",  0, 2E-01);
     /* [22] */ this->AddParameter("Bi207minishroud",  0, 5E-03);
     /* [23] */ this->AddParameter("Bi207cables",      0, 5E-02);
-    /* [24] */ this->AddParameter("Bi207holder",      0, 1E-02);
+    /* [24] */ this->AddParameter("Bi207holder",      0, 5E-02);
    
     // TODO: add new parameters here
     //// LEGEND

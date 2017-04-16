@@ -37,6 +37,8 @@ int main( int argc, char** argv ) {
     else { std::cout << "Please specify --2nbb or --2nbbLV option!\n"; return 0; }
 // ----------------------------------------------------------------------------------------------------------
     // infos about runs
+    // we'll read files for each detector named with the MaGeInput naming scheme
+    // because they come from MaGe simulations
     GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false, "MaGeInput");
     // infos on experimental setup
     GERDA::DetectorSet set("MaGeInput");
@@ -65,7 +67,8 @@ int main( int argc, char** argv ) {
         }
     }
     
-    // construct histograms (MaGeOutput scheme because we are reading the MaGe output)
+    // Inside each file the detector are named according to the MaGeOutput scheme
+    // --> det_id
     std::vector<std::unique_ptr<TH1F>> hist;
     // final histogram
     std::vector<TH1F> histTot;
@@ -78,6 +81,7 @@ int main( int argc, char** argv ) {
 
 // -----------------------------------------------------------------------------------------------------
     // lambda to fill histograms
+    // i quasi-follows the MaGeInput scheme
     auto fillHistos = [&]( int i , std::string genopt , std::string phys ) {
 
         if      ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/processed/p_2nbbLV_";
@@ -150,7 +154,9 @@ int main( int argc, char** argv ) {
     if ( phys == "2nbb" ) path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbb.root";
     else path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbbLV.root";
     TFile fileout(path.c_str(), "RECREATE");
-
+    
+    // now we are gonna sum over the histograms in histTot, which follow
+    // the MaGeOutput nomenclature
     GERDA::DetectorSet set2("MaGeOutput");
     
     for ( int i = 0; i < 40; ++i ) {

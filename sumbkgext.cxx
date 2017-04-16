@@ -109,7 +109,9 @@ int main( int argc, char** argv ) {
     
     std::string rootpath = std::string(std::getenv("GERDACPTDIR"));
 
-    // infos about runs, GELATIO scheme -> channels
+    // infos about runs 
+    // Inside the files in out/processed the GELATIO scheme 
+    // is adopted -> channels
     GERDA::DataReader reader( rootpath + "/misc/paths.txt", false, "GELATIO");
     // detector types
     GERDA::DetectorSet set("GELATIO");
@@ -125,6 +127,7 @@ int main( int argc, char** argv ) {
     while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time));
 
     ////// calculate the total time each detector is ON --> detector status = 0
+    // totalTime follows the GELATIO scheme
     std::vector<int> totalTime(40, 0);
     for ( const auto& i : dsm ) {
         for ( int j = 0; j < 40; ++j ) {

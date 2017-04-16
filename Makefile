@@ -55,14 +55,20 @@ bin/runfit : fit/runfit.cxx fit/pvalue.cxx lib/libFit2nbbLV.so lib/libProgressBa
 # ------------------------------------------------------------------------
 
 rundata : 
-	( bin/processData && misc/sumallbkgext.sh ) &;
-	( bin/processbb --2nbb && bin/sumbb --2nbb ) &;
-	( bin/processbb --2nbbLV && bin/sumbb --2nbbLV ) &;
+	bin/processData >/dev/null && misc/sumallbkgext.sh >/dev/null
+runbb :
+	bin/processbb --2nbb >/dev/null && bin/sumbb --2nbb
+runbbLV :
+	bin/processbb --2nbbLV >/dev/null && bin/sumbb --2nbbLV
 
-run : rundata
+run : rundata runbb runbbLV
 	bin/runfit
 	telegram-send "make run: task completed"
 
-.PHONY : clean
+.PHONY : clean dataclean
 clean :
 	-rm -rf lib bin
+
+dataclean : 
+	-rm data/sumMaGe*
+	-rm data/sumData*

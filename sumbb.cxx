@@ -117,6 +117,7 @@ int main( int argc, char** argv ) {
             hist.emplace_back( dynamic_cast<TH1F*>(file.Get(Form("energy_det_id%i", j))) );
         }
         // scale, add to final histogram, clear
+        // k --> MaGeOutput --> det_id
         for ( int k = 0; k < 40; ++k ) {
             hist[k]->Scale(corrN*corrTime);
             histTot[k].Add(hist[k].get());
@@ -149,17 +150,18 @@ int main( int argc, char** argv ) {
     if ( phys == "2nbb" ) path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbb.root";
     else path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbbLV.root";
     TFile fileout(path.c_str(), "RECREATE");
+
+    GERDA::DetectorSet set2("MaGeOutput");
     
     for ( int i = 0; i < 40; ++i ) {
         // NOTE: excluding GTFs and GD02D
-        if      ( set.GetDetectorTypes()[i] == 3 or 
-                  set.GetDetectorNames()[i] == "GD02D" ) continue;
-        else if ( set.GetDetectorTypes()[i] == 2 ) {
-            histCOAX.Add(&histTot[i]);
+        if      ( set2.GetDetectorTypes()[i] == 1 and 
+                  set2.GetDetectorNames()[i] != "GD02D" ) {
+            histBEGe.Add(&histTot[i]);
             histTot[i].Write();
         }
-        else { 
-            histBEGe.Add(&histTot[i]);
+        else if ( set2.GetDetectorTypes()[i] == 2 ) {
+            histCOAX.Add(&histTot[i]);
             histTot[i].Write();
         }
     }

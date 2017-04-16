@@ -1,4 +1,4 @@
-#!/usr/bin/make
+#!/bin/make
 #
 # Author: Luigi Pertoldi (luigi.pertoldi@pd.infn.it)
 # Created: 01/02/2017

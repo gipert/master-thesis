@@ -75,7 +75,6 @@ int main( int argc, char** argv ) {
 
     TH1D energyBEGe("energyBEGeAll", "energyBEGeAll", 7500, 0, 7500);
     auto energyEnrCoax = reader.GetEnergyHistEnrCoax();
-    auto energyNatCoax = reader.GetEnergyHistNatCoax();
 
     for ( int i = 0; i < 40; ++i ) {
         // NOTE: excluding GTFs and GD02D
@@ -90,7 +89,6 @@ int main( int argc, char** argv ) {
     // write on disk
     energyBEGe.Write();
     energyEnrCoax->Write();
-    energyNatCoax->Write();
     
     // retrieve time for each run [s]
     auto timeMap = reader.GetTimeMap();

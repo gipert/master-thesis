@@ -109,7 +109,7 @@ int main( int argc, char** argv ) {
     
     std::string rootpath = std::string(std::getenv("GERDACPTDIR"));
 
-    // infos about runs
+    // infos about runs, GELATIO scheme -> channels
     GERDA::DataReader reader( rootpath + "/misc/paths.txt", false, "GELATIO");
     // detector types
     GERDA::DetectorSet set("GELATIO");
@@ -176,10 +176,9 @@ int main( int argc, char** argv ) {
         int ltCOAX = 0;
         for ( int i = 0; i < 40; ++i ) {
             // NOTE: excluding GTFs and GD02D
-            if      ( set.GetDetectorTypes()[i] == 3 or
-                      set.GetDetectorNames()[i] == "GD02D" ) continue;
-            else if ( set.GetDetectorTypes()[i] == 2 ) ltCOAX += totalTime[i];
-            else                                       ltBEGe += totalTime[i];
+            if      ( set.GetDetectorTypes()[i] == 1 and
+                      set.GetDetectorNames()[i] != "GD02D" ) ltBEGe += totalTime[i];
+            else if ( set.GetDetectorTypes()[i] == 2 )       ltCOAX += totalTime[i];
         }
  
         if ( phys == "K42" ) {
@@ -242,14 +241,13 @@ int main( int argc, char** argv ) {
     
     for ( int i = 0; i < 40; ++i ) {
         // NOTE: excluding GTFs and GD02D
-        if      ( set.GetDetectorTypes()[i] == 3 or
-                  set.GetDetectorNames()[i] == "GD02D" ) continue;
-        else if ( set.GetDetectorTypes()[i] == 2 ) {
-            histCOAX.Add(hist[i]);
+        if      ( set.GetDetectorTypes()[i] == 1 or
+                  set.GetDetectorNames()[i] != "GD02D" ) {
+            histBEGe.Add(hist[i]);
             hist[i]->Write();
         }
-        else { 
-            histBEGe.Add(hist[i]);
+        else if ( set.GetDetectorTypes()[i] == 2 ) {
+            histCOAX.Add(hist[i]);
             hist[i]->Write();
         }
     }

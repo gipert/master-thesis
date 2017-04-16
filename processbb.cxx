@@ -131,7 +131,7 @@ int main( int argc, char** argv ) {
     };
 // -----------------------------------------------------------------------------------------------------
     
-    // loop over enrCOAX files
+    // loop over COAX files
     for ( int i = 1; i <= 10; ++i ) {
         
         auto start = std::chrono::system_clock::now();

@@ -31,7 +31,7 @@
 #include "TH1D.h"
 #include "TH1F.h"
 
-double GetPValue(Fit2nbbLV& m, bool save = false);
+double GetPValue(Fit2nbbLV& m, BCEngineMCMC::Precision level, bool save = false);
 
 int main( int argc, char** argv ) {
     
@@ -65,37 +65,52 @@ int main( int argc, char** argv ) {
     // [11] Ac228holder
     // [12] Co60holder
     // [13] K40holder
-    
+    // [14] Bi212holder 
+    // [15] Tl208holder 
+    // [16] Pb214holder 
+    // [17] Bi214holder 
+    // [18] K40cables
+    // [19] Bi212cables
+    // [20] Tl208cables
+    // [21] Pb214cables
+    // [22] Bi214cables
+    // [23] K40minishroud
+    // [24] Pa234minishroud
+    // [25] Bi207minishroud
+    // [26] Bi207cables
+    // [27] Bi207holder
+    //
+   
     std::vector<std::string> simpath;
 
-    simpath.push_back(path + "sumMaGe_2nbb.root");
-    simpath.push_back(path + "sumMaGe_2nbbLV.root");
-    simpath.push_back(path + "sumMaGe_K42homLAr.root");    
-    simpath.push_back(path + "sumMaGe_K40fibers.root");    
-    simpath.push_back(path + "sumMaGe_Bi212fibers.root");    
-    simpath.push_back(path + "sumMaGe_Tl208fibers.root");
-    simpath.push_back(path + "sumMaGe_Pb214fibers.root");   
-    simpath.push_back(path + "sumMaGe_Bi214fibers.root");
-    simpath.push_back(path + "alpha_model_run53-74.root");
-    simpath.push_back(path + "sumMaGe_K42nPlus.root"); 
-    simpath.push_back(path + "sumMaGe_K42pPlus.root");    
-    simpath.push_back(path + "sumMaGe_Ac228holder.root");
-    simpath.push_back(path + "sumMaGe_Co60holder.root"); 
-    simpath.push_back(path + "sumMaGe_K40holder.root"); 
-    simpath.push_back(path + "sumMaGe_Bi212holder.root"); 
-    simpath.push_back(path + "sumMaGe_Tl208holder.root"); 
-    simpath.push_back(path + "sumMaGe_Pb214holder.root"); 
-    simpath.push_back(path + "sumMaGe_Bi214holder.root"); 
-    simpath.push_back(path + "sumMaGe_K40cables.root"); 
-    simpath.push_back(path + "sumMaGe_Bi212cables.root"); 
-    simpath.push_back(path + "sumMaGe_Tl208cables.root"); 
-    simpath.push_back(path + "sumMaGe_Pb214cables.root"); 
-    simpath.push_back(path + "sumMaGe_Bi214cables.root"); 
-    simpath.push_back(path + "sumMaGe_K40minishroud.root"); 
-    simpath.push_back(path + "sumMaGe_Pa234minishroud.root"); 
-    simpath.push_back(path + "sumMaGe_Bi207minishroud.root"); 
-    simpath.push_back(path + "sumMaGe_Bi207cables.root"); 
-    simpath.push_back(path + "sumMaGe_Bi207holder.root"); 
+    /*[0]*/  simpath.push_back(path + "sumMaGe_2nbb.root");
+    /*[1]*/  simpath.push_back(path + "sumMaGe_2nbbLV.root");
+    /*[2]*/  simpath.push_back(path + "sumMaGe_K42homLAr.root");    
+    /*[3]*/  simpath.push_back(path + "sumMaGe_K40fibers.root");    
+    /*[4]*/  simpath.push_back(path + "sumMaGe_Bi212fibers.root");    
+    /*[5]*/  simpath.push_back(path + "sumMaGe_Tl208fibers.root");
+    /*[6]*/  simpath.push_back(path + "sumMaGe_Pb214fibers.root");   
+    /*[7]*/  simpath.push_back(path + "sumMaGe_Bi214fibers.root");
+    /*[8]*/  simpath.push_back(path + "alpha_model_run53-74.root");
+    /*[9]*/  simpath.push_back(path + "sumMaGe_K42nPlus.root"); 
+    /*[10]*/ simpath.push_back(path + "sumMaGe_K42pPlus.root");    
+    /*[11]*/ simpath.push_back(path + "sumMaGe_Ac228holder.root");
+    /*[12]*/ simpath.push_back(path + "sumMaGe_Co60holder.root"); 
+    /*[13]*/ simpath.push_back(path + "sumMaGe_K40holder.root"); 
+    /*[14]*/ simpath.push_back(path + "sumMaGe_Bi212holder.root"); 
+    /*[15]*/ simpath.push_back(path + "sumMaGe_Tl208holder.root"); 
+    /*[16]*/ simpath.push_back(path + "sumMaGe_Pb214holder.root"); 
+    /*[17]*/ simpath.push_back(path + "sumMaGe_Bi214holder.root"); 
+    /*[18]*/ simpath.push_back(path + "sumMaGe_K40cables.root"); 
+    /*[19]*/ simpath.push_back(path + "sumMaGe_Bi212cables.root"); 
+    /*[20]*/ simpath.push_back(path + "sumMaGe_Tl208cables.root"); 
+    /*[21]*/ simpath.push_back(path + "sumMaGe_Pb214cables.root"); 
+    /*[22]*/ simpath.push_back(path + "sumMaGe_Bi214cables.root"); 
+    /*[23]*/ simpath.push_back(path + "sumMaGe_K40minishroud.root"); 
+    /*[24]*/ simpath.push_back(path + "sumMaGe_Pa234minishroud.root"); 
+    /*[25]*/ simpath.push_back(path + "sumMaGe_Bi207minishroud.root"); 
+    /*[26]*/ simpath.push_back(path + "sumMaGe_Bi207cables.root"); 
+    /*[27]*/ simpath.push_back(path + "sumMaGe_Bi207holder.root"); 
 
     // TODO: push_back new files here
 
@@ -103,7 +118,7 @@ int main( int argc, char** argv ) {
  
     for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
 
-    TH1D* hDataBEGetmp;   fileData.GetObject("energyBEGeAll", hDataBEGetmp);
+    TH1D* hDataBEGetmp;   fileData.GetObject("energyBEGeAll",    hDataBEGetmp);
     TH1D* hDataCOAXtmp;   fileData.GetObject("energyEnrCoaxAll", hDataCOAXtmp);
     
     std::vector<TH1*> hSimBEGetmp;
@@ -131,8 +146,8 @@ int main( int argc, char** argv ) {
                                912, 968, 972, 1000, 1004, 1060, 1064, 
                                1120, 1172, 1176, 1236, 1240, 1332, 1460, 
                                1464, 1524, 1528, 1764, 2204, 2612, 2616 };
-
-    std::vector<double> dbin(nBins+1);
+    
+    std::vector<double> dbin(nBins+1); // this is what ROOT wants
     int k = 0, i = 0;
     while (1) { 
         if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) { 
@@ -143,14 +158,14 @@ int main( int argc, char** argv ) {
         if ( k > 7500 ) break;
     }
     
-    // my simulations are in MeV...
+    // the 2bb simulations are in MeV:
+    // ----> rescaling to keV
     hSimBEGetmp[0]->SetBins(7500,0,7500);
     hSimCOAXtmp[0]->SetBins(7500,0,7500);
     hSimBEGetmp[1]->SetBins(7500,0,7500);
     hSimCOAXtmp[1]->SetBins(7500,0,7500);
     
-    // rebin the histograms
-    // new histograms
+    // rebin the histograms in new histograms
     TH1D* hDataBEGe = dynamic_cast<TH1D*>(hDataBEGetmp->Rebin(nBins, "hDataBEGetmp", &dbin[0]));
     TH1D* hDataCOAX = dynamic_cast<TH1D*>(hDataCOAXtmp->Rebin(nBins, "hDataCOAXtmp", &dbin[0]));
     
@@ -174,10 +189,10 @@ int main( int argc, char** argv ) {
     hSimCOAXtmp.clear();
 
     // convert in std::vector
-    std::vector<int> vDataBEGe(nBins), vDataCOAX(nBins);
+    std::vector<int>                 vDataCOAX(nBins),          vDataBEGe(nBins);
     std::vector<std::vector<double>> vSimCOAX(hSimCOAX.size()), vSimBEGe(hSimBEGe.size());
 
-    // normalize alphas
+    // alphas need to be normalized, we want to measure counts
     hSimBEGe[8]->Scale(1./hSimBEGe[8]->Integral());
     hSimCOAX[8]->Scale(1./hSimCOAX[8]->Integral());
 
@@ -242,7 +257,7 @@ int main( int argc, char** argv ) {
     BCLog::SetLogLevelScreen(BCLog::summary);
 
     std::cout << std::endl;
-    double pvalue = GetPValue(model);
+    double pvalue = GetPValue(model, level);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
 
     // OUTPUT

@@ -96,25 +96,27 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
     for ( int i = downBin; i <= upBin; ++i ) {
 
         // BEGe
-        f = parameters[0]*simBEGe[0][i] + parameters[0]*parameters[1]*n2n1*simBEGe[1][i]; 
-        for ( int j = 2; j <= 3; ++j ) f += parameters[j]*simBEGe[j][i];
-        f += parameters[4]*(simBEGe[4][i] + BrTl*simBEGe[5][i]);
-        f += parameters[5]*(simBEGe[6][i] +      simBEGe[7][i]);
-        f += parameters[6]*simBEGe[8][i];
-        f += parameters[8]*simBEGe[9][i] + parameters[10]*simBEGe[10][i];
-        f += parameters[12]*simBEGe[11][i];
-        f += parameters[13]*simBEGe[12][i];
-        f += parameters[14]*simBEGe[13][i];
-        f += parameters[15]*(simBEGe[14][i] + BrTl*simBEGe[15][i]);
-        f += parameters[16]*(simBEGe[16][i] +      simBEGe[17][i]);
-        f += parameters[17]*simBEGe[18][i];
-        f += parameters[18]*(simBEGe[19][i] + BrTl*simBEGe[20][i]);
-        f += parameters[19]*(simBEGe[21][i] +      simBEGe[22][i]);
-        f += parameters[20]*simBEGe[23][i];
-        f += parameters[21]*simBEGe[24][i];
-        f += parameters[22]*simBEGe[25][i];
-        f += parameters[23]*simBEGe[26][i];
-        f += parameters[24]*simBEGe[27][i];
+        f = parameters[0]*simBEGe[0][i] + parameters[0]*parameters[1]*n2n1*simBEGe[1][i]; // 2nbb & 2nbbLV 
+        f += parameters[2]*simBEGe[2][i];                           // K42homLAr
+        f += parameters[3]*simBEGe[3][i];                           // K40fibers
+        f += parameters[4]*(simBEGe[4][i] + BrTl*simBEGe[5][i]);    // Bi212 -> Tl208 fibers with 35.93% Br
+        f += parameters[5]*(simBEGe[6][i] +      simBEGe[7][i]);    // Pb214 -> Bi214 fibers with 100.00% Br
+        f += parameters[6]*simBEGe[8][i];                           // alpha
+        f += parameters[8]*simBEGe[9][i];                           // K42nPlus 
+        f += parameters[10]*simBEGe[10][i];                         // K42pPlus
+        f += parameters[12]*simBEGe[11][i];                         // Ac228holder
+        f += parameters[13]*simBEGe[12][i];                         // Co60holder
+        f += parameters[14]*simBEGe[13][i];                         // K40holder     
+        f += parameters[15]*(simBEGe[14][i] + BrTl*simBEGe[15][i]); // Bi212 -> Tl208 holder with 35.93% Br
+        f += parameters[16]*(simBEGe[16][i] +      simBEGe[17][i]); // Pb214 -> Bi214 holder with 100.00% Br
+        f += parameters[17]*simBEGe[18][i];                         // K40cables
+        f += parameters[18]*(simBEGe[19][i] + BrTl*simBEGe[20][i]); // Bi212 -> Tl208 cables with 35.93% Br
+        f += parameters[19]*(simBEGe[21][i] +      simBEGe[22][i]); // Pb214 -> Bi214 cables with 100.00% Br
+        f += parameters[20]*simBEGe[23][i];                         // K40minishroud
+        f += parameters[21]*simBEGe[24][i];                         // Pa234minishroud
+        f += parameters[22]*simBEGe[25][i];                         // Bi207minishroud
+        f += parameters[23]*simBEGe[26][i];                         // Bi207cables
+        f += parameters[24]*simBEGe[27][i];                         // Bi207holder
         // TODO: update loglikelihood here
         
         //logprob += dataBEGe[i]*log(f) - f - BCMath::LogFact(dataBEGe[i]);
@@ -122,7 +124,8 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
 
         // COAX
         f = parameters[0]*simCOAX[0][i] + parameters[0]*parameters[1]*n2n1*simCOAX[1][i]; 
-        for ( int j = 2; j <= 3; ++j ) f += parameters[j]*simCOAX[j][i];
+        f += parameters[2]*simCOAX[2][i];
+        f += parameters[3]*simCOAX[3][i];
         f += parameters[4]*(simCOAX[4][i] + BrTl*simCOAX[5][i]);
         f += parameters[5]*(simCOAX[6][i] +      simCOAX[7][i]);
         f += parameters[7]*simCOAX[8][i];
@@ -222,7 +225,10 @@ std::vector<double> Fit2nbbLV::GetFittedFncCOAX(std::vector<double>& bestpar) {
 void Fit2nbbLV::SetBinning(std::vector<double>& v) {
     dbin = v;
     downBin = 0;
-    upBin = v.size()-2;
+    upBin = v.size()-2; // this because the last entry is fake,
+                        // it contains only the upper bound of 
+                        // the last bin
+                        // => nBins = ubin.size()-1-1
     return;
 }
 // ---------------------------------------------------------
@@ -237,7 +243,7 @@ void Fit2nbbLV::SetFitRange(double down, double up) {
     int iup   = 0;
     int dbinsize = dbin.size();
     
-    // maybe this needs some pre-testing
+    // maybe this needs some pre-testing?
     for ( int i = 0; i < dbinsize; ++i ) {
         if ( (double)dbin[i] <  down ) idown++;
         if ( (double)dbin[i] <= up   ) iup++;

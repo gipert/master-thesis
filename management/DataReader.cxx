@@ -89,13 +89,14 @@ DataReader::DataReader( std::string pathsFile, bool verbose, std::string orderin
     kMustResetEnergy = false;
 
     for ( auto& n : runsToProcess ) this->LoadRun(n);
-    
-        std::cout << "Loaded runs: ";
-        for ( const auto& it : dataTreeMap ) std::cout << it.first << ' ';
-        std::cout << ". Continue? [y/n, default=y] ";
-        std::string line;
-        std::getline( std::cin, line );
-        if( !line.empty() and line != "y" ) { std::cout << "Aborting...\n"; throw -1; }
+/*    
+    std::cout << "Loaded runs: ";
+    for ( const auto& it : dataTreeMap ) std::cout << it.first << ' ';
+    std::cout << ". Continue? [y/n, default=y] ";
+    std::string line;
+    std::getline( std::cin, line );
+    if( !line.empty() and line != "y" ) { std::cout << "Aborting...\n"; throw -1; }
+*/
 }
 // -------------------------------------------------------------------------------
 std::string DataReader::FindRunConfiguration( unsigned int runID ) {

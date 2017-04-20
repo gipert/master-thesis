@@ -109,7 +109,9 @@ int main( int argc, char** argv ) {
     
     std::string rootpath = std::string(std::getenv("GERDACPTDIR"));
 
-    // infos about runs
+    // infos about runs 
+    // Inside the files in out/processed the GELATIO scheme 
+    // is adopted -> channels
     GERDA::DataReader reader( rootpath + "/misc/paths.txt", false, "GELATIO");
     // detector types
     GERDA::DetectorSet set("GELATIO");
@@ -125,6 +127,7 @@ int main( int argc, char** argv ) {
     while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time));
 
     ////// calculate the total time each detector is ON --> detector status = 0
+    // totalTime follows the GELATIO scheme
     std::vector<int> totalTime(40, 0);
     for ( const auto& i : dsm ) {
         for ( int j = 0; j < 40; ++j ) {
@@ -175,9 +178,10 @@ int main( int argc, char** argv ) {
         int ltBEGe = 0;
         int ltCOAX = 0;
         for ( int i = 0; i < 40; ++i ) {
-            if      ( set.GetDetectorTypes()[i] == 3 ) continue;
-            else if ( set.GetDetectorTypes()[i] == 2 ) ltCOAX += totalTime[i];
-            else                                       ltBEGe += totalTime[i];
+            // NOTE: excluding GTFs and GD02D
+            if      ( set.GetDetectorTypes()[i] == 1 and
+                      set.GetDetectorNames()[i] != "GD02D" ) ltBEGe += totalTime[i];
+            else if ( set.GetDetectorTypes()[i] == 2 )       ltCOAX += totalTime[i];
         }
  
         if ( phys == "K42" ) {
@@ -233,24 +237,26 @@ int main( int argc, char** argv ) {
     TFile outfile(path.c_str(), "RECREATE");
     for ( int i = 0; i < 40; ++i ) {
         hist[i]->Scale(totalTime[i]*M/Ngen);
-        hist[i]->Write();
     }
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7500);
     TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7500);
-    TH1F histTotAll("energy_total", "global MaGe energy spectrum", 7500, 0, 7500);
-       
-    for ( auto& h : hist ) histTotAll.Add(h);
     
     for ( int i = 0; i < 40; ++i ) {
-        if      ( set.GetDetectorTypes()[i] == 3 ) continue;
-        else if ( set.GetDetectorTypes()[i] == 2 ) histCOAX.Add(hist[i]);
-        else                                       histBEGe.Add(hist[i]);
+        // NOTE: excluding GTFs and GD02D
+        if      ( set.GetDetectorTypes()[i] == 1 and
+                  set.GetDetectorNames()[i] != "GD02D" ) {
+            histBEGe.Add(hist[i]);
+            hist[i]->Write();
+        }
+        else if ( set.GetDetectorTypes()[i] == 2 ) {
+            histCOAX.Add(hist[i]);
+            hist[i]->Write();
+        }
     }
-    
+ 
     histCOAX.Write();
     histBEGe.Write();
-    histTotAll.Write();
 
     outfile.Close();
     infile.Close();

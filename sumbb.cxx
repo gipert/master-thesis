@@ -37,6 +37,8 @@ int main( int argc, char** argv ) {
     else { std::cout << "Please specify --2nbb or --2nbbLV option!\n"; return 0; }
 // ----------------------------------------------------------------------------------------------------------
     // infos about runs
+    // we'll read files for each detector named with the MaGeInput naming scheme
+    // because they come from MaGe simulations
     GERDA::DataReader reader( std::string(std::getenv("GERDACPTDIR")) + "/misc/paths.txt", false, "MaGeInput");
     // infos on experimental setup
     GERDA::DetectorSet set("MaGeInput");
@@ -65,7 +67,8 @@ int main( int argc, char** argv ) {
         }
     }
     
-    // construct histograms (MaGeOutput scheme because we are reading the MaGe output)
+    // Inside each file the detector are named according to the MaGeOutput scheme
+    // --> det_id
     std::vector<std::unique_ptr<TH1F>> hist;
     // final histogram
     std::vector<TH1F> histTot;
@@ -78,6 +81,7 @@ int main( int argc, char** argv ) {
 
 // -----------------------------------------------------------------------------------------------------
     // lambda to fill histograms
+    // i quasi-follows the MaGeInput scheme
     auto fillHistos = [&]( int i , std::string genopt , std::string phys ) {
 
         if      ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/processed/p_2nbbLV_";
@@ -117,6 +121,7 @@ int main( int argc, char** argv ) {
             hist.emplace_back( dynamic_cast<TH1F*>(file.Get(Form("energy_det_id%i", j))) );
         }
         // scale, add to final histogram, clear
+        // k --> MaGeOutput --> det_id
         for ( int k = 0; k < 40; ++k ) {
             hist[k]->Scale(corrN*corrTime);
             histTot[k].Add(hist[k].get());
@@ -129,8 +134,6 @@ int main( int argc, char** argv ) {
     
     // loop over enrCOAX files
     for ( int i = 1; i <= 10; ++i ) {
-        // NOTE: skipping GTFs
-        if ( i == 1 or i == 2 or i == 3 ) continue;
         
         // run
         fillHistos(i, "A_COAX", phys);
@@ -147,27 +150,30 @@ int main( int argc, char** argv ) {
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7.5);
     TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7.5);
-    TH1F histTotAll( "energy_total", "global MaGe energy spectrum", 7500, 0, 7.5 );
     
     if ( phys == "2nbb" ) path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbb.root";
     else path = std::string(std::getenv("GERDACPTDIR")) + "/data/sumMaGe_2nbbLV.root";
     TFile fileout(path.c_str(), "RECREATE");
     
-    for ( auto& h : histTot ) {
-        h.Write();
-        histTotAll.Add(&h);
-    }
+    // now we are gonna sum over the histograms in histTot, which follow
+    // the MaGeOutput nomenclature
+    GERDA::DetectorSet set2("MaGeOutput");
     
     for ( int i = 0; i < 40; ++i ) {
-        if ( i == 0 or i == 1 or i == 2 ) continue;
-        else if ( i == 11 or i == 12 or i == 13 or 
-                  i == 30 or i == 31 or i == 32 or i == 39 ) histCOAX.Add(&histTot[i]);
-        else histBEGe.Add(&histTot[i]);
+        // NOTE: excluding GTFs and GD02D
+        if      ( set2.GetDetectorTypes()[i] == 1 and 
+                  set2.GetDetectorNames()[i] != "GD02D" ) {
+            histBEGe.Add(&histTot[i]);
+            histTot[i].Write();
+        }
+        else if ( set2.GetDetectorTypes()[i] == 2 ) {
+            histCOAX.Add(&histTot[i]);
+            histTot[i].Write();
+        }
     }
     
     histCOAX.Write();
     histBEGe.Write();
-    histTotAll.Write();
 
     fileout.Close();
 

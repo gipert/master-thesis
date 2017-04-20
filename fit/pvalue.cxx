@@ -23,11 +23,13 @@
 #include "BAT/BCMath.h"
 #include "Fit2nbbLV.h"
 
-double GetPValue(Fit2nbbLV& model, bool save) {
+double GetPValue(Fit2nbbLV& model, BCEngineMCMC::Precision level, bool save) {
 
     omp_set_num_threads(4);
     
-    long int Niter = 1E05;
+    long int Niter;
+    if ( level == BCEngineMCMC::kLow ) Niter = 1E05;
+    else                               Niter = 1E06;
 
     std::cout << "Summary : Calculate p-value with 4 threads (" << Niter << " iterations).\nSummary : " << std::flush;
     // get loglikelihood after marginalization

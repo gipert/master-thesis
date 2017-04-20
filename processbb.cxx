@@ -111,7 +111,8 @@ int main( int argc, char** argv ) {
             if (verbose) {bar.Update(j); j++;}
             size = det_id.GetSize();
             for ( int k = 0; k < size; ++k ) {
-                if ( det_id[k] != 0 and det_id[k] != 1 and det_id[k] != 2 ) {
+                // NOTE: ignoring energy depositions in GTFs and GD02D
+                if ( det_id[k] != 0 and det_id[k] != 1 and det_id[k] != 2 and det_id[k] != 9 ) {
                     hist[det_id[k]].Fill(det_edep[k]);
                 }
             }
@@ -130,10 +131,8 @@ int main( int argc, char** argv ) {
     };
 // -----------------------------------------------------------------------------------------------------
     
-    // loop over enrCOAX files
+    // loop over COAX files
     for ( int i = 1; i <= 10; ++i ) {
-        // NOTE: skipping GTFs
-        if ( i == 1 or i == 2 or i == 3 ) { std::cout << "AV_det11_" << i << ": skipped\n" << "DV_det11_" << i << ": skipped\n"; continue; }
         
         auto start = std::chrono::system_clock::now();
         

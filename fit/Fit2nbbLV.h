@@ -111,7 +111,8 @@ class Fit2nbbLV : public BCModel {
     // [25] Bi207minishroud
     // [26] Bi207cables
     // [27] Bi207holder
-    //
+    // [28] Pb214minishroud
+    // [29] Bi214minishroud
 
     const double n2n1 = 134.594580;
     const double BrTl = 0.3539;

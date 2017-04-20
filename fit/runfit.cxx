@@ -34,13 +34,13 @@
 double GetPValue(Fit2nbbLV& m, BCEngineMCMC::Precision level, bool save = false);
 
 int main( int argc, char** argv ) {
-    
+
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
     BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
 /////////////////////////////////////////////
-    
+
     auto c_str = [](std::string s) { return s.c_str(); };
 
     TH1::AddDirectory(false);
@@ -48,7 +48,7 @@ int main( int argc, char** argv ) {
     std::string path = std::string(std::getenv("GERDACPTDIR")) + "/data/";
     TFile fileData(c_str(path + "sumData.root"), "READ");
     if (!fileData.IsOpen()) { std::cout << "Zombie fileData!\n"; return -1; }
-    
+
     // vector holding all sim files
     std::vector<std::unique_ptr<TFile>> simFile;
     // [0] 2nbb
@@ -65,10 +65,10 @@ int main( int argc, char** argv ) {
     // [11] Ac228holder
     // [12] Co60holder
     // [13] K40holder
-    // [14] Bi212holder 
-    // [15] Tl208holder 
-    // [16] Pb214holder 
-    // [17] Bi214holder 
+    // [14] Bi212holder
+    // [15] Tl208holder
+    // [16] Pb214holder
+    // [17] Bi214holder
     // [18] K40cables
     // [19] Bi212cables
     // [20] Tl208cables
@@ -79,96 +79,99 @@ int main( int argc, char** argv ) {
     // [25] Bi207minishroud
     // [26] Bi207cables
     // [27] Bi207holder
-    //
-   
+    // [28] Pb214minishroud
+    // [29] Bi214minishroud
+
     std::vector<std::string> simpath;
 
     /*[0]*/  simpath.push_back(path + "sumMaGe_2nbb.root");
     /*[1]*/  simpath.push_back(path + "sumMaGe_2nbbLV.root");
-    /*[2]*/  simpath.push_back(path + "sumMaGe_K42homLAr.root");    
-    /*[3]*/  simpath.push_back(path + "sumMaGe_K40fibers.root");    
-    /*[4]*/  simpath.push_back(path + "sumMaGe_Bi212fibers.root");    
+    /*[2]*/  simpath.push_back(path + "sumMaGe_K42homLAr.root");
+    /*[3]*/  simpath.push_back(path + "sumMaGe_K40fibers.root");
+    /*[4]*/  simpath.push_back(path + "sumMaGe_Bi212fibers.root");
     /*[5]*/  simpath.push_back(path + "sumMaGe_Tl208fibers.root");
-    /*[6]*/  simpath.push_back(path + "sumMaGe_Pb214fibers.root");   
+    /*[6]*/  simpath.push_back(path + "sumMaGe_Pb214fibers.root");
     /*[7]*/  simpath.push_back(path + "sumMaGe_Bi214fibers.root");
     /*[8]*/  simpath.push_back(path + "alpha_model_run53-74.root");
-    /*[9]*/  simpath.push_back(path + "sumMaGe_K42nPlus.root"); 
-    /*[10]*/ simpath.push_back(path + "sumMaGe_K42pPlus.root");    
+    /*[9]*/  simpath.push_back(path + "sumMaGe_K42nPlus.root");
+    /*[10]*/ simpath.push_back(path + "sumMaGe_K42pPlus.root");
     /*[11]*/ simpath.push_back(path + "sumMaGe_Ac228holder.root");
-    /*[12]*/ simpath.push_back(path + "sumMaGe_Co60holder.root"); 
-    /*[13]*/ simpath.push_back(path + "sumMaGe_K40holder.root"); 
-    /*[14]*/ simpath.push_back(path + "sumMaGe_Bi212holder.root"); 
-    /*[15]*/ simpath.push_back(path + "sumMaGe_Tl208holder.root"); 
-    /*[16]*/ simpath.push_back(path + "sumMaGe_Pb214holder.root"); 
-    /*[17]*/ simpath.push_back(path + "sumMaGe_Bi214holder.root"); 
-    /*[18]*/ simpath.push_back(path + "sumMaGe_K40cables.root"); 
-    /*[19]*/ simpath.push_back(path + "sumMaGe_Bi212cables.root"); 
-    /*[20]*/ simpath.push_back(path + "sumMaGe_Tl208cables.root"); 
-    /*[21]*/ simpath.push_back(path + "sumMaGe_Pb214cables.root"); 
-    /*[22]*/ simpath.push_back(path + "sumMaGe_Bi214cables.root"); 
-    /*[23]*/ simpath.push_back(path + "sumMaGe_K40minishroud.root"); 
-    /*[24]*/ simpath.push_back(path + "sumMaGe_Pa234minishroud.root"); 
-    /*[25]*/ simpath.push_back(path + "sumMaGe_Bi207minishroud.root"); 
-    /*[26]*/ simpath.push_back(path + "sumMaGe_Bi207cables.root"); 
-    /*[27]*/ simpath.push_back(path + "sumMaGe_Bi207holder.root"); 
+    /*[12]*/ simpath.push_back(path + "sumMaGe_Co60holder.root");
+    /*[13]*/ simpath.push_back(path + "sumMaGe_K40holder.root");
+    /*[14]*/ simpath.push_back(path + "sumMaGe_Bi212holder.root");
+    /*[15]*/ simpath.push_back(path + "sumMaGe_Tl208holder.root");
+    /*[16]*/ simpath.push_back(path + "sumMaGe_Pb214holder.root");
+    /*[17]*/ simpath.push_back(path + "sumMaGe_Bi214holder.root");
+    /*[18]*/ simpath.push_back(path + "sumMaGe_K40cables.root");
+    /*[19]*/ simpath.push_back(path + "sumMaGe_Bi212cables.root");
+    /*[20]*/ simpath.push_back(path + "sumMaGe_Tl208cables.root");
+    /*[21]*/ simpath.push_back(path + "sumMaGe_Pb214cables.root");
+    /*[22]*/ simpath.push_back(path + "sumMaGe_Bi214cables.root");
+    /*[23]*/ simpath.push_back(path + "sumMaGe_K40minishroud.root");
+    /*[24]*/ simpath.push_back(path + "sumMaGe_Pa234minishroud.root");
+    /*[25]*/ simpath.push_back(path + "sumMaGe_Bi207minishroud.root");
+    /*[26]*/ simpath.push_back(path + "sumMaGe_Bi207cables.root");
+    /*[27]*/ simpath.push_back(path + "sumMaGe_Bi207holder.root");
+    /*[28]*/ simpath.push_back(path + "sumMaGe_Pb214minishroud.root");
+    /*[29]*/ simpath.push_back(path + "sumMaGe_Bi214minishroud.root");
 
     // TODO: push_back new files here
 
     for ( const auto& p : simpath ) simFile.emplace_back( new TFile(p.c_str(), "READ") );
- 
+
     for ( auto& f : simFile ) if (!f->IsOpen()) { std::cout << "At least one zombie simFile!\n"; return -1; }
 
     TH1D* hDataBEGetmp;   fileData.GetObject("energyBEGeAll",    hDataBEGetmp);
     TH1D* hDataCOAXtmp;   fileData.GetObject("energyEnrCoaxAll", hDataCOAXtmp);
-    
+
     std::vector<TH1*> hSimBEGetmp;
     std::vector<TH1*> hSimCOAXtmp;
 
     TH1* tmp;
-    
+
     for ( auto& f : simFile ) {
         f->GetObject("energy_BEGe", tmp);
         hSimBEGetmp.push_back(tmp);
         f->GetObject("energy_COAX", tmp);
         hSimCOAXtmp.push_back(tmp);
     }
-    
+
     fileData.Close();
     for ( auto& f : simFile ) f->Close();
 
     for ( auto& h : hSimBEGetmp ) if (!h) { std::cout << "There's at least one zombie simBEGe hist!\n"; return -1; }
     for ( auto& h : hSimCOAXtmp ) if (!h) { std::cout << "There's at least one zombie simCOAX hist!\n"; return -1; }
-    
+
     // create !!!VARIABLE!!! binning
-    
+
     const int nBins = 1847;
-    std::vector<int> avoid = { 568, 572, 580, 584, 608, 612, 908, 
-                               912, 968, 972, 1000, 1004, 1060, 1064, 
-                               1120, 1172, 1176, 1236, 1240, 1332, 1460, 
+    std::vector<int> avoid = { 568, 572, 580, 584, 608, 612, 908,
+                               912, 968, 972, 1000, 1004, 1060, 1064,
+                               1120, 1172, 1176, 1236, 1240, 1332, 1460,
                                1464, 1524, 1528, 1764, 2204, 2612, 2616 };
-    
+
     std::vector<double> dbin(nBins+1); // this is what ROOT wants
     int k = 0, i = 0;
-    while (1) { 
-        if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) { 
-            dbin[i] = k; 
-            i++; 
+    while (1) {
+        if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) {
+            dbin[i] = k;
+            i++;
         }
         k += 4;
         if ( k > 7500 ) break;
     }
-    
+
     // the 2bb simulations are in MeV:
     // ----> rescaling to keV
     hSimBEGetmp[0]->SetBins(7500,0,7500);
     hSimCOAXtmp[0]->SetBins(7500,0,7500);
     hSimBEGetmp[1]->SetBins(7500,0,7500);
     hSimCOAXtmp[1]->SetBins(7500,0,7500);
-    
+
     // rebin the histograms in new histograms
     TH1D* hDataBEGe = dynamic_cast<TH1D*>(hDataBEGetmp->Rebin(nBins, "hDataBEGetmp", &dbin[0]));
     TH1D* hDataCOAX = dynamic_cast<TH1D*>(hDataCOAXtmp->Rebin(nBins, "hDataCOAXtmp", &dbin[0]));
-    
+
     std::vector<TH1*> hSimBEGe;
     std::vector<TH1*> hSimCOAX;
 
@@ -183,8 +186,8 @@ int main( int argc, char** argv ) {
         }
     }
 
-    delete hDataBEGetmp;   
-    delete hDataCOAXtmp;   
+    delete hDataBEGetmp;
+    delete hDataCOAXtmp;
     hSimBEGetmp.clear();
     hSimCOAXtmp.clear();
 
@@ -199,40 +202,40 @@ int main( int argc, char** argv ) {
     for ( int i = 0; i < nBins; ++i ) {
         vDataBEGe[i] = hDataBEGe->GetBinContent(i+1);
         vDataCOAX[i] = hDataCOAX->GetBinContent(i+1);
-        
+
         for ( unsigned int j = 0; j < hSimBEGe.size(); ++j ) {
             vSimBEGe[j].push_back(hSimBEGe[j]->GetBinContent(i+1));
             vSimCOAX[j].push_back(hSimCOAX[j]->GetBinContent(i+1));
         }
     }
 
-    delete hDataBEGe;   
-    delete hDataCOAX;   
+    delete hDataBEGe;
+    delete hDataCOAX;
     hSimBEGe.clear();
     hSimCOAX.clear();
 
 // ==========================================================================================================
-	
+
     // create Fit2nbbLV object
     Fit2nbbLV model("Fit2nbbLV");
-	// create a new summary tool object
-	BCSummaryTool summary(&model);
+    // create a new summary tool object
+    BCSummaryTool summary(&model);
     // create output class
     path = std::string(std::getenv("GERDACPTDIR")) + "/";
     BCModelOutput output(&model, c_str(path + "out/markowChains.root"));
     model.WriteMarkovChain(true);
-    
-    // set nicer style for drawing than the ROOT default
-	BCAux::SetStyle();
 
-	// open log file
+    // set nicer style for drawing than the ROOT default
+    BCAux::SetStyle();
+
+    // open log file
     BCLog::SetLogLevelFile(BCLog::detail);
     BCLog::SetLogLevelScreen(BCLog::summary);
-	BCLog::OpenLog(c_str(path + "/out/logBAT.txt"));
+    BCLog::OpenLog(c_str(path + "/out/logBAT.txt"));
 
-	// set precision (number of samples in Markov chain)
-	model.MCMCSetPrecision(level);
-    
+    // set precision (number of samples in Markov chain)
+    model.MCMCSetPrecision(level);
+
     // set data
     model.SetBinning(dbin);
     model.SetDataBEGe(vDataBEGe);
@@ -243,17 +246,17 @@ int main( int argc, char** argv ) {
 
     // set parameter binning
     //m.SetNbins(1000);
-    
-	// run MCMC and marginalize posterior w/r/t all parameters and all
-	// combinations of two parameters
+
+    // run MCMC and marginalize posterior w/r/t all parameters and all
+    // combinations of two parameters
     auto start = std::chrono::system_clock::now();
-	model.MarginalizeAll();
-    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);	
+    model.MarginalizeAll();
+    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);
     std::cout << "Summary : Time spent: " << elapsed.count() << "s.\n";
 
-	// run mode finding, by default using Minuit
+    // run mode finding, by default using Minuit
     BCLog::SetLogLevelScreen(BCLog::detail);
-	model.FindMode(model.GetBestFitParameters());
+    model.FindMode(model.GetBestFitParameters());
     BCLog::SetLogLevelScreen(BCLog::summary);
 
     std::cout << std::endl;
@@ -261,25 +264,25 @@ int main( int argc, char** argv ) {
     std::cout << "Summary : pValue = " << pvalue << std::endl;
 
     // OUTPUT
-	// print results of the analysis into a text file
-	model.PrintResults(c_str(path + "out/Fit2nbbLV_results.txt"));
-	// draw all marginalized distributions into a PDF file
-	model.PrintAllMarginalized(c_str(path + "out/Fit2nbbLV_plots.pdf"));
+    // print results of the analysis into a text file
+    model.PrintResults(c_str(path + "out/Fit2nbbLV_results.txt"));
+    // draw all marginalized distributions into a PDF file
+    model.PrintAllMarginalized(c_str(path + "out/Fit2nbbLV_plots.pdf"));
 
     // print all summary plots
-	summary.PrintParameterPlot(c_str(path + "out/Fit2nbbLV_parameters.pdf"));
-	summary.PrintCorrelationPlot(c_str(path + "out/Fit2nbbLV_correlation.pdf"));
-	summary.PrintCorrelationMatrix(c_str(path + "out/Fit2nbbLV_correlationMatrix.pdf"));
+    summary.PrintParameterPlot(c_str(path + "out/Fit2nbbLV_parameters.pdf"));
+    summary.PrintCorrelationPlot(c_str(path + "out/Fit2nbbLV_correlation.pdf"));
+    summary.PrintCorrelationMatrix(c_str(path + "out/Fit2nbbLV_correlationMatrix.pdf"));
     model.WriteHistosOnFile(path + "out/");
     // this will re-run the analysis without the LogLikelihood information
     BCLog::OutSummary("Building knowledge-update plots.");
     BCLog::SetLogLevelScreen(BCLog::warning);
-	summary.PrintKnowledgeUpdatePlots(c_str(path + "out/Fit2nbbLV_update.pdf"));
+    summary.PrintKnowledgeUpdatePlots(c_str(path + "out/Fit2nbbLV_update.pdf"));
     BCLog::SetLogLevelScreen(BCLog::summary);
 
     BCLog::OutSummary("Exiting");
-	// close log file
-	BCLog::CloseLog();
+    // close log file
+    BCLog::CloseLog();
 
     if ( level != BCEngineMCMC::kLow ) {
         std::string command = "telegram-send \"runfit: completed\"";

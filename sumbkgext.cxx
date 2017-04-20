@@ -4,12 +4,12 @@
  * into global energy spectra to be used in the fit
  *
  * supported sources:
- *   
+ *
  *   in LAr (homogeneous)
  *   K42
- *  
+ *
  *   on Fibers:
- *   K40 Bi212 Bi214 
+ *   K40 Bi212 Bi214
  *   Pb214 Tl208
  *
  *   on contacts (p and n):
@@ -21,17 +21,18 @@
  *   Tl208 Bi207
  *
  *   on cables:
- *   K40 Bi212 Bi214 
+ *   K40 Bi212 Bi214
  *   Pb214 Tl208 Bi207
  *
  *   on mini shroud:
  *   K40, Pa234, Bi207
+ *   Bi214, Pb214
  *
  *   on mini shroud surface:
  *   K42
  *
- * state-of-arts: enrCOAX are not summed. Different live times 
- * of the detectors (depending on the considered runs) are taken 
+ * state-of-arts: enrCOAX are not summed. Different live times
+ * of the detectors (depending on the considered runs) are taken
  * into account.
  *
  * Author: Luigi Pertoldi - luigi.pertoldi@pd.infn.it
@@ -50,10 +51,10 @@
 #include "DataReader.h"
 
 int main( int argc, char** argv ) {
-    
+
     std::vector<std::string> args(argc);
     for ( int i = 0; i < argc; ++i ) args[i] = argv[i];
- 
+
     if ( argc == 1 or std::find(args.begin(), args.end(), "--help" ) != args.end() ) {
         std::cout << "Available sources:\n\n"
                   << "homLAr:\n"
@@ -67,7 +68,7 @@ int main( int argc, char** argv ) {
                   << " on cables:\n"
                   << "    K40, Bi212, Bi214, Tl208, Pb214, Bi207\n\n"
                   << " on mini shroud:\n"
-                  << "    K40, Pa234, Bi207\n\n"
+                  << "    K40, Pa234, Bi207, Bi214, Pb214\n\n"
                   << " on mini shroud surface:\n"
                   << "    K42\n";
         return 0;
@@ -100,16 +101,16 @@ int main( int argc, char** argv ) {
         if ( place == "contacts" )          std::cout << "--K42\n";
         if ( place == "holder" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60, --Bi207\n";
         if ( place == "cables" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214, --Bi207\n";
-        if ( place == "minishroud" )        std::cout << "--K40, --Pa234, --Bi207\n";
+        if ( place == "minishroud" )        std::cout << "--K40, --Pa234, --Bi207, --Bi214, --Pb214\n";
         if ( place == "minishroudsurface" ) std::cout << "--K42\n";
         return -1;
     }
     // TODO: add sources here
 // ----------------------------------------------------------------------------------------------------------
-    
+
     std::string rootpath = std::string(std::getenv("GERDACPTDIR"));
 
-    // infos about runs 
+    // infos about runs
     // Inside the files in out/processed the GELATIO scheme 
     // is adopted -> channels
     GERDA::DataReader reader( rootpath + "/misc/paths.txt", false, "GELATIO");
@@ -134,7 +135,7 @@ int main( int argc, char** argv ) {
             if ( i.second[j] == 0 ) totalTime[j] += timeMap[i.first];
         }
     }
-    
+
     long int Ngen;
     double M;
     if ( place == "homLAr" ) {
@@ -166,14 +167,14 @@ int main( int argc, char** argv ) {
 // -------------------------------------------------------------------------------------------------------------------    
     // SPECIAL CASE: contacts
     else if ( place == "contacts" ) {
-        
+
         // simulation are already normalized to number of generated events
         //long int Ngen;
         double MBEGe_n = 0.07423; // [Kg]
         double MBEGe_p = 5.4007716E-07; // [Kg]
         double MCOAX_n = 0.29962; // [Kg]
         double MCOAX_p = 0.0021176; // [Kg]
-     
+
         // calculate total time BEGe and COAX are on
         int ltBEGe = 0;
         int ltCOAX = 0;
@@ -217,7 +218,7 @@ int main( int argc, char** argv ) {
         return 0;
     }
 // -------------------------------------------------------------------------------------------------------------------    
-   
+
     else { std::cout << "Error: " << place << ": unknown place\n"; return -1; }
 
     std::vector<TH1F*> hist;
@@ -231,7 +232,7 @@ int main( int argc, char** argv ) {
         hist.push_back(dynamic_cast<TH1F*>(infile.Get(Form("h%i", i))));
         if (hist[i]->IsZombie()) { std::cout << "Zombie h" << std::to_string(i) << "!\n"; return -1; }
     }
-    
+
     // save
     path = rootpath + "/data/sumMaGe_" + phys + place + ".root";
     TFile outfile(path.c_str(), "RECREATE");
@@ -241,7 +242,7 @@ int main( int argc, char** argv ) {
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7500);
     TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7500);
-    
+
     for ( int i = 0; i < 40; ++i ) {
         // NOTE: excluding GTFs and GD02D
         if      ( set.GetDetectorTypes()[i] == 1 and

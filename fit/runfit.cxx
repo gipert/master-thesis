@@ -81,6 +81,7 @@ int main( int argc, char** argv ) {
     // [27] Bi207holder
     // [28] Pb214minishroud
     // [29] Bi214minishroud
+    // [30] K42minishroudsurface
 
     std::vector<std::string> simpath;
 
@@ -114,6 +115,7 @@ int main( int argc, char** argv ) {
     /*[27]*/ simpath.push_back(path + "sumMaGe_Bi207holder.root");
     /*[28]*/ simpath.push_back(path + "sumMaGe_Pb214minishroud.root");
     /*[29]*/ simpath.push_back(path + "sumMaGe_Bi214minishroud.root");
+    /*[30]*/ simpath.push_back(path + "sumMaGe_K42minishroudsurface.root");
 
     // TODO: push_back new files here
 

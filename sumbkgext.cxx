@@ -162,6 +162,11 @@ int main( int argc, char** argv ) {
         Ngen = 1E08;
         M = 0.09251623; // total mini shroud's mass
     }
+
+    else if ( place == "minishroudsurface" ) { // NOTE: fake
+        Ngen = 1E07;
+        M = 1;
+    }
     // TODO: complete here
 
 // -------------------------------------------------------------------------------------------------------------------    

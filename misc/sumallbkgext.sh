@@ -46,5 +46,9 @@ echo "--minishroud --Bi207"
 sumbkgext --minishroud --Bi207
 echo "--minishroud --Pa234"
 sumbkgext --minishroud --Pa234
-#echo "--minishroudsurface --K42"
-#sumbkgext --minishroudsurface --K42
+echo "--minishroud --Pb214"
+sumbkgext --minishroud --Pb214
+echo "--minishroud --Bi214"
+sumbkgext --minishroud --Bi214
+echo "--minishroudsurface --K42"
+sumbkgext --minishroudsurface --K42

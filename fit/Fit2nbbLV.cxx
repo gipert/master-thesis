@@ -1,4 +1,4 @@
-/* Fit2nbbLV.h
+/* Fit2nbbLV.cxx
  *
  * Author: Luigi Pertoldi - luigi.pertoldi@pd.infn.it
  * Created: 20/03/2017
@@ -25,9 +25,9 @@
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
    
     // define parameters
-    /* [0] */  this->AddParameter("2nbb",                 2E02, 2.3E02);
+    /* [0] */  this->AddParameter("2nbb",                 2E02, 2.4E02);
     /* [1] */  this->AddParameter("2nbbLV",               0, 2E-03);
-    /* [2] */  this->AddParameter("K42homLAr",            1.5E-04, 2.5E-04);
+    /* [2] */  this->AddParameter("K42homLAr",            1E-04, 2.5E-04);
     /* [3] */  this->AddParameter("K40fibers",            0, 1E-00);
     /* [4] */  this->AddParameter("Bi212Tl208fibers",     0, 0.02);
     /* [5] */  this->AddParameter("Pb214Bi214fibers",     0, 1E-01);
@@ -51,7 +51,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [23] */ this->AddParameter("Bi207cables",          0, 7E-02);
     /* [24] */ this->AddParameter("Bi207holder",          0, 5E-02);
     /* [25] */ this->AddParameter("Pb214Bi214minishroud", 0, 3E03);
-    /* [26] */ this->AddParameter("K42minishroudsurface", 0, 7E-04);
+    /* [26] */ this->AddParameter("K42minishroudsurface", 0, 1E-03);
 
     // TODO: add new parameters here
     //// LEGEND
@@ -86,9 +86,10 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
 
     // priors
     this->SetPriorConstantAll();
-    this->SetPriorGauss(0,217,11);
+    //this->SetPriorGauss(0,217,11);
 
-    //fix
+    // ignore 2nbbLV
+    this->GetParameter(1)->Fix(0);
     //for ( int i = 5; i <= 24; ++i ) this->GetParameter(i)->Fix(0);
 }
 // ---------------------------------------------------------
@@ -485,7 +486,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
     hSimBEGe[29].SetName("hBi214minishroudBEGe");
     hSimCOAX[29].Scale(results[25]);
     hSimCOAX[29].SetName("hBi214minishroudCOAX");
-    
+
     // K42minishroudsurface
     hSimBEGe[30].Scale(results[26]);
     hSimBEGe[30].SetName("K42minishroudsurfaceBEGe");
@@ -511,7 +512,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         vd.GetYaxis()->SetTitle("counts");
         vd.GetYaxis()->SetNdivisions(10);
         vd.GetYaxis()->SetTickLength(0.01);
-        vd.Draw("P");
+        vd.Draw("P0");
 
         for ( auto& h : v ) h.SetLineWidth(1);
         v[0].SetLineColor(kBlue);
@@ -566,14 +567,21 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         sum.Draw("HISTSAME");
         sum.Write();
 
-        TLegend leg(0.87,0.64,0.98,0.95);
+        TLegend leg;
+        leg.SetX1NDC(0.87);
+        leg.SetY1NDC(0.7);
+        leg.SetX2NDC(0.98);
+        leg.SetY2NDC(0.95);
         for ( auto& h : v ) leg.AddEntry(&h,h.GetName(),"l");
         leg.AddEntry(&sum,sum.GetName(),"l");
+        std::string heading = "#bf{" + type + "}";
+        leg.SetHeader(heading.c_str());
+        leg.SetMargin(0.5);
         leg.Draw();
 
-        TText text(0.5, 0.7, type.c_str());
-        text.SetNDC();
-        text.Draw();
+        //TText text(0.5, 0.7, type.c_str());
+        //text.SetNDC();
+        //text.Draw();
 
         pad.SetLogy();
         pad.SetGrid();
@@ -608,27 +616,41 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
             datares.SetBinContent(i, vd.GetBinContent(i) - sum.GetBinContent(i));
         }
 
+        TLegend legb;
+        legb.SetX1NDC(0.87);
+        legb.SetY1NDC(0.1);
+        legb.SetX2NDC(0.98);
+        legb.SetY2NDC(0.95);
+        legb.SetHeader(type.c_str());
+        legb.SetMargin(0.5);
+
         for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 3*sum.GetBinError(i));
         sum.SetMarkerStyle(0);
         sum.SetFillColor(kOrange-3);
-        sum.SetFillStyle(3001);
+        sum.SetFillStyle(1001);
         sum.DrawCopy("E2");
+        legb.AddEntry(sum.Clone(), "3#sigma", "f");
 
         for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 2*sum.GetBinError(i)/3);
         sum.SetFillColor(kYellow);
         sum.DrawCopy("E2 SAME");
+        legb.AddEntry(sum.Clone(), "2#sigma", "f");
 
         for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 0.5*sum.GetBinError(i));
         sum.SetFillColor(kGreen);
         sum.DrawCopy("E2 SAME");
+        legb.AddEntry(sum.Clone(), "1#sigma", "f");
 
-        for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 0.0001);
+        for ( int i = 1; i <= nbins; ++i ) sum.SetBinError(i, 0.00001);
         sum.SetFillStyle(0);
         sum.SetFillColor(0);
         sum.DrawCopy("E SAME");
+        legb.AddEntry(sum.Clone(), "Model", "l");
 
-        vd.DrawCopy("P SAME");
-        text.Draw();
+        vd.DrawCopy("P0 SAME");
+        legb.AddEntry(sum.Clone(), "Data", "p");
+        //text.Draw();
+        legb.Draw();
 
         name = path + "/brasilian" + type + ".C";
         brascan.SaveAs(name.c_str());
@@ -637,7 +659,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 3*resdraw.GetBinError(i));
         resdraw.SetMarkerStyle(0);
         resdraw.SetFillColor(kOrange-3);
-        resdraw.SetFillStyle(3001);
+        resdraw.SetFillStyle(1001);
         pad1.Draw();
         pad1.cd();
         pad1.SetLogy(false);
@@ -651,13 +673,14 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         resdraw.SetFillColor(kGreen);
         resdraw.DrawCopy("E2 SAME");
 
-        for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 0.0001);
+        for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 0.00001);
         resdraw.SetFillStyle(0);
         resdraw.SetFillColor(0);
         resdraw.DrawCopy("E SAME");
 
-        datares.DrawCopy("P SAME");
-        text.Draw();
+        datares.DrawCopy("P0 SAME");
+        //text.Draw();
+        legb.Draw();
 
         name = path + "/residuals" + type + ".C";
         brascan.SaveAs(name.c_str());
@@ -668,7 +691,7 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
 
     hDataBEGe.Write();
     hDataCOAX.Write();
-    for ( unsigned int i = 1; i < hSimBEGe.size(); ++i ) {
+    for ( unsigned int i = 0; i < hSimBEGe.size(); ++i ) {
         hSimBEGe[i].Write();
         hSimCOAX[i].Write();
     }

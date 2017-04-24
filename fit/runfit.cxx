@@ -38,7 +38,7 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
 /////////////////////////////////////////////
 
     auto c_str = [](std::string s) { return s.c_str(); };
@@ -256,15 +256,15 @@ int main( int argc, char** argv ) {
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);
     std::cout << "Summary : Time spent: " << elapsed.count() << "s.\n";
 
-    // run mode finding, by default using Minuit
-    BCLog::SetLogLevelScreen(BCLog::detail);
-    model.FindMode(model.GetBestFitParameters());
-    BCLog::SetLogLevelScreen(BCLog::summary);
-/*
+    // run mode finding, by default using Minuit, working shitty
+    //BCLog::SetLogLevelScreen(BCLog::detail);
+    //model.FindMode(model.GetBestFitParameters());
+    //BCLog::SetLogLevelScreen(BCLog::summary);
+
     std::cout << std::endl;
     double pvalue = GetPValue(model, level);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
-*/
+
     // OUTPUT
     // print results of the analysis into a text file
     model.PrintResults(c_str(path + "out/Fit2nbbLV_results.txt"));

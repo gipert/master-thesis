@@ -41,6 +41,9 @@ int main( int argc, char** argv ) {
     BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
 /////////////////////////////////////////////
 
+    // retrieve the name of the directory containing the output
+    std::string const outdirname = argc > 1 ? argv[1] : std::string(std::getenv("GERDACPT")) + "/out/";
+
     auto c_str = [](std::string s) { return s.c_str(); };
 
     TH1::AddDirectory(false);
@@ -226,8 +229,8 @@ int main( int argc, char** argv ) {
     // create a new summary tool object
     BCSummaryTool summary(&model);
     // create output class
-    path = std::string(std::getenv("GERDACPTDIR")) + "/";
-    BCModelOutput output(&model, c_str(path + "out/markowChains.root"));
+    path = outdirname + "/";
+    BCModelOutput output(&model, c_str(path + "markowChains.root"));
     model.WriteMarkovChain(true);
 
     // set nicer style for drawing than the ROOT default
@@ -236,7 +239,7 @@ int main( int argc, char** argv ) {
     // open log file
     BCLog::SetLogLevelFile(BCLog::detail);
     BCLog::SetLogLevelScreen(BCLog::summary);
-    BCLog::OpenLog(c_str(path + "/out/logBAT.txt"));
+    BCLog::OpenLog(c_str(path + "logBAT.txt"));
 
     // set precision (number of samples in Markov chain)
     model.MCMCSetPrecision(level);
@@ -270,19 +273,19 @@ int main( int argc, char** argv ) {
 */
     // OUTPUT
     // print results of the analysis into a text file
-    model.PrintResults(c_str(path + "out/Fit2nbbLV_results.txt"));
+    model.PrintResults(c_str(path + "Fit2nbbLV_results.txt"));
     // draw all marginalized distributions into a PDF file
-    model.PrintAllMarginalized(c_str(path + "out/Fit2nbbLV_plots.pdf"));
+    model.PrintAllMarginalized(c_str(path + "Fit2nbbLV_plots.pdf"));
 
     // print all summary plots
-    summary.PrintParameterPlot(c_str(path + "out/Fit2nbbLV_parameters.pdf"));
-    summary.PrintCorrelationPlot(c_str(path + "out/Fit2nbbLV_correlation.pdf"));
-    summary.PrintCorrelationMatrix(c_str(path + "out/Fit2nbbLV_correlationMatrix.pdf"));
-    model.WriteHistosOnFile(path + "out/");
+    summary.PrintParameterPlot(c_str(path + "Fit2nbbLV_parameters.pdf"));
+    summary.PrintCorrelationPlot(c_str(path + "Fit2nbbLV_correlation.pdf"));
+    summary.PrintCorrelationMatrix(c_str(path + "Fit2nbbLV_correlationMatrix.pdf"));
+    model.WriteHistosOnFile(path);
     // this will re-run the analysis without the LogLikelihood information
     BCLog::OutSummary("Building knowledge-update plots.");
     BCLog::SetLogLevelScreen(BCLog::warning);
-    summary.PrintKnowledgeUpdatePlots(c_str(path + "out/Fit2nbbLV_update.pdf"));
+    summary.PrintKnowledgeUpdatePlots(c_str(path + "Fit2nbbLV_update.pdf"));
     BCLog::SetLogLevelScreen(BCLog::summary);
 
     BCLog::OutSummary("Exiting");

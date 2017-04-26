@@ -116,6 +116,9 @@ int main( int argc, char** argv ) {
     /*[28]*/ simpath.push_back(path + "sumMaGe_Pb214minishroud.root");
     /*[29]*/ simpath.push_back(path + "sumMaGe_Bi214minishroud.root");
     /*[30]*/ simpath.push_back(path + "sumMaGe_K42minishroudsurface.root");
+    /*[31]*/ simpath.push_back(path + "sumMaGe_Pa234cables.root");
+    /*[32]*/ simpath.push_back(path + "sumMaGe_Pa234holder.root");
+    /*[33]*/ simpath.push_back(path + "sumMaGe_K42homLArAA.root");
 
     // TODO: push_back new files here
 

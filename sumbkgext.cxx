@@ -3,35 +3,7 @@
  * Program to sum MaGe simulations for external bkg sources
  * into global energy spectra to be used in the fit
  *
- * supported sources:
- *
- *   in LAr (homogeneous)
- *   K42
- *
- *   on Fibers:
- *   K40 Bi212 Bi214
- *   Pb214 Tl208
- *
- *   on contacts (p and n):
- *   K42
- *
- *   on Holder:
- *   K40 Ac228 Bi212 
- *   Bi214 Co60 Pb214
- *   Tl208 Bi207
- *
- *   on cables:
- *   K40 Bi212 Bi214
- *   Pb214 Tl208 Bi207
- *
- *   on mini shroud:
- *   K40, Pa234, Bi207
- *   Bi214, Pb214
- *
- *   on mini shroud surface:
- *   K42
- *
- * state-of-arts: enrCOAX are not summed. Different live times
+ * state-of-arts: enrCOAX and GD02D are not summed. Different live times
  * of the detectors (depending on the considered runs) are taken
  * into account.
  *

@@ -83,9 +83,10 @@ int main( int argc, char** argv ) {
     // lambda to fill histograms
     // i quasi-follows the MaGeInput scheme
     auto fillHistos = [&]( int i , std::string genopt , std::string phys ) {
-
-        if      ( phys == "2nbbLV" ) filename = "/home/GERDA/pertoldi/simulations/2nbbLV/processed/p_2nbbLV_";
-        else if ( phys == "2nbb"   ) filename = "/home/GERDA/pertoldi/simulations/2nbb/processed/p_2nbb_";
+        
+        std::string basename = "/storage/gpfs_data/gerda/gerda_scratch/pertoldi/simulations/";
+        if      ( phys == "2nbbLV" ) filename = basename + "2nbbLV/processed/p_2nbbLV_";
+        else if ( phys == "2nbb"   ) filename = basename + "2nbb/processed/p_2nbb_";
         
         if ( genopt == "A_COAX" ) {
             filename += "AV_det11_";

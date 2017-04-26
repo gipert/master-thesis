@@ -1,5 +1,7 @@
 echo "--homLAr --K42"
 sumbkgext --homLAr --K42
+echo "--homLArAA --K42"
+sumbkgext --homLArAA --K42
 echo "--contacts --K42"
 sumbkgext --contacts --K42
 echo "--fibers --K40"
@@ -28,6 +30,8 @@ echo "--holder --Tl208"
 sumbkgext --holder --Tl208
 echo "--holder --Bi207"
 sumbkgext --holder --Bi207
+echo "--holder --Pa234"
+sumbkgext --holder --Pa234
 echo "--cables --K40"
 sumbkgext --cables --K40
 echo "--cables --Bi212"
@@ -40,6 +44,8 @@ echo "--cables --Tl208"
 sumbkgext --cables --Tl208
 echo "--cables --Bi207"
 sumbkgext --cables --Bi207
+echo "--cables --Pa234"
+sumbkgext --cables --Pa234
 echo "--minishroud --K40"
 sumbkgext --minishroud --K40
 echo "--minishroud --Bi207"

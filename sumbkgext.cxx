@@ -59,14 +59,16 @@ int main( int argc, char** argv ) {
         std::cout << "Available sources:\n\n"
                   << "homLAr:\n"
                   << "    K42\n\n"
+                  << "homLar above array:\n"
+                  << "    K42\n\n"
                   << "on fibers:\n"
                   << "    K40, Bi212, Bi214, Pb214, Tl208\n\n"
                   << " on contacts (p and n):\n"
                   << "    K42\n\n"
                   << " on holder:\n"
-                  << "    K40, Ac228, Bi212, Bi214, Co60, Pb214, Tl208, Bi207\n\n"
+                  << "    K40, Ac228, Bi212, Bi214, Co60, Pb214, Tl208, Bi207, Pa234\n\n"
                   << " on cables:\n"
-                  << "    K40, Bi212, Bi214, Tl208, Pb214, Bi207\n\n"
+                  << "    K40, Bi212, Bi214, Tl208, Pb214, Bi207, Pa234\n\n"
                   << " on mini shroud:\n"
                   << "    K40, Pa234, Bi207, Bi214, Pb214\n\n"
                   << " on mini shroud surface:\n"
@@ -76,13 +78,14 @@ int main( int argc, char** argv ) {
    
     std::string phys, place;
     if      ( std::find(args.begin(), args.end(), "--homLAr"   ) != args.end() ) place = "homLAr";
+    else if ( std::find(args.begin(), args.end(), "--homLArAA" ) != args.end() ) place = "homLArAA";
     else if ( std::find(args.begin(), args.end(), "--fibers"   ) != args.end() ) place = "fibers";
     else if ( std::find(args.begin(), args.end(), "--contacts" ) != args.end() ) place = "contacts";
     else if ( std::find(args.begin(), args.end(), "--holder"   ) != args.end() ) place = "holder";
     else if ( std::find(args.begin(), args.end(), "--cables"   ) != args.end() ) place = "cables";
     else if ( std::find(args.begin(), args.end(), "--minishroud") != args.end() ) place = "minishroud";
     else if ( std::find(args.begin(), args.end(), "--minishroudsurface") != args.end() ) place = "minishroudsurface";
-    else { std::cout << "Please pecify place: --homLAr, --fibers, --contacts, --holder, --cables, --minishroud, --minishroudsurface\n"; return -1; }
+    else { std::cout << "Please pecify place: --homLAr, --homLArAA (above array), --fibers, --contacts, --holder, --cables, --minishroud, --minishroudsurface\n"; return -1; }
     
     if      ( std::find(args.begin(), args.end(), "--K42" ) != args.end() )   phys = "K42";
     else if ( std::find(args.begin(), args.end(), "--K40" ) != args.end() )   phys = "K40";
@@ -97,10 +100,11 @@ int main( int argc, char** argv ) {
     else {
         std::cout << "Please specify source: ";
         if ( place == "homLAr" )            std::cout << "--K42\n";
+        if ( place == "homLArAA" )          std::cout << "--K42\n";
         if ( place == "fibers" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214\n";
         if ( place == "contacts" )          std::cout << "--K42\n";
-        if ( place == "holder" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60, --Bi207\n";
-        if ( place == "cables" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214, --Bi207\n";
+        if ( place == "holder" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214, --Ac228, --Co60, --Bi207, --Pa234\n";
+        if ( place == "cables" )            std::cout << "--K40, --Bi212, --Tl208, --Bi214, --Pb214, --Bi207, --Pa234\n";
         if ( place == "minishroud" )        std::cout << "--K40, --Pa234, --Bi207, --Bi214, --Pb214\n";
         if ( place == "minishroudsurface" ) std::cout << "--K42\n";
         return -1;
@@ -141,6 +145,11 @@ int main( int argc, char** argv ) {
     if ( place == "homLAr" ) {
         Ngen = 5E09;
         M = 24563.385; // LAr mass [kg]
+    }
+    
+    if ( place == "homLArAA" ) {
+        Ngen = 1E09;
+        M = 267.33869; // LAr mass [kg]
     }
 
     else if ( place == "fibers" ) {

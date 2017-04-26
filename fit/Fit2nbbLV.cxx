@@ -52,6 +52,9 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [24] */ this->AddParameter("Bi207holder",          0, 5E-02);
     /* [25] */ this->AddParameter("Pb214Bi214minishroud", 0, 3E03);
     /* [26] */ this->AddParameter("K42minishroudsurface", 0, 1E-03);
+    /* [27] */ this->AddParameter("Pa234cables",          0, 1E-03);
+    /* [28] */ this->AddParameter("Pa234holder",          0, 1E-03);
+    /* [29] */ this->AddParameter("K42homLArAA",          0, 1E-03);
 
     // TODO: add new parameters here
     //// LEGEND
@@ -83,7 +86,10 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     // [24] Bi207holder
     // [25] Pb214 + Bi214 in minishroud
     // [26] K42 on minishroud surface
-
+    // [27] Pa234 on cables
+    // [28] Pa234 on holders
+    // [29] K42 in LAr Above Array
+    //
     // priors
     this->SetPriorConstantAll();
     //this->SetPriorGauss(0,217,11);
@@ -124,6 +130,9 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
         f += parameters[24]*simBEGe[27][i];                         // Bi207holder
         f += parameters[25]*(simBEGe[28][i] +      simBEGe[29][i]); // Pb214 -> Bi214 minishroud with 100.00% Br
         f += parameters[26]*simBEGe[30][i];                         // K42minishroudsurface
+        f += parameters[27]*simBEGe[31][i];                         // Pa234cables
+        f += parameters[28]*simBEGe[32][i];                         // Pa234holder
+        f += parameters[29]*simBEGe[33][i];                         // K42homLArAA
         // TODO: update loglikelihood here
 
         //logprob += dataBEGe[i]*log(f) - f - BCMath::LogFact(dataBEGe[i]);
@@ -152,6 +161,9 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
         f += parameters[24]*simCOAX[27][i];
         f += parameters[25]*(simCOAX[28][i] +      simCOAX[29][i]);
         f += parameters[26]*simCOAX[30][i];
+        f += parameters[27]*simCOAX[31][i];
+        f += parameters[28]*simCOAX[32][i];
+        f += parameters[29]*simCOAX[33][i];
         // TODO: update loglikelihood here
         
         //logprob += dataCOAX[i]*log(f) - f - BCMath::LogFact(dataCOAX[i]);
@@ -191,6 +203,9 @@ std::vector<double> Fit2nbbLV::GetFittedFncBEGe(std::vector<double>& bestpar) {
           + bestpar[24]*simBEGe[27][i]
           + bestpar[25]*(simBEGe[28][i] +     simBEGe[29][i])
           + bestpar[26]*simBEGe[30][i]
+          + bestpar[27]*simBEGe[31][i]
+          + bestpar[28]*simBEGe[32][i]
+          + bestpar[29]*simBEGe[33][i]
           ;
           // TODO: update fitting func here
     }
@@ -228,6 +243,9 @@ std::vector<double> Fit2nbbLV::GetFittedFncCOAX(std::vector<double>& bestpar) {
           + bestpar[24]*simCOAX[27][i]
           + bestpar[25]*(simCOAX[28][i] +      simCOAX[29][i])
           + bestpar[26]*simCOAX[30][i]
+          + bestpar[27]*simCOAX[31][i]
+          + bestpar[28]*simCOAX[32][i]
+          + bestpar[29]*simCOAX[33][i]
           ;
         // TODO: update fitting func here
     }
@@ -493,6 +511,24 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
     hSimCOAX[30].Scale(results[26]);
     hSimCOAX[30].SetName("K42minishroudsurfaceCOAX");
 
+    // Pa234cables
+    hSimBEGe[31].Scale(results[27]);
+    hSimBEGe[31].SetName("Pa234cablesBEGe");
+    hSimCOAX[31].Scale(results[27]);
+    hSimCOAX[31].SetName("Pa234cablesCOAX");
+
+    // K42minishroudsurface
+    hSimBEGe[32].Scale(results[28]);
+    hSimBEGe[32].SetName("Pa234holderBEGe");
+    hSimCOAX[32].Scale(results[28]);
+    hSimCOAX[32].SetName("Pa234holderCOAX");
+
+    // K42minishroudsurface
+    hSimBEGe[33].Scale(results[29]);
+    hSimBEGe[33].SetName("K42homLArAABEGe");
+    hSimCOAX[33].Scale(results[29]);
+    hSimCOAX[33].SetName("K42homLArAACOAX");
+
     // TODO: add new sources here
     // ...
 
@@ -552,9 +588,12 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         v[27].SetLineColor(kYellow);  // holder
 
         v[28].SetLineColor(kGray);  // minishroud
-        v[29].SetLineColor(kGray);  // minishroud
-        // minishroudsurface
-        v[30].SetLineColor(kBlack);
+        v[29].SetLineColor(kGray);  // minishroud 
+        v[30].SetLineColor(kBlack); // minishroudsurface
+        v[31].SetLineColor(kOrange); // cables
+        v[32].SetLineColor(kYellow); // holder
+        v[33].SetLineColor(kMagenta+2); // LAr Above Array
+
         // TODO: define color
 
         for ( auto& h : v ) h.Draw("HISTSAME");

@@ -159,8 +159,5 @@ int main( int argc, char** argv ) {
         if (verbose) std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
     
-    std::string command = "telegram-send \"processbb --" + phys + ": completed.\"";
-    std::system(command.c_str());
-
     return 0;
 }

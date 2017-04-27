@@ -18,8 +18,6 @@
 #include <TFile.h>
 #include <TH1D.h>
 
-#include "ProgressBar.h"
-
 #include "BAT/BCMath.h"
 #include "Fit2nbbLV.h"
 
@@ -71,18 +69,13 @@ double GetPValue(Fit2nbbLV& model, BCEngineMCMC::Precision level, bool save) {
         }
     }
   
-    int k = 0;
-    ProgressBar bar(Niter);
     auto start = std::chrono::system_clock::now();
     // markov chain, Niter = number of datasets
 #pragma omp parallel for reduction(+:pv) firstprivate(meanBEGe,lCountsBEGe,meanCOAX,lCountsCOAX) private(logP)
     for ( int i = 0; i < Niter; ++i ) {
         double r;
         logP = 0;
-        
-#pragma omp critical 
-        bar.Update(++k);
-        
+
         // update bin content and loglikelihood
         for ( int j = downBin; j <= upBin; ++j ) {
             

@@ -119,7 +119,7 @@ int main( int argc, char** argv ) {
         M = 24563.385; // LAr mass [kg]
     }
     
-    if ( place == "homLArAA" ) {
+    else if ( place == "homLArAA" ) {
         Ngen = 1E09;
         M = 267.33869; // LAr mass [kg]
     }

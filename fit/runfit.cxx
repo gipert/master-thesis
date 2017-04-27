@@ -17,6 +17,7 @@
 #include "Fit2nbbLV.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <chrono>
@@ -26,6 +27,7 @@
 #include <BAT/BCAux.h>
 #include <BAT/BCSummaryTool.h>
 #include <BAT/BCModelOutput.h>
+#include <BAT/BCParameter.h>
 
 #include "TFile.h"
 #include "TH1D.h"
@@ -38,12 +40,12 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
 /////////////////////////////////////////////
 
     // retrieve the name of the directory containing the output
-    std::string const outdirname = argc > 1 ? argv[1] : std::string(std::getenv("GERDACPT")) + "/out/";
-
+    std::string outdirname = argc > 1 ? argv[1] : ( std::string(std::getenv("GERDACPTDIR")) + "/out" );
+    
     auto c_str = [](std::string s) { return s.c_str(); };
 
     TH1::AddDirectory(false);
@@ -252,6 +254,15 @@ int main( int argc, char** argv ) {
     model.SetSimCOAX(vSimCOAX);
     model.SetFitRange(rangeDown, rangeUp);
 
+    // eventually fix parameters as indicated in external file
+    std::ifstream fixfile(c_str(std::string(std::getenv("GERDACPTDIR")) + "/misc/fixfile.txt"));
+    int n, p;
+    while ( fixfile >> p >> n ) {
+        if ( n == 0 ) {
+            model.GetParameter(p)->Fix(0);
+            std::cout << "Summary : Fixing parameter: " << model.GetParameter(p)->GetName() << '\n';
+        }
+    }
     // set parameter binning
     //m.SetNbins(1000);
 
@@ -266,11 +277,11 @@ int main( int argc, char** argv ) {
     //BCLog::SetLogLevelScreen(BCLog::detail);
     //model.FindMode(model.GetBestFitParameters());
     //BCLog::SetLogLevelScreen(BCLog::summary);
-/*
+
     std::cout << std::endl;
     double pvalue = GetPValue(model, level);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
-*/
+
     // OUTPUT
     // print results of the analysis into a text file
     model.PrintResults(c_str(path + "Fit2nbbLV_results.txt"));

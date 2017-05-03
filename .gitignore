@@ -1,5 +1,6 @@
 *.swp
 *.bsub
+.ycm_extra_conf.py
 
 out/
 lib/

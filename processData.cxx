@@ -97,8 +97,5 @@ int main( int argc, char** argv ) {
     
     textFile.close();
 
-    std::string command = "telegram-send \"processData: completed\"";
-    std::system(command.c_str());
-
     return 0;
 }

@@ -17,6 +17,7 @@
 #include "Fit2nbbLV.h"
 
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <vector>
 #include <chrono>
@@ -26,6 +27,7 @@
 #include <BAT/BCAux.h>
 #include <BAT/BCSummaryTool.h>
 #include <BAT/BCModelOutput.h>
+#include <BAT/BCParameter.h>
 
 #include "TFile.h"
 #include "TH1D.h"
@@ -41,10 +43,31 @@ int main( int argc, char** argv ) {
     BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
 /////////////////////////////////////////////
 
-    // retrieve the name of the directory containing the output
-    std::string const outdirname = argc > 1 ? argv[1] : std::string(std::getenv("GERDACPTDIR")) + "/out/";
-
     auto c_str = [](std::string s) { return s.c_str(); };
+
+    // save command line arguments
+    std::vector<std::string> args;
+    for ( int i = 0; i < argc; ++i ) args.emplace_back(argv[i]);
+
+    // help
+    if ( std::find(args.begin(), args.end(), "--help") != args.end() ) {
+        std::cout << std::endl
+                  << "Usage:\n\n"
+                  << "    runfit [OPTIONS]\n\n"
+                  << "Options:\n\n"
+                  << "    --fixbinning   : use fixed-size binning instead of the\n"
+                  << "                     default one (variable)\n"
+                  << "    --outdir [DIR] : set directory to store results\n"
+                  << "                     default : $GERDACPTDIR/out\n\n";
+        return 0;
+    }
+
+    // retrieve the name of the directory containing the output
+    auto result = std::find( args.begin(), args.end(), "--outdir");
+    std::string outdirname;
+    if ( result != args.end() ) outdirname = *(result+1);
+    else                        outdirname = std::string(std::getenv("GERDACPTDIR")) + "/out";
+    std::system(c_str("mkdir -p " + outdirname));
 
     TH1::AddDirectory(false);
     // retrieve data
@@ -85,6 +108,9 @@ int main( int argc, char** argv ) {
     // [28] Pb214minishroud
     // [29] Bi214minishroud
     // [30] K42minishroudsurface
+    // [31] Pa234cables
+    // [32] Pa234holders
+    // [33] K42homLArAA
 
     std::vector<std::string> simpath;
 
@@ -150,23 +176,40 @@ int main( int argc, char** argv ) {
     for ( auto& h : hSimBEGetmp ) if (!h) { std::cout << "There's at least one zombie simBEGe hist!\n"; return -1; }
     for ( auto& h : hSimCOAXtmp ) if (!h) { std::cout << "There's at least one zombie simCOAX hist!\n"; return -1; }
 
-    // create !!!VARIABLE!!! binning
+    // create binning
 
-    const int nBins = 1847;
-    std::vector<int> avoid = { 568, 572, 580, 584, 608, 612, 908,
-                               912, 968, 972, 1000, 1004, 1060, 1064,
-                               1120, 1172, 1176, 1236, 1240, 1332, 1460,
-                               1464, 1524, 1528, 1764, 2204, 2612, 2616 };
+    int nBins;
+    std::vector<double> dbin; // this is what ROOT wants
 
-    std::vector<double> dbin(nBins+1); // this is what ROOT wants
-    int k = 0, i = 0;
-    while (1) {
-        if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) {
-            dbin[i] = k;
-            i++;
+    // variable
+    if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) {
+        nBins = 1847;
+        dbin = std::vector<double>(nBins+1);
+        std::vector<int> avoid = { 568, 572, 580, 584, 608, 612, 908,
+                                   912, 968, 972, 1000, 1004, 1060, 1064,
+                                   1120, 1172, 1176, 1236, 1240, 1332, 1460,
+                                   1464, 1524, 1528, 1764, 2204, 2612, 2616 };
+
+        int k = 0, i = 0;
+        while (1) {
+            if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) {
+                dbin[i] = k;
+                i++;
+            }
+            k += 4;
+            if ( k > 7500 ) break;
         }
-        k += 4;
-        if ( k > 7500 ) break;
+    }
+
+    // fixed
+    else {
+        nBins = 1875;
+        dbin = std::vector<double>(nBins+1);
+        int k = 0;
+        for ( int i = 0; i <= nBins; ++i ) {
+            dbin[i] = k;
+            k+=4;
+        }
     }
 
     // the 2bb simulations are in MeV:
@@ -252,6 +295,18 @@ int main( int argc, char** argv ) {
     model.SetSimCOAX(vSimCOAX);
     model.SetFitRange(rangeDown, rangeUp);
 
+    BCLog::OutSummary(c_str("Saving results in " + path));
+    if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) BCLog::OutSummary("Adopting variable binning size ");
+    else BCLog::OutSummary("Adopting fixed binning size");
+    // eventually fix parameters as indicated in external file
+    std::ifstream fixfile(c_str(std::string(std::getenv("GERDACPTDIR")) + "/misc/fixfile.txt"));
+    int n, p;
+    while ( fixfile >> p >> n ) {
+        if ( n == 0 ) {
+            model.GetParameter(p)->Fix(0);
+            std::cout << "Summary : Fixing parameter: " << model.GetParameter(p)->GetName() << '\n';
+        }
+    }
     // set parameter binning
     //m.SetNbins(1000);
 
@@ -291,11 +346,6 @@ int main( int argc, char** argv ) {
     BCLog::OutSummary("Exiting");
     // close log file
     BCLog::CloseLog();
-
-    if ( level != BCEngineMCMC::kLow ) {
-        std::string command = "telegram-send \"runfit: completed\"";
-        std::system(command.c_str());
-    }
 
     return 0;
 }

@@ -1,0 +1,30 @@
+\documentclass[convert]{standalone}
+
+\usepackage[compat=1.1.0]{tikz-feynman}
+
+\begin{document}
+\begin{tikzpicture}
+  \begin{feynman}
+    \vertex (b);
+    \vertex [below=of b] (c);
+    \vertex [below left=1cm and 0.4cm of c] (d);
+    \vertex [above left=1cm and 0.4cm of b] (a);
+    \vertex [left=of a] (i1);
+    \vertex [left=of d] (i2);
+    \vertex[above right of=a] (f1);
+    \vertex[right of=b] (f2);
+    \vertex[right of=c] (f3);
+    \vertex[below right of=d] (f4);
+
+    \diagram* {
+      (a) -- [photon] (b) -- [majorana, insertion=0.5] (c) -- [photon] (d),
+      (i1) -- [fermion] (a),
+      (i2) -- [fermion] (d),
+      (a) -- [fermion] (f1),
+      (b) -- [fermion] (f2),
+      (c) -- [fermion] (f3),
+      (d) -- [fermion] (f4),
+    };
+  \end{feynman}
+\end{tikzpicture}
+\end{document}

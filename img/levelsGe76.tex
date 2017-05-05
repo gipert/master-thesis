@@ -1,0 +1,48 @@
+\RequirePackage{luatex85}
+\documentclass{standalone}
+\usepackage[version=4]{mhchem}
+\usepackage{tikz}
+\usetikzlibrary{positioning,decorations.markings}
+	\newcommand\len{3}
+	\newcommand\inter{1.2}
+	\newcommand\hei{7}
+\tikzset{
+	arrowline/.style={
+		postaction={
+			decoration={
+				markings,
+				mark=at position 0.5 with { \arrow[thick]{>}; },
+			},
+		decorate=true,
+		},
+	},
+}
+\begin{document}	
+\begin{tikzpicture}
+	\node (a) at (0,0.6*\hei) {};
+	\node (b) [right=\len of a] {};
+	\node (c) at (\len+\inter,\hei) {};
+	\node (d) [right=\len of c] {};
+	\node (e) at (2*\len+2*\inter,0) {};
+	\node (f) [right=\len of e] {};
+	\node (g) [above=0.15*\hei of e] {};
+	\node (h) [right=\len of g] {};
+	% levels
+	\draw [very thick] (a.mid) -- (b.mid) 
+		node [midway, above] {$0^+$} 
+		node [rectangle, thin, draw, midway, below=0.5cm] {$\ce{^{76}Ge}$};
+	\draw [very thick] (c.mid) -- (d.mid) 
+		node [midway, above] {$2^+$} 
+		node [rectangle, thin, draw, midway, below=0.5cm] {$\ce{^{76}As}$};
+	\draw [very thick] (e.mid) -- (f.mid) node [midway, above] {$0^+$} 
+		node [rectangle, thin, draw, midway, below=0.5cm] {$\ce{^{76}Se}$};
+	\draw [very thick] (g.mid) -- (h.mid) 
+		node [midway, above] {$2^+$};
+	% connections
+	\draw [arrowline] (b.mid) -- (c.mid) node [midway, above left] {$\beta^+$};
+	\draw [arrowline] (b.mid) -- (e.mid) node [midway, below left] {$\beta^-\beta^-$};
+	\draw [arrowline] (b.mid) -- (g.mid) node [midway, above right] {$\beta^-\beta^-$};
+	\draw [arrowline] (d.mid) -- (e.mid) node [midway, above right] {$\beta^-$};
+
+\end{tikzpicture}
+\end{document}

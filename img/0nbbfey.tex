@@ -4,7 +4,7 @@
 \newcommand\ldx{7cm}
 \newcommand\lsx{2.5cm}
 \newcommand\hei{1.5cm}
-\newcommand\ange{0.3cm}
+\newcommand\ange{0.6cm}
 \newcommand\lene{4cm}
 \begin{document}
 \LARGE
@@ -17,6 +17,20 @@
 				markings,
 				mark=at position 0.5 with {
 					\arrow{Stealth[length=6pt, width=6pt]};
+				},
+			},
+		/tikz/decorate=true,
+		},
+	},
+	mymajorana/.style={
+		/tikz/postaction={
+			/tikz/decoration={
+				markings,
+				mark=at position 0.4 with {
+					\arrow{>[length=6pt, width=6pt]};
+				},
+				mark=at position 0.7 with {
+					\arrow{<[length=6pt, width=6pt]};
 				},
 			},
 		/tikz/decorate=true,
@@ -38,10 +52,10 @@
 		\vertex [left=\lsx of a] (i1) {$d$};
 		\vertex [left=\lsx of d] (i2) {$d$};
 		\vertex [right=\ldx of a] (f1) {$u$};
-		\vertex [above right=\ange and \lene of b] (f2) {\color{red}$e^-$};
-		\vertex [below right=\ange and \lene of b] (f13) {\color{green!60!black}$\bar{\nu}_e$};
-		\vertex [below right=\ange and \lene of c] (f3) {\color{red}$e^-$};
-		\vertex [above right=\ange and \lene of c] (f14) {\color{green!60!black}$\bar{\nu}_e$};
+		\vertex [right=\lene of b] (f2) {\color{red}$e^-$};
+		%\vertex [below right=\ange and \lene of b] (f13) {$\bar{\nu}_e$};
+		\vertex [right=\lene of c] (f3) {\color{red}$e^-$};
+		%\vertex [above right=\ange and \lene of c] (f14) {$\bar{\nu}_e$};
 		\vertex [right=\ldx of d] (f4) {$u$};
 		% spactator quarks
 		\vertex [right=\ldx of e] (f5) {$d$};
@@ -56,8 +70,9 @@
 		\diagram* {
 			(a) -- [boson, blue, edge label'=$W^-$] (b),
 			(c) -- [boson, blue, edge label'=$W^-$] (d),
-			(f13) -- [myfermion, green!60!black] (b),
-			(f14) -- [myfermion, green!60!black] (c),
+			(b) -- [mymajorana, green!60!black] (c),
+			%(f13) -- [myfermion, green!60!black] (b),
+			%(f14) -- [myfermion, green!60!black] (c),
 			(i1) -- [myfermion] (a),
 			(i2) -- [myfermion] (d),
 			(a) -- [myfermion,] (f1),

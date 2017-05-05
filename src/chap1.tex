@@ -4,16 +4,19 @@
 The two-neutrino double-beta decay ($2\nbb$) processes, first suggested by M.~Goeppert-Mayer in 1935 \cite{PhysRev.48.512}, can be schematically defined as:
 \begin{equation*}
 	\begin{split}
-		\mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z+2)+2e^-+2\bar{\nu}_e \qquad [2\nu\beta^-\beta^-] \\
-		\mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z-2)+2e^++2\nu_e \qquad [2\nu\beta^+\beta^+]\\
+		& \mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z+2)+2e^-+2\bar{\nu}_e \qquad [2\nu\beta^-\beta^-] \\
+		& \mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z-2)+2e^++2\nu_e \qquad [2\nu\beta^+\beta^+]\\
 	\end{split}
 \end{equation*}
 where $\mathcal{N}(A,Z)$ represents a nucleus with mass number $A$ and atomic number $Z$. A $2\nu\beta^-\beta^-$ ($2\nu\beta^+\beta^+$) process consists of the simultaneous $\beta^-$ ($\beta^+$) decay of two neutrons (protons) in the same nucleus. The processes are generated at second-order in the perturbative expansion of weak interactions in the Standard Model.
 \begin{figure}
-	\centering
-	\includestandalone{img/2nbbfey}
-	\caption{Feynman graph for the two-neutrino double-beta decay.}
-	\label{fig:2nbbfey}
+	\centering%
+	\makebox[\textwidth]{%
+		\includestandalone[width=0.5\textwidth]{img/2nbbfey}%
+		\includestandalone[width=0.5\textwidth]{img/0nbbfey}%
+	}%
+	\caption{Feynman graphs for two-neutrino and neutinoless double-beta decay.}
+	\label{fig:nbbfey}
 \end{figure}
 
 Since the $2\nbb$ decays have a four-body leptonic final state, the sum of the kinetic energies of the two decay electrons have a continuous spectrum from zero to the Q-value of the decay process (the recoil energy of the final nucleus is negligible), which is given by
@@ -21,10 +24,10 @@ Since the $2\nbb$ decays have a four-body leptonic final state, the sum of the k
 where $M_i$ and $M_f$ are, respectively, the masses of the initial and final nuclei (i.e. the energy levels of their ground states; if the transition occurs into an excited energy level of the final nucleus, $M_f$ must be replaced with the appropriate energy). 
 
 A nucleus $\mathcal{N}(A,Z)$ can decay through a $2\nbb$ process if its ground state has an energy which is larger than the ground-state energy of the nucleus $\mathcal{N}(A,Z\pm2)$ plus twice the electron mass. Moreover, if a nucleus can decay through both the $\beta$ and $2\nbb$ processes, in practice the $2\nbb$ decay process is not observable, because its $\beta$ decay lifetime is much shorter than its $2\nbb$ decay lifetime (the half-life of $2\nbb$ is typically around $10^{19}-10^{24}$ yrs). Therefore, in practice the $2\nbb$ decay of a nucleus is observable only if its $\beta$ decay is energetically forbidden or strongly suppressed because of a large change of spin. The $\beta^-$ decay of a nucleus $\mathcal{N}(A,Z)$ is energetically forbidden if its ground-state energy is lower than the ground-state energy of the nucleus $\mathcal{N}(A,Z+1)$ plus the electron mass ($Q_{\beta^{-}}<0$). Typically, in $2\nu\beta^-\beta^-$ decays the energy levels of the three nuclei $\mathcal{N}(A,Z)$, $\mathcal{N}(A,Z+1)$, and $\mathcal{N}(A,Z+2)$ are of the type depicted in Fig.~\ref{fig:levelsGe76}, where the specific case of the \ce{^{76}Ge}, \ce{^{76}As}, and \ce{^{76}Se} nuclei is considered.
-\begin{figure}[]
-	\centering
+\begin{figure}
+\centering
 	\subfigure
-		{\includegraphics[width=5cm]{img/levelsGe76}}
+		{\includestandalone[width=0.5\textwidth]{img/levelsGe76}}
 	\subfigure
 		{\includegraphics[width=5cm]{img/masspar}}
 	\caption{Schematic illustration of the energy level structure of the $2\nu\beta^-\beta^-$ decay of \ce{^{76}Ge} into \ce{^{76}Se}.}
@@ -66,10 +69,11 @@ with $F_\text{PR}(Z)=2\pi\alpha/Z(\-e^{-2\pi\alpha Z})$.
 	The neutrinoless double-beta decay processes ($0\nbb$) of the types
 \begin{equation*}
 	\begin{split}
-		\mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z+2)+2e^- \qquad [0\nu\beta^-\beta^-] \\
-		\mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z-2)+2e^+ \qquad [0\nu\beta^+\beta^+] \\
+		& \mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z+2)+2e^- \qquad [0\nu\beta^-\beta^-] \\
+		& \mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z-2)+2e^+ \qquad [0\nu\beta^+\beta^+] \\
 	\end{split}
 \end{equation*}
 which have been proposed by W.~H.~Furry in 1939 \cite{PhysRev.56.1184}, are forbidden in the minimal Standard Model, because the conservation of the total lepton number is violated by two units. Considering that today we know, from oscillations experiments, that neutrinos are instead massive particles, there are two ways to characterize them: they could be Dirac (as all the other fundamental particles) or Majorana particles. Being a Majorana particle, as first proposed by E.~Majorana \cite{Majorana1932}, means basically do not distinguish between particle and anti-particle. $0\nbb$ decays, in the standard interpretation, are possible if neutrinos are massive Majorana particles. In this case, a nucleus which can decay through a $2\nbb$ process can also decay through $0\nbb$ process, albeit with a different lifetime. Also the other double-beta decay modes mentioned above have their neutrinoless analog. However, as reviewed in \cite{Rodejohann:2011mu}, should be noted that there are many other well-motivated particle physics scenarios and frameworks that allow for $0\nbb$, treated as negligible contributions in the standard interpretation.
 
-	Considerable experimental efforts are being dedicated to the detection of $0\nbb$, as such experiments represent the only practical way of establishing the nature of neutrino mass and therefore of shedding light on the mechanism of the tiny (but nonzero) neutrino mass generation established by neutrino oscillation experiments
+	Considerable experimental efforts are being dedicated to the detection of $0\nbb$, as such experiments represent the only practical way of establishing the nature of neutrino mass and therefore of shedding light on the mechanism of the tiny (but nonzero) neutrino mass generation established by neutrino oscillation experiments.
+

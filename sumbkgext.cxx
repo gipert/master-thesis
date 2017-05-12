@@ -47,7 +47,7 @@ int main( int argc, char** argv ) {
                   << "    K42\n";
         return 0;
     }
-   
+
     std::string phys, place;
     if      ( std::find(args.begin(), args.end(), "--homLAr"   ) != args.end() ) place = "homLAr";
     else if ( std::find(args.begin(), args.end(), "--homLArAA" ) != args.end() ) place = "homLArAA";
@@ -58,7 +58,7 @@ int main( int argc, char** argv ) {
     else if ( std::find(args.begin(), args.end(), "--minishroud") != args.end() ) place = "minishroud";
     else if ( std::find(args.begin(), args.end(), "--minishroudsurface") != args.end() ) place = "minishroudsurface";
     else { std::cout << "Please pecify place: --homLAr, --homLArAA (above array), --fibers, --contacts, --holder, --cables, --minishroud, --minishroudsurface\n"; return -1; }
-    
+
     if      ( std::find(args.begin(), args.end(), "--K42" ) != args.end() )   phys = "K42";
     else if ( std::find(args.begin(), args.end(), "--K40" ) != args.end() )   phys = "K40";
     else if ( std::find(args.begin(), args.end(), "--Bi212" ) != args.end() ) phys = "Bi212";
@@ -118,7 +118,7 @@ int main( int argc, char** argv ) {
         Ngen = 5E09;
         M = 24563.385; // LAr mass [kg]
     }
-    
+
     else if ( place == "homLArAA" ) {
         Ngen = 1E09;
         M = 267.33869; // LAr mass [kg]
@@ -177,14 +177,14 @@ int main( int argc, char** argv ) {
             TFile file_n(path.c_str(), "READ");
             path = rootpath + "/out/processed/K42_pPlus.root";
             TFile file_p(path.c_str(), "READ");
-        
+
             TH1F *hBEGe_n, *hBEGe_p, *hCOAX_n, *hCOAX_p;
 
             file_n.GetObject("energy_BEGe", hBEGe_n);
             file_n.GetObject("energy_COAX", hCOAX_n);
             file_p.GetObject("energy_BEGe", hBEGe_p);
             file_p.GetObject("energy_COAX", hCOAX_p);
-    
+
             path = rootpath + "/data/sumMaGe_K42nPlus.root";
             TFile outfile_n(path.c_str(), "RECREATE");
             path = rootpath + "/data/sumMaGe_K42pPlus.root";
@@ -211,10 +211,10 @@ int main( int argc, char** argv ) {
 
     // get original spectra
     path = rootpath + "/out/processed/" + phys + place + ".root";
-    TFile infile(path.c_str(), "READ"); 
+    TFile infile(path.c_str(), "READ");
     if (!infile.IsOpen()) { std::cerr << "Zombie infile!\n"; return -1; }
 
-    for ( int i = 0; i < 40; ++i ) { 
+    for ( int i = 0; i < 40; ++i ) {
         hist.push_back(dynamic_cast<TH1F*>(infile.Get(Form("h%i", i))));
         if (hist[i]->IsZombie()) { std::cout << "Zombie h" << std::to_string(i) << "!\n"; return -1; }
     }
@@ -241,7 +241,7 @@ int main( int argc, char** argv ) {
             hist[i]->Write();
         }
     }
- 
+
     histCOAX.Write();
     histBEGe.Write();
 

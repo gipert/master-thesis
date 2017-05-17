@@ -1,5 +1,7 @@
 \RequirePackage{luatex85}
 \documentclass{standalone}
+\usepackage[cmbraces, libertine, varg]{newtxmath}
+\usepackage{ebgaramond}
 \usepackage[version=4]{mhchem}
 \usepackage{tikz}
 \usetikzlibrary{positioning,decorations.markings}
@@ -31,12 +33,12 @@
 	% levels
 	\draw [very thick] (a.mid) -- (b.mid) 
 		node [midway, above] {$0^+$} 
-		node [rectangle, thin, draw, midway, below=0.5cm] {$\ce{^{76}Ge}$};
+		node [rectangle, thin, draw, midway, below=0.5cm] {\ce{^{76}Ge}};
 	\draw [very thick] (c.mid) -- (d.mid) 
 		node [midway, above] {$2^+$} 
-		node [rectangle, thin, draw, midway, below=0.5cm] {$\ce{^{76}As}$};
+		node [rectangle, thin, draw, midway, below=0.5cm] {\ce{^{76}As}};
 	\draw [very thick] (e.mid) -- (f.mid) node [midway, above] {$0^+$} 
-		node [rectangle, thin, draw, midway, below=0.5cm] {$\ce{^{76}Se}$};
+		node [rectangle, thin, draw, midway, below=0.5cm] {\ce{^{76}Se}};
 	\draw [very thick] (g.mid) -- (h.mid) 
 		node [midway, above] {$2^+$};
 	% connections

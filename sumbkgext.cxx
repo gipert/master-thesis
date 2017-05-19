@@ -132,11 +132,15 @@ int main( int argc, char** argv ) {
     else if ( place == "holder" ) {
         Ngen = 1E07;
         M = 0.658988; // holder's mass [kg]
+
+        if ( phys == "Pa234" ) Ngen = 1;
     }
 
     else if ( place == "cables" ) {
         Ngen = 1E07;
         M = 0.0309831; // total cables' mass
+
+        if ( phys == "Pa234" ) Ngen = 1;
     }
 
     else if ( place == "minishroud" ) {

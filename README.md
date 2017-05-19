@@ -22,3 +22,6 @@
 # NOTES #
 
 * clone with `--recursive` to include ProgressBar submodule
+* set GERDACPTDIR env variable to point at the project location
+* just `make fit` if you are only interested in doing the fit with the pre-processed data
+* see `runfit --help`

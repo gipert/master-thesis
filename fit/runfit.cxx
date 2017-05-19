@@ -40,7 +40,7 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
 /////////////////////////////////////////////
 
     auto c_str = [](std::string s) { return s.c_str(); };
@@ -321,16 +321,16 @@ int main( int argc, char** argv ) {
     //BCLog::SetLogLevelScreen(BCLog::detail);
     //model.FindMode(model.GetBestFitParameters());
     //BCLog::SetLogLevelScreen(BCLog::summary);
-
+/*
     std::cout << std::endl;
     double pvalue = GetPValue(model, level);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
-
+*/
     // OUTPUT
     // print results of the analysis into a text file
     model.PrintResults(c_str(path + "Fit2nbbLV_results.txt"));
     // draw all marginalized distributions into a PDF file
-    model.PrintAllMarginalized(c_str(path + "Fit2nbbLV_plots.pdf"));
+    //model.PrintAllMarginalized(c_str(path + "Fit2nbbLV_plots.pdf"));
 
     // print all summary plots
     summary.PrintParameterPlot(c_str(path + "Fit2nbbLV_parameters.pdf"));

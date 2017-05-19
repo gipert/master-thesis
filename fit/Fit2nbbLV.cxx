@@ -16,6 +16,7 @@
 #include "TPad.h"
 #include "TLegend.h"
 #include "TText.h"
+#include "TF1.h"
 
 #include <BAT/BCMath.h>
 #include <BAT/BCLog.h>
@@ -90,9 +91,20 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     // [28] Pa234 on holders
     // [29] K42 in LAr Above Array
     //
+
     // priors
+    TF1 invflat("inverse-flat", "1/x^2"  , 0, 1);
+    TF1 logflat("log-flat"    , "1/x"    , 0, 1);
+    TF1 linear ("linear"      , "(x<=[0])*(-x+[0])+(x>[0])*0" , 0, 1);
+
+    // 2nbb
     this->SetPriorConstantAll();
-    //this->SetPriorGauss(0,217,11);
+    this->SetPrior(0, &invflat);
+    
+    // holders
+    this->SetPriorGauss(14, 4.3E-03, 0.9E-03); // K40
+    linear.SetParameter(0, 0.16E-03);          // Co60
+    this->SetPrior(13, &linear);
 }
 // ---------------------------------------------------------
 double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {

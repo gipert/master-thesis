@@ -15,11 +15,10 @@
                       energy spectra of each detector, starting from MaGe trees (2nbb and 2nbbLV)
 * `sumbb.cxx`       : sum the 40 files into one single file (with 40 histograms) properly scaling 
                       each simulation with live time and mass of the detector. The histograms 
-		      are then ready to be used in the fit (2nbb and 2nbbLV)
+                      are then ready to be used in the fit (2nbb and 2nbbLV)
 * `sumbkgext.cxx`   : dedicated to external sources of background, scales the histograms for each
                       detector
 
 # NOTES #
 
 * clone with `--recursive` to include ProgressBar submodule
-* use Arch only to perform the fit!

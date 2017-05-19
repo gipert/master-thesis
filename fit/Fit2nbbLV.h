@@ -13,23 +13,23 @@
 #include <string>
 
 class Fit2nbbLV : public BCModel {
- 
+
     public:
-    
+
     // delete dangerous constructors
     Fit2nbbLV()                            = delete;
     Fit2nbbLV           (Fit2nbbLV const&) = delete;
-    Fit2nbbLV& operator=(Fit2nbbLV const&) = delete; 
+    Fit2nbbLV& operator=(Fit2nbbLV const&) = delete;
     // use default destructor
-	~Fit2nbbLV()                           = default;
+    ~Fit2nbbLV()                           = default;
 
     // custom constructor
-	Fit2nbbLV(std::string name = "Fit2nbbLV");
+    Fit2nbbLV(std::string name = "Fit2nbbLV");
 
-	// methods from BCModel to be overloaded
-	double LogLikelihood(const std::vector<double>& parameters);
-	//double LogAPrioriProbability(const std::vector<double> & parameters);
-    
+    // methods from BCModel to be overloaded
+    double LogLikelihood(const std::vector<double>& parameters);
+    //double LogAPrioriProbability(const std::vector<double> & parameters);
+
     // GET
     // binning
     std::vector<double> GetBinning() const { return dbin; }
@@ -44,7 +44,7 @@ class Fit2nbbLV : public BCModel {
     // misc
     double Getn2n1() const { return n2n1; }
     double GetBrRatioTl() const { return BrTl; }
-   
+
     // SET
     // initialize ubin vector
     void SetBinning(std::vector<double>& v);
@@ -52,7 +52,7 @@ class Fit2nbbLV : public BCModel {
     void SetFitRange(double down, double up);
     // initialize dataBEGe vector
     void SetDataBEGe(std::vector<int>& v) { dataBEGe = v; }
-    // initialize dataCOAX vector 
+    // initialize dataCOAX vector
     void SetDataCOAX(std::vector<int>& v) { dataCOAX = v; }
     // initialize simBEGe vector
     void SetSimBEGe(std::vector<std::vector<double>>& v) { simBEGe = v; }
@@ -63,7 +63,7 @@ class Fit2nbbLV : public BCModel {
     void WriteHistosOnFile(std::string filename);
 
     private:
-    
+
     // new custom data containers (variable binning)
     // WARNING: integer values
     // lower bin bounds, size = nbins+1
@@ -97,10 +97,10 @@ class Fit2nbbLV : public BCModel {
     // [11] Ac228holder <----- 
     // [12] Co60holder
     // [13] K40holder
-    // [14] Bi212holder 
-    // [15] Tl208holder 
-    // [16] Pb214holder 
-    // [17] Bi214holder 
+    // [14] Bi212holder
+    // [15] Tl208holder
+    // [16] Pb214holder
+    // [17] Bi214holder
     // [18] K40cables  <-----
     // [19] Bi212cables
     // [20] Tl208cables

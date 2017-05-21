@@ -112,7 +112,7 @@ int main( int argc, char** argv ) {
         }
     }
 
-    long int Ngen;
+    double Ngen;
     double M;
     if ( place == "homLAr" ) {
         Ngen = 5E09;
@@ -134,6 +134,8 @@ int main( int argc, char** argv ) {
         M = 0.658988; // holder's mass [kg]
 
         if ( phys == "Pa234" ) Ngen = 1;
+        if ( phys == "Bi214" ) Ngen = 1.2381915E06;
+        if ( phys == "Pb214" ) Ngen = 577063.5;
     }
 
     else if ( place == "cables" ) {
@@ -141,6 +143,7 @@ int main( int argc, char** argv ) {
         M = 0.0309831; // total cables' mass
 
         if ( phys == "Pa234" ) Ngen = 1;
+        if ( phys == "Bi214" or phys == "Pb214" ) Ngen = 309831.6;
     }
 
     else if ( place == "minishroud" ) {

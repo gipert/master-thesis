@@ -134,8 +134,6 @@ int main( int argc, char** argv ) {
         M = 0.658988; // holder's mass [kg]
 
         if ( phys == "Pa234" ) Ngen = 1;
-        if ( phys == "Bi214" ) Ngen = 1.2381915E06;
-        if ( phys == "Pb214" ) Ngen = 577063.5;
     }
 
     else if ( place == "cables" ) {
@@ -149,6 +147,9 @@ int main( int argc, char** argv ) {
     else if ( place == "minishroud" ) {
         Ngen = 1E08;
         M = 0.09251623; // total mini shroud's mass
+
+        if ( phys == "Bi214" ) Ngen = 1.2381915E06;
+        if ( phys == "Pb214" ) Ngen = 577063.5;
     }
 
     else if ( place == "minishroudsurface" ) { // NOTE: fake

@@ -1,75 +1,20 @@
-\chapter{A Bayesian approach}
-The gist of Bayesian statistics is not difficult to grasp. At its base is the intuitive idea that probability quantifies the `degree of belief' in an event. The probability of an event changes if other events are assumed to be `true', provided these other events are `stochastically dependent' on that event. This is the essence of Bayes' theorem. As a consequence, Bayesian statistics allows the probability of a hypothesis to be continually updated on the basis of new observation (events) that depend on that hypothesis. 
+%! TEX root = ../main.tex
+\chapter{The {\gerda} dataset and Monte Carlo simulations}
+% {{{ THE GERDA DATA STRUCTURE
+\marginnote{the\\{\gerda}\\data\\structure} The binary raw data format is defined by the different data acquisition systems. In order to optimize the analysis streaming and to provide a unique input interface for the analysis, all raw data are converted to a common standardized format. MGDO \cite{MGDO} (\textsc{Majorana} {\gerda} Data Objects) is a software library jointly developed by {\gerda} and \textsc{Majorana} \cite{majoranadem}. The core function of this software is to provide a collection of \texttt{C++} objects to encapsulate HPGe detector array event data and related analytical quantities. It also includes implementations of a number of general-purpose signal processing algorithms to support advanced detector signal analysis. The custom data objects available in the MGDO package are used as reference format to store events, waveforms, and other DAQ data (time stamps, flags). The MGDO data objects are stored as ROOT \cite{ROOT} files. The set of ROOT files produced by the conversion of raw data is named \textsc{Tier1}, and is officially distributed for the analysis.
 
-% {{{ MODELING
-\marginnote{\textsc{modeling}} The theory or model can be used to provide `direct probabilities'; i.e., relative frequencies of possible outcomes of the results were one to reproduce the experiment many times under identical conditions. The function $g(\vec{y}|\vec{\lambda},M)$ gives the relative frequency of getting results $\vec{y}$ assuming the model $M$ and parameters $\vec{\lambda}$. It should satisfy:
-\[\int g(\vec{y}|\vec{\lambda},M)\text{d}\vec{y}=1 \quad\text{and}\quad g(\vec{y}|\vec{\lambda},M)>0\]
-if continuous values are measured (in the discrete situation the integral gets replaced by a sum over all the possible outcomes). In the following, we will write formulae for the continuous case; the modification for the discrete case will be clear.
+Since the information contained in the \textsc{Tier1} set and in the raw data is expected to be equal, the conversion procedure is the optimal place where blinding can be applied. Events with an energy close to $Q_{\beta\beta}$ are not exported to \textsc{Tier1} but they remain saved in the backup of the raw data.
 
-The prediction from the model cannot usually be directly compared to experimental results, the modeling of the experiment will usually add extra parameters and assumptions. We will use the symbol $\vec{\nu}$ to represent these additional nuisance parameters, which could also be limited by additional information not included explicitly in the model. In the following we will implicitly assume that all available information is used in the probability distributions. We would then have $f(\vec{x}|\vec{\lambda},\vec{\nu},M)$ for the frequency distribution of observable quantities $\vec{x}$.
+The software framework \textsc{Gelatio} \cite{GELATIO} contains nearly independent and customizable modules that are applied to the input \textsc{Tier1} waveforms. The results (pulse amplitude, rise time, average baseline, energy, etc.) are stored as a new ROOT file (\textsc{Tier2}). A description of the analysis modules is presented in Ref.~\cite{dataproc}. Higher level \textsc{Tier}\emph{i} files can be created that contain additional parameters evaluated from more advanced analysis (e.g.~calibrated energy spectra). The information of the same event stored in different \textsc{Tier}\emph{i} files can be accessed by means of the ROOT friendship mechanism. In principle only the \textsc{Tier1} is official and everyone should produce his own \textsc{Tier2} files depending on the actual needs. However there exist a `reference' \textsc{Tier2} produced with a standard set of \textsc{Gelatio} modules with a reasonable choice of parameters (e.g.~the width of the gaussian filter responsible for the reconstruction of the energy of an event). The same procedure applies to every \textsc{Tier}\emph{i} file.
 
-In general, the judgement on the validity on a model and the extraction of values of the parameters within the model will be based on a comparison of the data $\vec{D}$ with $f(\vec{x}|\vec{\lambda},\vec{\nu},M)$.
-
-% }}}
-% {{{ THE LEARNING RULE
-\marginnote{\textsc{the\\learning\\rule}} The probability of a model M will be quantified as $P(M)\in[0,1]$, while the probability density of the parameters are typically continuous functions. The parameters from the modeling of the experimental conditions are not correlated to the parameters of the physical model so that
-\[P(\vec{\lambda},\vec{\nu}|M)=P(\vec{\lambda}|M)P(\vec{\nu})\;.\]
-In the Bayesian approach the quantities $P(M)$ and $P(\vec{\lambda}|M)$ are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains out knowledge about nature and has to \emph{updated} by comparing data with the predictions of the model.
-
-The procedure for learning from experiment is, according to the Bayes theorem:
-\[P_{i+1}(\vec{\lambda},\vec{\nu},M|\vec{D})=\frac{f(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}{\sum_M\int f(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}\;,\]
-where the index on $P$ represents the state-of-knowledge that gets updated from $i$ to $i+1$. The normalization factor derives from the normalization requirements on $P$ and we can also write it as $P(\vec{D})$, the probability to get the data $\vec{D}$.
-
-For a given model $M$, $f$ is a function of the model parameters, the experimental parameters, and the possible outcomes $\vec{x}$. When $f$ is viewed as a function of $(\vec{\lambda},\vec{\nu})$ for fixed $\vec{x}=\vec{D}$, it is known as the likelihood. If $f$ is normalized, we can write
-\[P(\vec{D}|\vec{\lambda},\vec{\nu},M)=f(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)\;.\]
+Once the relevant quantities have been extracted from raw waveforms they have to be calibrated (e.g.~energy) and quality cuts (e.g.~for unphysical events) have to be applied. The results are stored again as a ROOT file (\textsc{Tier3}). The extraction of parameters related to the entire event (e.g.~the number of channels with a physical signal) is also performed at this level. Finally, high level quality cuts are applied in \textsc{Tier4}, such as pulse shape discrimination, muon-veto and LAr-veto.
 
 % }}}
-% {{{ PARAMETER ESTIMATION
-\marginnote{\textsc{parameter\\estimation}} Parameter estimation is performed while keeping the model fixed. It this case we write
-\begin{equation}P(\vec{\lambda},\vec{\nu}|\vec{D},M)=\frac{P(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}|M)}{\int P(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}|M)}\;,\label{eq:posterior}\end{equation}
-The output of the evaluation is a normalized probability density for the parameters, including all correlations, and hence it can be used to give best-fit values, probability intervals for the parameters, etc.
+% {{{ QUALITY CUTS
+\marginnote{quality\\cuts} There is a set of classes of events that originates from errors in the acquisition process, limitations of the hardware (e.g.~the FADC) or failures in the reconstruction flow (\textsc{Gelatio}) and has to be excluded from the analysis. There are events not related to an energy deposition, and thus consisting of a flat signal (an energy deposition in one detector triggers the sampling of the pulses from each of the 40 detectors, so it is very common to find pure-baseline signals in data), waveforms which amplitude exceeds the FADC's energy threshold (overshoot events), pile-up events, and all other unphysical events.
 
-When working with the posterior probability density function (or \emph{pdf}) \ref{eq:posterior}, it is often the case that one is interested not in the full \emph{pdf}, but in the probability distribution for only one, or a few, parameters. These distributions are determined via marginalization. For example, the probability distribution for parameter $\lambda_i$ is:
-\[P(\lambda_i|\vec{D},M)=\int P(\vec{\lambda},\vec{\nu}|\vec{D},M)\text{d}\vec{\lambda}_{i\neq j}\text{d}\vec{\nu}\;.\]
-Note that the parameter values which maximize the full posterior \emph{pdf} usually do not coincide with the values which maximize the marginalized distributions.
-
-We will mainly interested in estimating the mode of $\lambda_i$, i.e.~the value of $\lambda_i$ which maximizes the marginalized posterior \emph{pdf}
-\[\text{argmax}\left[ P(\lambda_i|\vec{D},M) \right]\]
-and confidence intervals such that a certain fraction $\alpha$ of the total area is contained in it:
-\[\alpha=\int^{\lambda_\text{upper}}_{\lambda_\text{lower}}P(\lambda_i|\vec{D},M)\text{d}\lambda_i\;,\]
-where the desired interval is $[\lambda_\text{lower},\lambda_\text{upper}]$.
+The main purpose for acquiring pulses from all the detectors when an energy deposition occurs anywhere is to provide the ability to detect multi-detector events. {\color{red}Si ma perchè li togliamo?} Events that left a trace also in the water tank and/or in the upper scintillating panels and thus flagged by the muon-veto system are also discarded.
 
 % }}}
-% {{{ MODEL VALIDITY
-\marginnote{\textsc{model\\validity}} Model testing in a strictly Bayesian approach is problematic since there is often no way to define all possible models, and the results depend critically on the choice of priors. However, having a number representing how well the model fits the available data is important. Here we consider a p-value that gives a goodness-of-fit criterion based on the likelihood of the data in the model under consideration using the parameters defined at the mode of the posterior. We define the following function:
-\[\hat{f}(\vec{x})=P(\vec{x}|\hat{\vec{\lambda}},\hat{\vec{\nu}},M)\;,\]
-where $(\hat{\vec{\lambda}},\hat{\vec{\nu}})$ is the set of parameters at the mode of the full \emph{pdf}. We then define the p-value as
-\[p=\frac{\int_{\hat{f}(\vec{x})<\hat{f}(\vec{D})}\hat{f}(\vec{x})\text{d}\vec{x}}{\int \hat{f}(\vec{x})\text{d}\vec{x}}\;.\]
-$p$ is the tail area probability to have found a result with $\hat{f}(\vec{x})<\hat{f}(\vec{D})$, assuming that the model $M$ is valid and all experimental effects are perfectly known. It is the probability that the likelihood could have been lower than the observed in the data, so it the model does not give a good representation of the data, then $p$ will be a small number. If the modeling is correct, $p$ will have a flat probability distribution in $[0,1]$, but it should be clear that incorrect formulations of the data fluctuations will bias the p-value distribution to lower (if the data fluctuations are underestimated) or higher (if the data fluctuations are overestimated) values. Also, if the existing data are used to modify the parameter values, the extracted p-value will be biased to higher values.
-
-One should also keep in mind that p-values cannot be turned into probabilistic statements about the model being correct without priors, and should therefore be handled with care. General guidelines suggest that one should check if the p-value distribution is reasonably flat, keeping in mind that sharply falling distributions starting at $p=0$ are usually originated by a bad model. Moreover, small p-values are worrisome, they indicate that a poor model might has been picked. For further discussions on the topic see, for example, \cite{p-value}.
-
-% }}}
-% {{{ COMPUTATIONAL ASPECTS
-\marginnote{\textsc{computational\\aspects}} There are several ways to calculate the posterior in \ref{eq:posterior} and the marginalized \emph{pdf}s, and even with few parameters $(\vec{\lambda},\vec{\nu})$ the computation can easily become highly time consuming. However, the application of Markov Chain Monte Carlo (MCMC) methods in this field has revolutionized Bayesian computation. The BAT package \cite{BAT} implements several tools to perform a Bayesia data analysis.
-
-Markov chains are sequences of random numbers (or, in general, vectors of numbers), $X_t$, which follow a well-defined limiting distribution, $\pi(x)$. The fundamental property of a Markov chain is that the probability distribution for the next element in the sequence, $X_{t+1}$, depends only on the current state, and not on any previous history. A Markov chain is completely defined by the one-step probability transition matrix, $P(X_{t+1}|X_t)$. Under certain conditions (recurrence, irreducibility, aperiodicity), it can be proven that the chain is ergodic; i.e., that the limiting probability to be in a given state does not depend on the starting point of the chain. An MCMC is an algorithm producing an ergodic Markov chain which stationary distribution is the distribution of interest. In our case, the BAT package produces a Markov chain where the stationary distribution is the desired posterior \emph{pdf}.
-
-A very popular algorithm that achieves this is the Metropolis-Hastings algorithm \cite{Metropolis,Hastings}. The algorithm works as follows:
-\begin{enumerate}
-	\item Given the system in a starting state $X_t=\vec{x}$, a new proposed state $\vec{y}$ is generated according to a symmetric proposal function $g(\vec{y},\vec{x})$ (in our application a state is a set of parameter values);
-	\item The Hastings test ratio
-		\[r=\text{min}\left[1,\frac{\pi(\vec{y})}{\pi(\vec{x})}\right]\]
-		is calculated, and then the generated state $\vec{y}$ is accepted or rejected with probability r, i.e.:
-		\begin{enumerate}
-			\item Generate a random number $u$ from a uniform distribution between $0$ and $1$, $\text{Unif}[0,1]$;
-			\item If $u<r$ set $X_{t+1}=\vec{y}$, else take $X_{t+1}=\vec{x}$.
-		\end{enumerate}
-\end{enumerate}
-It is possible to show that, given a reasonable proposal function $g$, this algorithm satisfies the conditions of an MCMC, and that the limiting distribution is $\pi(\vec{x})$. Thus this allows for the production of states distributed according to the desired distribution.
-
-% }}}
-% {{{ IMPLEMENTATION
-\marginnote{\textsc{implementation}} The BAT software is \texttt{c++} based code interfaced to software packages such as ROOT \cite{ROOT}, \textsc{Minuit} \cite{MINUIT}, or the CUBA library \cite{CUBA}. Several Markov chains can optionally be run in parallel thanks to the OpenMP \cite{openmp} support. For further details about the statistical theory and implementation aspects, as well as applications to real problems, underlying the BAT package see \cite{BAT}, for a detailed description of the class structure and the methods the official documentation is available at \texttt{http://www.mppmu.mpg.de/bat/}.
-
-% }}}
+% {{{ THE ENERGY SPECTRA
+\marginnote{the\\energy\\spectra} With the cuts described above, the summed energy spectra from BEGe, enriched coaxial and natural coaxial detectors are presented in Fig.~TODO. Some prominent features can be identified. The low energy part up to 565 keV is dominated by $\beta^-$ decay of cosmogenic \ce{^{39}Ar} in all spectra. Slight differences in the spectral shape between the coaxial and BEGe type detectors result from differences in detector geometry and of the n$^+$ dead layer thickness. Between 600 and 1500 keV the spectra of the enriched detectors exhibit an enhanced continuous spectrum due to $2\nbb$ decay (see also Fig.~\ref{fig:energyspectra}). In all spectra, $\gamma$ lines from the decays of \ce{^{40}K} and \ce{^{42}K} can be identified, the spectra of the enriched coaxial detectors contain also lines from \ce{^{60}Co}, \ce{^{208}Tl}, \ce{^{214}Bi}, \ce{^{214}Pb} and \ce{^{228}Ac}. A peak-like structure appears around 5.3 MeV in the spectrum of the enriched coaxial detectors. This can be attributed to the decay of \ce{^{210}Po} on the detector p$^+$ surfaces. Further peak like structures at energies of 4.7, 5.4 and 5.9 MeV can be attributed to the $\alpha$ decays on the detector p$^+$ surface of \ce{^{226}Ra}, \ce{^{222}Rn} and \ce{^{218}Po}, respectively. 

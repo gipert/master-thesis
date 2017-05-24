@@ -1,0 +1,28 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\usetikzlibrary{pgfplots.groupplots}
+\usepackage{ebgaramond}
+\usepackage[libertine]{newtxmath}
+\begin{document}
+\begin{tikzpicture}
+	\begin{groupplot}[	group style = { group size = 1 by 3,
+										xlabels at = edge bottom,
+										xticklabels at = edge bottom,
+										vertical sep = 0pt
+										},
+						width = 20cm,
+						height = 5cm,
+						xlabel = keV,
+						ylabel style = {rotate = -90},
+						xmin = 0, xmax = 7500,
+						ymin = 0, ymax = 2300
+						]
+		\nextgroupplot[ymode = log]
+			\addplot[const plot, draw = red] file {../data/BEGe.dat};
+		\nextgroupplot[ymode = log]
+			\addplot[const plot, draw = blue] file {../data/EnrCoax.dat};
+		\nextgroupplot[ymode = log]
+			\addplot[const plot, draw = black] file {../data/NatCoax.dat};
+	\end{groupplot}
+\end{tikzpicture}
+\end{document}

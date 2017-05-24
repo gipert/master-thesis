@@ -9,6 +9,7 @@
 	%\usepackage[binding=5mm]{layaureo}
 	%\usepackage[marginparwidth=2cm]{geometry}
 	\usepackage{marginnote}
+	\renewcommand*{\marginfont}{\scshape}
 	\pagestyle{plain}
 	%\usepackage{syntonly}
 	%\syntaxonly
@@ -32,10 +33,10 @@
 	\renewcommand{\mathbf}{\bm}
 	\usepackage{ebgaramond}
 	\usepackage{microtype}
-	\usepackage{titlesec}
-		\titleformat*{\section}{\Large\swshape}
-		\titleformat*{\subsection}{\large\scshape}
-		\titleformat*{\subsubsection}{\scshape}
+%	\usepackage{titlesec}
+%		\titleformat*{\section}{\Large\swshape}
+%		\titleformat*{\subsection}{\large\scshape}
+%		\titleformat*{\subsubsection}{\scshape}
 	\usepackage{fontspec}
 	\setmonofont[Scale=MatchLowercase]{Inconsolata}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -100,6 +101,7 @@
 %\include{src/chap1}
 %\include{src/chap2}
 \include{src/chap3}
+%\include{src/chap4}
 \bibliographystyle{unsrt}
 \bibliography{bib-thesis}
 \end{document}

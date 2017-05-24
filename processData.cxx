@@ -19,7 +19,7 @@
 #include "DataReader.h"
 
 int main( int argc, char** argv ) {
-    
+
     // copy arguments
     std::vector<std::string> args(argc);
     for ( int i = 0; i < argc; ++i ) args[i] = argv[i];
@@ -45,7 +45,7 @@ int main( int argc, char** argv ) {
         std::cerr << "Please provide a valid .root output filename.\n";
         return -1;
     }
-*/    
+*/
     std::string filename = std::string(std::getenv("GERDACPTDIR")) + "/data/sumData.root";
 
     std::string opt = "gauss";
@@ -54,7 +54,7 @@ int main( int argc, char** argv ) {
         opt = "zac";
         std::cout << "Using ZAC filter results...\n";
     }
- 
+
  // ----------------------------------------------------------------------------------------------------
     // main reader object
     bool verbose = false;
@@ -67,7 +67,7 @@ int main( int argc, char** argv ) {
     filename.erase(filename.end()-4,filename.end());
     filename += "dat";
     std::ofstream textFile(filename.c_str());
-    
+
     // retrieve energy spectrum
     std::vector<TH1D> energy;
     reader.CreateEnergyHist(opt);
@@ -75,6 +75,7 @@ int main( int argc, char** argv ) {
 
     TH1D energyBEGe("energyBEGeAll", "energyBEGeAll", 7500, 0, 7500);
     auto energyEnrCoax = reader.GetEnergyHistEnrCoax();
+    auto energyNatCoax = reader.GetEnergyHistNatCoax();
 
     for ( int i = 0; i < 40; ++i ) {
         // NOTE: excluding GTFs and GD02D
@@ -85,16 +86,17 @@ int main( int argc, char** argv ) {
         }
         if ( set.GetDetectorTypes()[i] == 2 ) energy[i].Write();
     }
-   
+
     // write on disk
     energyBEGe.Write();
     energyEnrCoax->Write();
-    
+    energyNatCoax->Write();
+
     // retrieve time for each run [s]
     auto timeMap = reader.GetTimeMap();
     // write on disk
     for ( const auto& i : timeMap ) textFile << i.first << '\t' << i.second << '\n';
-    
+
     textFile.close();
 
     return 0;

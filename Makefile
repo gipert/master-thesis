@@ -52,6 +52,8 @@ bin/sumbkgext : sumbkgext.cxx lib/libDataReader.so lib/libDetectorSet.so
 
 bin/runfit : fit/runfit.cxx fit/pvalue.cxx lib/libFit2nbbLV.so lib/libProgressBar.so
 	$(CC) $(CFLAGS) -o $@ $< fit/pvalue.cxx $(ROOTLIBS) $(shell bat-config --libs) -lFit2nbbLV -lProgressBar
+bin/exposure : misc/exposure.cxx lib/libDataReader.so lib/libDetectorSet.so
+	$(CC) $(CFLAGS) -o $@ $< -lDataReader -lDetectorSet
 # ------------------------------------------------------------------------
 
 rundata : 

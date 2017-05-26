@@ -17,9 +17,9 @@ int main() {
         if ( set.GetDetectorTypes()[i] == 3 ) NatCoaxMass += set.GetMass()[i];
     }
 
-    std::cout << "The total mass of the BEGe detectors is: "    << BEGeMass << '\n';
-    std::cout << "The total mass of the EnrCoax detectors is: " << EnrCoaxMass << '\n';
-    std::cout << "The total mass of the NatCoax detectors is: " << NatCoaxMass << '\n';
+    std::cout << "The total mass of the BEGe detectors is: "    << BEGeMass/1E03 << '\n';
+    std::cout << "The total mass of the EnrCoax detectors is: " << EnrCoaxMass/1E03 << '\n';
+    std::cout << "The total mass of the NatCoax detectors is: " << NatCoaxMass/1E03 << '\n';
 
     GERDA::DataReader reader( rootpath + "/misc/paths.txt", false, "GELATIO");
 
@@ -44,9 +44,9 @@ int main() {
 
     double BEGeExp = 0, EnrCoaxExp = 0, NatCoaxExp = 0;
     for ( int i = 0; i < 40; i++ ) {
-        if ( set.GetDetectorTypes()[i] == 1 ) BEGeExp    += (set.GetMass()[i]/10E3)*(totalTime[i]/31536000);
-        if ( set.GetDetectorTypes()[i] == 2 ) EnrCoaxExp += (set.GetMass()[i]/10E3)*(totalTime[i]/31536000);
-        if ( set.GetDetectorTypes()[i] == 3 ) NatCoaxExp += (set.GetMass()[i]/10E3)*(totalTime[i]/31536000);
+        if ( set.GetDetectorTypes()[i] == 1 ) BEGeExp    += (set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
+        if ( set.GetDetectorTypes()[i] == 2 ) EnrCoaxExp += (set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
+        if ( set.GetDetectorTypes()[i] == 3 ) NatCoaxExp += (set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
     }
 
     std::cout << "The total exposure of the BEGe detectors is: "    << BEGeExp << '\n';

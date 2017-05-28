@@ -10,6 +10,9 @@
 	%\usepackage[marginparwidth=2cm]{geometry}
 	\usepackage{marginnote}
 	\renewcommand*{\marginfont}{\scshape}
+	\usepackage{indentfirst}
+	%\setlength{\parindent}{10pt}
+	%\usepackage[parfill]{parskip}
 	\pagestyle{plain}
 	%\usepackage{syntonly}
 	%\syntaxonly
@@ -28,7 +31,7 @@
 	\usepackage[T1]{fontenc}
 	%\usepackage{lmodern}
 	\usepackage[lining]{libertine}
-	\usepackage[cmbraces, libertine, varg, smallerops]{newtxmath}
+	\usepackage[cmbraces, libertine, varg]{newtxmath}
 	\usepackage{bm}
 	\renewcommand{\mathbf}{\bm}
 	\usepackage{ebgaramond}
@@ -40,8 +43,6 @@
 	\usepackage{fontspec}
 	\setmonofont[Scale=MatchLowercase]{Inconsolata}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\usepackage{indentfirst}
-	%\usepackage[parfill]{parskip}
 	\usepackage{booktabs}
 	\usepackage[labelfont=bf]{caption}
 	\usepackage{multirow}
@@ -63,6 +64,7 @@
 	%        stringstyle=\color{orange}
 	%        }
 	\usepackage{multicol}
+	\usepackage{pdflscape}
 \begin{document}
 \begin{titlepage}
 	\thispagestyle{empty}
@@ -100,8 +102,8 @@
 %\include{src/intro}
 %\include{src/chap1}
 %\include{src/chap2}
-\include{src/chap3}
-%\include{src/chap4}
+%\include{src/chap3}
+\include{src/chap4}
 \bibliographystyle{unsrt}
 \bibliography{bib-thesis}
 \end{document}

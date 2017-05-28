@@ -3,7 +3,7 @@
 % {{{ THE GERDA DATA STRUCTURE
 \marginnote{the\\{\gerda}\\data\\structure} The binary raw data format is defined by the different data acquisition systems. In order to optimize the analysis streaming and to provide a unique input interface for the analysis, all raw data are converted to a common standardized format. MGDO \cite{MGDO} (\textsc{Majorana} {\gerda} Data Objects) is a software library jointly developed by {\gerda} and \textsc{Majorana} \cite{majoranadem}. The core function of this software is to provide a collection of \texttt{C++} objects to encapsulate HPGe detector array event data and related analytical quantities. It also includes implementations of a number of general-purpose signal processing algorithms to support advanced detector signal analysis. The custom data objects available in the MGDO package are used as reference format to store events, waveforms, and other DAQ data (time stamps, flags). The MGDO data objects are stored as ROOT \cite{ROOT} files. The set of ROOT files produced by the conversion of raw data is named \textsc{Tier1}, and is officially distributed for the analysis.
 
-Since the information contained in the \textsc{Tier1} set and in the raw data is expected to be equal, the conversion procedure is the optimal place where blinding can be applied. Events with an energy close to $Q_{\beta\beta}$ are not exported to \textsc{Tier1} but they remain saved in the backup of the raw data.
+Since the information contained in the \textsc{Tier1} set and in the raw data is expected to be equal, the conversion procedure is the optimal place where blinding can be applied. Events with an energy within $\pm$25 keV around $Q_{\beta\beta}$ are not exported to \textsc{Tier1} but they remain saved in the backup of the raw data.
 
 The software framework \textsc{Gelatio} \cite{GELATIO} contains nearly independent and customizable modules that are applied to the input \textsc{Tier1} waveforms. The results (pulse amplitude, rise time, average baseline, energy, etc.) are stored as a new ROOT file (\textsc{Tier2}). A description of the analysis modules is presented in Ref.~\cite{dataproc}. Higher level \textsc{Tier}\emph{i} files can be created that contain additional parameters evaluated from more advanced analysis (e.g.~calibrated energy spectra). The information of the same event stored in different \textsc{Tier}\emph{i} files can be accessed by means of the ROOT friendship mechanism. In principle only the \textsc{Tier1} is official and everyone should produce his own \textsc{Tier2} files depending on the actual needs. However there exist a `reference' \textsc{Tier2} produced with a standard set of \textsc{Gelatio} modules with a reasonable choice of parameters (e.g.~the width of the gaussian filter responsible for the reconstruction of the energy of an event). The same procedure applies to every \textsc{Tier}\emph{i} file.
 
@@ -13,8 +13,61 @@ Once the relevant quantities have been extracted from raw waveforms they have to
 % {{{ QUALITY CUTS
 \marginnote{quality\\cuts} There is a set of classes of events that originates from errors in the acquisition process, limitations of the hardware (e.g.~the FADC) or failures in the reconstruction flow (\textsc{Gelatio}) and has to be excluded from the analysis. There are events not related to an energy deposition, and thus consisting of a flat signal (an energy deposition in one detector triggers the sampling of the pulses from each of the 40 detectors, so it is very common to find pure-baseline signals in data), waveforms which amplitude exceeds the FADC's energy threshold (overshoot events), pile-up events, and all other unphysical events.
 
-The main purpose for acquiring pulses from all the detectors when an energy deposition occurs anywhere is to provide the ability to detect multi-detector events. {\color{red}Si ma perchè li togliamo?} Events that left a trace also in the water tank and/or in the upper scintillating panels and thus flagged by the muon-veto system are also discarded.
+The main purpose for acquiring pulses from all the detectors when an energy deposition occurs anywhere is to provide the ability to detect multi-detector events. Such events cannot be associated to double-beta decay electrons, which are absorbed within the detector's volume, and thus can be discarded as a background event. Events that leave a trace also in the water tank and/or in the upper scintillating panels and thus flagged by the muon-veto system are also discarded.
 
 % }}}
 % {{{ THE ENERGY SPECTRA
-\marginnote{the\\energy\\spectra} With the cuts described above, the summed energy spectra from BEGe, enriched coaxial and natural coaxial detectors are presented in Fig.~TODO. Some prominent features can be identified. The low energy part up to 565 keV is dominated by $\beta^-$ decay of cosmogenic \ce{^{39}Ar} in all spectra. Slight differences in the spectral shape between the coaxial and BEGe type detectors result from differences in detector geometry and of the n$^+$ dead layer thickness. Between 600 and 1500 keV the spectra of the enriched detectors exhibit an enhanced continuous spectrum due to $2\nbb$ decay (see also Fig.~\ref{fig:energyspectra}). In all spectra, $\gamma$ lines from the decays of \ce{^{40}K} and \ce{^{42}K} can be identified, the spectra of the enriched coaxial detectors contain also lines from \ce{^{60}Co}, \ce{^{208}Tl}, \ce{^{214}Bi}, \ce{^{214}Pb} and \ce{^{228}Ac}. A peak-like structure appears around 5.3 MeV in the spectrum of the enriched coaxial detectors. This can be attributed to the decay of \ce{^{210}Po} on the detector p$^+$ surfaces. Further peak like structures at energies of 4.7, 5.4 and 5.9 MeV can be attributed to the $\alpha$ decays on the detector p$^+$ surface of \ce{^{226}Ra}, \ce{^{222}Rn} and \ce{^{218}Po}, respectively. 
+\marginnote{the\\energy\\spectra} With the cuts described above, the summed energy spectra from BEGe, enriched coaxial and natural coaxial detectors are presented in Fig.~\ref{fig:data}. The considered data set was taken between December 2015 and March 2017. Some prominent features can be identified. The low energy part up to 565 keV is dominated by $\beta^-$ decay of cosmogenic \ce{^{39}Ar} in all spectra. Slight differences in the spectral shape between the coaxial and BEGe type detectors result from differences in detector geometry and of the n$^+$ dead layer thickness. Between 600 and 1500 keV the spectra of the enriched detectors exhibit an enhanced continuous spectrum due to $2\nbb$ decay (see also Fig.~\ref{fig:energyspectra}). In all spectra, $\gamma$ lines from the decays of \ce{^{40}K} and \ce{^{42}K} can be identified, the spectra of the enriched coaxial detectors contain also lines from \ce{^{208}Tl} and \ce{^{214}Bi}. the structure starting from 3 MeV can be attributed to the $\alpha$ decays on the detector p$^+$ surface.
+
+% }}}
+% {{{ SCREENING MEASUREMENTS
+\marginnote{screening\\measurements} There are some radioactive contaminations in the components of {\gerda}, though not evident in the energy spectra, which have been identified and systematically measured. The most relevant contributions come from the silicon of the holder mounting, the cables, the nylon mini shroud covering the detectors and the fiber shroud. {\color{red}Decidere cosa dire}.
+
+% }}}
+\section*{Monte Carlo simulations}
+Background components that were identified in the energy spectra or that were known to be present in the vicinity of the detectors were simulated using the \textsc{MaGe} \cite{MaGe} code based on \textsc{Geant4} \cite{geant4} and jointly developed by the {\gerda} and \textsc{Majorana} \cite{majoranadem} collaborations. The detectors and the arrangement of the germanium detector array with seven detector strings were implemented into the \textsc{MaGe} code as well as the other {\gerda} components {\color{red}vorrei delle immagini}. During the simulation \textsc{Geant4} generates complete information about the trajectory and interactions of particles as they propagate through the detectors. Although all of this information is available to the user, it is typically processed, parsed and saved to an output file for further analysis after the simulation run is complete. Simulations of contaminations of the following hardware components were performed: on the p$^+$ and n$^+$ surfaces of the detectors, homogeneously distributed in the LAr, in the detector assembly representing contaminations in the detector holders and their components, the mini shroud surrounding the detectors and the fiber shroud.
+% {{{ BACKGROUND INDEX
+\marginnote{background\\index} The Background Index (BI), used to estimate the background activity in the \textsc{RoI}, is defined as the number of counts over mass (detector's active volume {\color{red}?}), time and energy range found inside a energy window defined as follows. The window covers the energy range between 1930 keV and 2190 keV excluding the blinded window around $Q_{\beta\beta}$. Also the two lines from \ce{^{208}Tl} and \ce{^{214}Bi} occurring respectively at 2104 keV and 2119 keV have to be neglected in this computation. This is done removing the energy range within $\pm$5 keV around the peaks. The width of the window is then 190 keV.
+
+% }}}
+% {{{ muons, neutrons, water tank
+The expected background indices due to the neutron and muon fluxes at the LNGS underground laboratory have been estimated to be of the order < $10^{−5}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{neutronsBI} and < $10^{−4}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{muonsBI} respectively, and then are not considered. It has been also shown in earlier works that the contributions of the cryostat and water tank components are of the order < $10^{−4}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{criowaterBI}, and then they have not been considered in this analysis. {\color{red}Come giustifichiamo il fatto che abbiamo scelto queste simulazioni piuttosto che altre? Si può citare qualche altro lavoro?}
+
+% }}}
+% {{{ 2nbb
+\marginnote{$2\nbb$} The spectrum of the two electrons emitted in the $2\nbb$ decay of \ce{^{76}Ge} is sampled according to the distribution of \cite{tables2nbb} that is implemented in the code \textsc{decay0} \cite{decay0}. The $2\nbb$ decay distributions of \cite{tables2nbb} are in principle more precise than those based on the Primakoff-Rosen approximation, and they have been cross-checked against the high-statistics data of the \textsc{Nemo} experiment for several nuclei {\color{red}[ref?]}. Electrons are propagated in the {\gerda} simulated setup by \textsc{MaGe} and the total energy released in the active mass of the enriched detectors is registered.
+
+% }}}
+% {{{ 42Ar
+\marginnote{\textnormal{\ce{^{42}Ar}}} While the distribution of \ce{^{42}Ar} is homogeneous inside LAr, the short lived ionized decay product \ce{^{42}K} ($T_{1/2} = 12.3$ h) can have a significantly different distribution due to drifts of the \ce{^{42}K} ions inside the electric fields that are present near the detectors. Separate spectra for two \ce{^{42}K} distributions have thus been simulated: homogeneous in LAr in a volume of centered around the full detector array, on the n$^+$ and on the p$^+$ detector surface of the detectors. As the spectral shape is not expected to vary strongly between the detectors, the isotope on the n$^+$ and p$^+$ surface was simulated only for a single detector. The simulated spectral shapes are shown in Fig.~{\color{red}???}.
+
+% }}}
+% {{{ 238U
+\marginnote{\textnormal{\ce{^{238}U}}\\chain} \ce{^{214}Bi} and \ce{^{214}Pb} are the only one in the \ce{^{226}Ra} $\rightarrow$ \ce{^{210}Pb} chain decaying by $\beta$ decay accompanied by emission of high energy $\gamma$ particles and they are assumed to be in equilibrium. \ce{^{214}Bi} and \ce{^{214}Pb} were simulated in the holder mounting, in the cables, in the fiber shroud and in the mini shrouds. For the \ce{^{238}U} $\rightarrow$ \ce{^{226}Ra} the \ce{^{234\text{m}}Pa} was simulated. {\color{red}Giustificare}
+
+% }}}
+% {{{ 232Th
+\marginnote{\textnormal{\ce{^{232}Th}}\\chain} The characteristic $\gamma$ line at 2615 keV, a hint of the presence of isotopes from the \ce{^{232}Th} chain, can be clearly identified in the energy spectra shown in Fig.~\ref{fig:data}. Possible locations for contaminations are the detector assembly, the cables, the mini shrouds and the fiber shroud. As \ce{^{228}Ac} and \ce{^{228}Th} do not necessarily have to be in equilibrium, the two parts of the decay chain were simulated separately. From the sub-decay chain following the \ce{^{228}Th} decay only the contributions from the \ce{^{212}Bi} and \ce{^{208}Tl} decays were simulated, as theses are the only ones emitting high energetic $\gamma$ rays and electrons that can reach the detectors.
+
+% }}}
+% {{{ 60Co
+{\color{red}60Co}%\marginnote{\textnormal{\ce{^{60}Co}}}
+
+% }}}
+% {{{ 207Bi
+{\color{red}207Bi}%\marginnote{\textnormal{\ce{^{207}Bi}}}
+
+% }}}
+% {{{ ALPHA MODEL
+{\color{red}Alpha model}%\marginnote{alpha\\model}
+
+% }}}
+{\color{red}Appendice con catene}
+\begin{landscape}
+\begin{figure}
+	\centering
+	\includestandalone{img/data}
+	\caption{The summed energy spectrum (counts in logarithmic scale), showed separately for BEGe, enriched coaxial and natural coaxial detectors, produced using data from {\gerda} phase \textsc{ii}. The isotopes responsible for the relevant lines are reported on the plots together with the exposure. All the counts with energy greater than 3 MeV can be associated to $\alpha$ events on the p$^+$ electrode. The blinding window $\left[Q_{\beta\beta}-25\;\text{keV},Q_{\beta\beta}+25\;\text{keV}\right]$ is also shown in green. A 4 keV binning is adopted.}
+	\label{fig:data}
+\end{figure}
+\end{landscape}

@@ -1,49 +1,51 @@
 %! TEX root = ../main.tex
-\chapter{A Bayesian approach}
+\chapter{Statistical analysis}
+A global model that describes the background spectrum was obtained by fitting the simulated spectra of different contributions to the measured energy spectrum using a Bayesian fit. A detailed description of the statistical method is given in the following.
+\section*{A Bayesian approach}
 The gist of Bayesian statistics is not difficult to grasp. At its base is the intuitive idea that probability quantifies the `degree of belief' in an event. The probability of an event changes if other events are assumed to be `true', provided these other events are `stochastically dependent' on that event. This is the essence of Bayes' theorem. As a consequence, Bayesian statistics allows the probability of a hypothesis to be continually updated on the basis of new observation (events) that depend on that hypothesis. 
 
 % {{{ MODELING
-\marginnote{modeling} The theory or model can be used to provide `direct probabilities'; i.e., relative frequencies of possible outcomes of the results were one to reproduce the experiment many times under identical conditions. The function $g(\vec{y}|\vec{\lambda},M)$ gives the relative frequency of getting results $\vec{y}$ assuming the model $M$ and parameters $\vec{\lambda}$. It should satisfy:
-\[\int g(\vec{y}|\vec{\lambda},M)\text{d}\vec{y}=1 \quad\text{and}\quad g(\vec{y}|\vec{\lambda},M)>0\]
+\marginnote{modeling} The theory or model can be used to provide `direct probabilities'; i.e., relative frequencies of possible outcomes of the results were one to reproduce the experiment many times under identical conditions. The function $g(\vec{y}\mid\vec{\lambda},M)$ gives the relative frequency of getting results $\vec{y}$ assuming the model $M$ and parameters $\vec{\lambda}$. It should satisfy:
+\[\int g(\vec{y}\mid\vec{\lambda},M)\text{d}\vec{y}=1 \quad\text{and}\quad g(\vec{y}\mid\vec{\lambda},M)>0\]
 if continuous values are measured (in the discrete situation the integral gets replaced by a sum over all the possible outcomes). In the following, we will write formulae for the continuous case; the modification for the discrete case will be clear.
 
-The prediction from the model cannot usually be directly compared to experimental results, the modeling of the experiment will usually add extra parameters and assumptions. We will use the symbol $\vec{\nu}$ to represent these additional nuisance parameters, which could also be limited by additional information not included explicitly in the model. In the following we will implicitly assume that all available information is used in the probability distributions. We would then have $f(\vec{x}|\vec{\lambda},\vec{\nu},M)$ for the frequency distribution of observable quantities $\vec{x}$.
+The prediction from the model cannot usually be directly compared to experimental results, the modeling of the experiment will usually add extra parameters and assumptions. We will use the symbol $\vec{\nu}$ to represent these additional nuisance parameters, which could also be limited by additional information not included explicitly in the model. In the following we will implicitly assume that all available information is used in the probability distributions. We would then have $f(\vec{x}\mid\vec{\lambda},\vec{\nu},M)$ for the frequency distribution of observable quantities $\vec{x}$.
 
-In general, the judgement on the validity on a model and the extraction of values of the parameters within the model will be based on a comparison of the data $\vec{D}$ with $f(\vec{x}|\vec{\lambda},\vec{\nu},M)$.
+In general, the judgement on the validity on a model and the extraction of values of the parameters within the model will be based on a comparison of the data $\vec{D}$ with $f(\vec{x}\mid\vec{\lambda},\vec{\nu},M)$.
 
 % }}}
 % {{{ THE LEARNING RULE
 \marginnote{the\\learning\\rule} The probability of a model M will be quantified as $P(M)\in[0,1]$, while the probability density of the parameters are typically continuous functions. The parameters from the modeling of the experimental conditions are not correlated to the parameters of the physical model so that
-\[P(\vec{\lambda},\vec{\nu}|M)=P(\vec{\lambda}|M)P(\vec{\nu})\;.\]
-In the Bayesian approach the quantities $P(M)$ and $P(\vec{\lambda}|M)$ are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains out knowledge about nature and has to \emph{updated} by comparing data with the predictions of the model.
+\[P(\vec{\lambda},\vec{\nu}\mid M)=P(\vec{\lambda}\mid M)P(\vec{\nu})\;.\]
+In the Bayesian approach the quantities $P(M)$ and $P(\vec{\lambda}\mid M)$ are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains out knowledge about nature and has to \emph{updated} by comparing data with the predictions of the model.
 
 The procedure for learning from experiment is, according to the Bayes theorem:
-\[P_{i+1}(\vec{\lambda},\vec{\nu},M|\vec{D})=\frac{f(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}{\sum_M\int f(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}\;,\]
+\[P_{i+1}(\vec{\lambda},\vec{\nu},M\mid\vec{D})=\frac{f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}{\sum_M\int f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}\;,\]
 where the index on $P$ represents the state-of-knowledge that gets updated from $i$ to $i+1$. The normalization factor derives from the normalization requirements on $P$ and we can also write it as $P(\vec{D})$, the probability to get the data $\vec{D}$.
 
 For a given model $M$, $f$ is a function of the model parameters, the experimental parameters, and the possible outcomes $\vec{x}$. When $f$ is viewed as a function of $(\vec{\lambda},\vec{\nu})$ for fixed $\vec{x}=\vec{D}$, it is known as the likelihood. If $f$ is normalized, we can write
-\[P(\vec{D}|\vec{\lambda},\vec{\nu},M)=f(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)\;.\]
+\[P(\vec{D}\mid\vec{\lambda},\vec{\nu},M)=f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)\;.\]
 
 % }}}
 % {{{ PARAMETER ESTIMATION
 \marginnote{parameter\\estimation} Parameter estimation is performed while keeping the model fixed. It this case we write
-\begin{equation}P(\vec{\lambda},\vec{\nu}|\vec{D},M)=\frac{P(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}|M)}{\int P(\vec{x}=\vec{D}|\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}|M)}\;,\label{eq:posterior}\end{equation}
+\begin{equation}P(\vec{\lambda},\vec{\nu}\mid\vec{D},M)=\frac{P(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}\mid M)}{\int P(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}\mid M)}\;,\label{eq:posterior}\end{equation}
 The output of the evaluation is a normalized probability density for the parameters, including all correlations, and hence it can be used to give best-fit values, probability intervals for the parameters, etc.
 
 When working with the posterior probability density function (or \emph{pdf}) \ref{eq:posterior}, it is often the case that one is interested not in the full \emph{pdf}, but in the probability distribution for only one, or a few, parameters. These distributions are determined via marginalization. For example, the probability distribution for parameter $\lambda_i$ is:
-\[P(\lambda_i|\vec{D},M)=\int P(\vec{\lambda},\vec{\nu}|\vec{D},M)\text{d}\vec{\lambda}_{i\neq j}\text{d}\vec{\nu}\;.\]
+\[P(\lambda_i\mid\vec{D},M)=\int P(\vec{\lambda},\vec{\nu}\mid\vec{D},M)\text{d}\vec{\lambda}_{i\neq j}\text{d}\vec{\nu}\;.\]
 Note that the parameter values which maximize the full posterior \emph{pdf} usually do not coincide with the values which maximize the marginalized distributions.
 
 We will mainly interested in estimating the mode of $\lambda_i$, i.e.~the value of $\lambda_i$ which maximizes the marginalized posterior \emph{pdf}
-\[\text{argmax}\left[ P(\lambda_i|\vec{D},M) \right]\]
+\[\text{argmax}\left[ P(\lambda_i\mid\vec{D},M) \right]\]
 and confidence intervals such that a certain fraction $\alpha$ of the total area is contained in it:
-\[\alpha=\int^{\lambda_\text{upper}}_{\lambda_\text{lower}}P(\lambda_i|\vec{D},M)\text{d}\lambda_i\;,\]
+\[\alpha=\int^{\lambda_\text{upper}}_{\lambda_\text{lower}}P(\lambda_i\mid\vec{D},M)\text{d}\lambda_i\;,\]
 where the desired interval is $[\lambda_\text{lower},\lambda_\text{upper}]$.
 
 % }}}
 % {{{ MODEL VALIDITY
 \marginnote{model\\validity} Model testing in a strictly Bayesian approach is problematic since there is often no way to define all possible models, and the results depend critically on the choice of priors. However, having a number representing how well the model fits the available data is important. Here we consider a p-value that gives a goodness-of-fit criterion based on the likelihood of the data in the model under consideration using the parameters defined at the mode of the posterior. We define the following function:
-\[\hat{f}(\vec{x})=P(\vec{x}|\hat{\vec{\lambda}},\hat{\vec{\nu}},M)\;,\]
+\[\hat{f}(\vec{x})=P(\vec{x}\mid\hat{\vec{\lambda}},\hat{\vec{\nu}},M)\;,\]
 where $(\hat{\vec{\lambda}},\hat{\vec{\nu}})$ is the set of parameters at the mode of the full \emph{pdf}. We then define the p-value as
 \[p=\frac{\int_{\hat{f}(\vec{x})<\hat{f}(\vec{D})}\hat{f}(\vec{x})\text{d}\vec{x}}{\int \hat{f}(\vec{x})\text{d}\vec{x}}\;.\]
 $p$ is the tail area probability to have found a result with $\hat{f}(\vec{x})<\hat{f}(\vec{D})$, assuming that the model $M$ is valid and all experimental effects are perfectly known. It is the probability that the likelihood could have been lower than the observed in the data, so it the model does not give a good representation of the data, then $p$ will be a small number. If the modeling is correct, $p$ will have a flat probability distribution in $[0,1]$, but it should be clear that incorrect formulations of the data fluctuations will bias the p-value distribution to lower (if the data fluctuations are underestimated) or higher (if the data fluctuations are overestimated) values. Also, if the existing data are used to modify the parameter values, the extracted p-value will be biased to higher values.
@@ -54,7 +56,7 @@ One should also keep in mind that p-values cannot be turned into probabilistic s
 % {{{ COMPUTATIONAL ASPECTS
 \marginnote{computational\\aspects} There are several ways to calculate the posterior in \ref{eq:posterior} and the marginalized \emph{pdf}s, and even with few parameters $(\vec{\lambda},\vec{\nu})$ the computation can easily become highly time consuming. However, the application of Markov Chain Monte Carlo (MCMC) methods in this field has revolutionized Bayesian computation. The BAT package \cite{BAT} implements several tools to perform a Bayesia data analysis.
 
-Markov chains are sequences of random numbers (or, in general, vectors of numbers), $X_t$, which follow a well-defined limiting distribution, $\pi(x)$. The fundamental property of a Markov chain is that the probability distribution for the next element in the sequence, $X_{t+1}$, depends only on the current state, and not on any previous history. A Markov chain is completely defined by the one-step probability transition matrix, $P(X_{t+1}|X_t)$. Under certain conditions (recurrence, irreducibility, aperiodicity), it can be proven that the chain is ergodic; i.e., that the limiting probability to be in a given state does not depend on the starting point of the chain. An MCMC is an algorithm producing an ergodic Markov chain which stationary distribution is the distribution of interest. In our case, the BAT package produces a Markov chain where the stationary distribution is the desired posterior \emph{pdf}.
+Markov chains are sequences of random numbers (or, in general, vectors of numbers), $X_t$, which follow a well-defined limiting distribution, $\pi(x)$. The fundamental property of a Markov chain is that the probability distribution for the next element in the sequence, $X_{t+1}$, depends only on the current state, and not on any previous history. A Markov chain is completely defined by the one-step probability transition matrix, $P(X_{t+1}\mid X_t)$. Under certain conditions (recurrence, irreducibility, aperiodicity), it can be proven that the chain is ergodic; i.e., that the limiting probability to be in a given state does not depend on the starting point of the chain. An MCMC is an algorithm producing an ergodic Markov chain which stationary distribution is the distribution of interest. In our case, the BAT package produces a Markov chain where the stationary distribution is the desired posterior \emph{pdf}.
 
 A very popular algorithm that achieves this is the Metropolis-Hastings algorithm \cite{Metropolis,Hastings}. The algorithm works as follows:
 \begin{enumerate}
@@ -72,5 +74,34 @@ It is possible to show that, given a reasonable proposal function $g$, this algo
 % }}}
 % {{{ IMPLEMENTATION
 \marginnote{implementation} The BAT software is \texttt{C++} based code interfaced to software packages such as ROOT \cite{ROOT}, \textsc{Minuit} \cite{MINUIT}, or the CUBA library \cite{CUBA}. Several Markov chains can optionally be run in parallel thanks to the OpenMP \cite{openmp} support. For further details about the statistical theory and implementation aspects, as well as applications to real problems, underlying the BAT package see \cite{BAT}, for a detailed description of the class structure and the methods the official documentation is available at \texttt{http://www.mppmu.mpg.de/bat/}.
+
+% }}}
+\section*{Background decomposition}
+The analysis of the energy distributions was carried out by fitting binned energy distributions. The likelihood $P(\vec{D}\mid\vec{\lambda})$ is written as the product of the probability of the data given the model and parameters in each bin:
+\[P(\vec{D}\mid\vec{\lambda})=\prod_i^{N}P(n_i\mid\mu_i)=\prod_i^N\frac{e^{-\mu_i}\mu_i^{n_i}}{n_i!}\;,\]
+where $N$ is the number of bins, $n_i$ is the observed number of events and $\mu_i$ is the expected number of events (frequency) in bin $i$. $\mu_i$ can be written as the sum of the background contributions in bin $i$:
+\[\mu^i=\sum_jb_j^i=\sum_j c_jh_j^i\;,\]
+where the index $j$ runs over all the background contributions and $b_j^i$ is the expected number of events for the background source $j$ in bin $i$. The latter can be further decomposed in the product of the frequency $h_j^i$ in bin $i$ and a factor $c_j$, which does not depend on the bin and contains the $\lambda_j$ parameter of physical interest that will be estimated with the fitting procedure.
+
+We want to keep the summed energy spectra from BEGes and coaxial separate, as the contamination of radioactive sources on the electrodes can be different. All the other parameters (e.g. the double-beta decay half-life or the \ce{^{60}Co} activity in the detector assembly) are the same for the two spectra. The natural coaxial detectors were omitted from the analysis {\color{red}because\ldots} Then the likelihood can be expressed as
+\[P(\vec{D}\mid\vec{\lambda})=P_\text{BEGe}(\vec{D}\mid\vec{\lambda})P_\text{Coax}(\vec{D}\mid\vec{\lambda})=\prod_i^N\left[\frac{e^{-\mu_i}\mu_i^{n_i}}{n_i!}\right]_\text{BEGe}\prod_j^N\left[\frac{e^{-\mu_j}\mu_j^{n_j}}{n_j!}\right]_\text{Coax}\]
+
+% {{{ 2nbb
+\marginnote{$2\nbb$} For the two-neutrino mode of double-beta decay we want to estimate the half-life $T_{1/2}$. In this case the contribution $b_{2\nu}^i$ can be written as
+\[b_{2\nu}^i=\frac{N_A\log2}{A_{76}T_{1/2}}\sum_{k=1}^\text{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu}\;,\]
+where $k$ labels the detectors, $N_A$ is the Avogadro number, $A_{76}$ is the molar weight of \ce{^{76}Ge}, $f^{76}$ is the enrichment fraction, and $t$ is the detector's live time. The detection efficiency $\epsilon_{2\nu}^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer and the intrinsic efficiency of the detector $k$. $f_{2\nu}^i$ is the theoretical absolute frequency (i.e.~the entire distribution is normalized to one) for double-beta decay in bin $i$, it is the discrete version of \ref{eq:spectstd}. We adopted the approximation $T_{1/2}\gg t$.
+
+The expression holds also for the Lorentz-violating mode, with the associated half-life $T_{1/2}^\text{LV}$. Recalling the equation \ref{eq:totwidth} we can express $T_{1/2}^\text{LV}$ in relation to $T_{1/2}$ and $\aof$:
+\[T_{1/2}^\text{LV}=\frac{T_{1/2}}{\aof}\ldots\;,\]
+and then the $b_{2\nu\text{LV}}^i$ factor can be written as:
+\[b_{2\nu\text{LV}}^i=\frac{N_A\log2}{A_{76}T_{1/2}}\sum_{k=1}^\text{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu\text{LV}}\ldots\;,\]
+
+% }}}
+% {{{ EXTERNAL SOURCES
+\marginnote{external\\sources} For the other background sources the parameter of interest is the activity, defined as the number of events per unit of time and mass. Assuming a stable isotope contamination within the considered live times, we can express $b_j$ as
+\[b_j=a_jM\sum_k^\text{det}t_k\epsilon_j^{ik}f_j^i\;,\]
+where $a_j$ is the activity for the source $j$ and $M$ is the mass of the object in which the source is located. The detection efficiency $\epsilon_j^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer, the intrinsic efficiency and the solid angle the detector $k$ subtends at the radioactive source.
+
+It should be noted that the activities of some isotopes are correlated, for example if they come from the same decay chain. In this analysis we have two examples of this, \ce{^{212}Bi} decays in \ce{^{208}Tl} with 39.93\% branching ratio, while \ce{^{214}Pb} decays in \ce{^{214}Bi} with $\sim$100\% branching ratio.
 
 % }}}

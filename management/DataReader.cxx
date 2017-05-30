@@ -169,12 +169,12 @@ bool DataReader::LoadRun( unsigned int runID ) {
         std::cerr << "DataLoader::BuildTier3 failed for run" << runID << ", tree not loaded.\n";
         return false;
     }
-
+    /*
     if ( !loader.BuildTier4() ) {
         std::cerr << "DataLoader::BuildTier4 failed for run" << runID << ", tree not loaded.\n";
         return false;
     }
-
+    */
     /*auto tmp = loader.GetUniqueMasterChain();
     if ( tmp->IsZombie() or tmp == 0 ) {
         std::cerr << "Data chain of run" << runID << " is Zombie! Tree not loaded.\n";

@@ -31,12 +31,13 @@ namespace GERDA {
       DetectorSet           (DetectorSet&&)      = default;
       DetectorSet& operator=(DetectorSet&&)      = default;
 
-      
+
       std::vector<std::string> GetDetectorNames()   const { return names; }
       // 1 = BEGe, 2 = enrCOAX, 3 = natCOAX
       std::vector<int>   GetDetectorTypes() const { return detectorTypes; }
       // get mass [g]
       std::vector<int>   GetMass()          const { return mass; }
+      std::vector<float> GetActiveMass()    const;
       // get total volume, active volume, dead volume [cm^3]
       std::vector<float> GetVolume()        const;
       std::vector<float> GetActiveVolume()  const;
@@ -46,7 +47,7 @@ namespace GERDA {
       std::vector<float> GetDeadN76Ge()     const;
 
       protected:
-      
+
       // detector's names
       std::vector<std::string> names;
       // detector's types in detector strings:
@@ -66,11 +67,11 @@ namespace GERDA {
       // Avogadro number
       const double NAv = 6.02214E23;
   };
-  
+
   // order vectors in the MaGe naming scheme: GELATIO -> MaGe
   template<typename T>
   void ReorderAsMaGe(std::vector<T>& v, std::string mode) {
-    
+
     auto v_ = v;
     if (mode == "input") {
         int c = 0;
@@ -93,11 +94,11 @@ namespace GERDA {
 
     else return;
   }
-  
+
   // print vectors depending on the ordering scheme
   template<typename T>
   void Print(std::vector<T>& v, std::string mode) {
-    
+
     if (mode == "GELATIO") {
         std::cout << "string1  ";
         for ( int i = 0 ; i <= 7 ; ++i ) std::cout << v[i] << ", ";

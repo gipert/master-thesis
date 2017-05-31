@@ -100,9 +100,11 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     // 2nbb
     this->SetPriorConstantAll();
     this->SetPrior(0, &invflat);
-    
+
     // holders
     this->SetPriorGauss(14, 4.3E-03, 0.9E-03); // K40
+    linear.SetParameter(0, 0.39E-03);          // Ac228
+    this->SetPrior(12, &linear);
     linear.SetParameter(0, 0.16E-03);          // Co60
     this->SetPrior(13, &linear);
 }

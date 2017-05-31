@@ -219,6 +219,16 @@ int main( int argc, char** argv ) {
     hSimBEGetmp[1]->SetBins(7500,0,7500);
     hSimCOAXtmp[1]->SetBins(7500,0,7500);
 
+    // remove events in blinded window Qbb +- 25 keV
+    for ( int i = 2014; i <= 2064; i++ ) {
+        hDataBEGetmp->SetBinContent(i,0);
+        hDataCOAXtmp->SetBinContent(i,0);
+        for ( int j = 0; j < (int)hSimBEGetmp.size(); ++j ) {
+            hSimBEGetmp[j]->SetBinContent(i,0);
+            hSimCOAXtmp[j]->SetBinContent(i,0);
+        }
+    }
+
     // rebin the histograms in new histograms
     TH1D* hDataBEGe = dynamic_cast<TH1D*>(hDataBEGetmp->Rebin(nBins, "hDataBEGetmp", &dbin[0]));
     TH1D* hDataCOAX = dynamic_cast<TH1D*>(hDataCOAXtmp->Rebin(nBins, "hDataCOAXtmp", &dbin[0]));
@@ -321,11 +331,11 @@ int main( int argc, char** argv ) {
     //BCLog::SetLogLevelScreen(BCLog::detail);
     //model.FindMode(model.GetBestFitParameters());
     //BCLog::SetLogLevelScreen(BCLog::summary);
-/*
+
     std::cout << std::endl;
     double pvalue = GetPValue(model, level);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
-*/
+
     // OUTPUT
     // print results of the analysis into a text file
     model.PrintResults(c_str(path + "Fit2nbbLV_results.txt"));

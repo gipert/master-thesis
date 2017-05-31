@@ -1,5 +1,6 @@
-Under developement
-contact: luigi.pertoldi@pd.infn.it
+# GERDA background model #
+Under developement.
+Contact: luigi.pertoldi@pd.infn.it
 
 ## CONTENTS ##
 

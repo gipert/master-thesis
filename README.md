@@ -1,3 +1,6 @@
+Under developement
+contact: luigi.pertoldi@pd.infn.it
+
 ## CONTENTS ##
 
 * `management/`     : utilities to read and manage GERDA data, DataReader and DetectorSet classes
@@ -5,11 +8,12 @@
 * `misc/`
     * `drawspectra.C`: ROOT macro to draw theoretical 2bb spectra
     * `shorten.C`    : ROOT macro to shrink histograms from 8500 to 7500 keV
-    * `help`: contains instructions for main program
-    * `runconfiguration_mod.db`: modified `runconfiguration.db` from `gerda-metadata` repo
-* `fit/`            : class and runfit.cxx to perform the fit
+    * `BI.C`         : ROOT macro to calculate background index, works only with 4keV binning
+    * `exposure.cxx` : program to calculate exposure
+    * `runconfiguration_mod.db`: modified `runconfiguration.db` from `gerda-metadata` repo
+    * `sumallbkgext.sh` : shell script to reproduce all simulated spectra
+* `fit/`            : BAT-derived class and runfit.cxx to perform the fit
 * `data/`           : data needed for the fit
-* `Makefile`        : master makefile to compile all the project
 * `processData.cxx` : construct energy spectra from data
 * `processbb.cxx`   : produce 40 files (in which only one detector acts as a source) containing
                       energy spectra of each detector, starting from MaGe trees (2nbb and 2nbbLV)
@@ -23,6 +27,6 @@
 
 * clone with `--recursive` to include ProgressBar submodule
 * please check what the Makefile does before doing anything
-* set `GERDACPTDIR` env variable to point at the project location
-* just `make fit` if you are only interested in doing the fit with the pre-processed data
+* set `GERDACPTDIR` env variable to point at the project location!
+* just `make fit` if you are only interested in doing the fit with the pre-processed data (required: BAT)
 * see `runfit --help`

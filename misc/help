@@ -1,10 +1,10 @@
 
-The program produces the energy spectra (saved in data/sumData.root)
-and the total livetimes for each run (saved in data/sumData.dat) of
+The program produces the energy spectra (saved then in data/sumData.root)
+and the total livetimes for each run (saved then in data/sumData.dat) of
 the 40 detectors installed in Gerda given a set of runIDs.
 
 USAGE:
-  ./main [OPTIONS]
+  ./processData [OPTIONS]
 
 There must be a file named 'paths.txt' in the same location of
 the executable formatted as the following:
@@ -26,4 +26,5 @@ ASSIGNABLE:
 
   --energy  : default is "gauss", specify "ZAC" to use energy
               reconstructed with the ZAC filter
-
+              
+              

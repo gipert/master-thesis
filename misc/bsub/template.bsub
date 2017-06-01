@@ -1,0 +1,18 @@
+#BSUB -J ${OUTDIR}.job # Job name
+#BSUB -o /storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/out/${OUTDIR}/runFit2nbbLV.out  # Job standard output
+#BSUB -e /storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/out/${OUTDIR}/runFit2nbbLV.err  # Job standard error
+#BSUB -q gerda					# Job queue
+##BSUB -R "select[hname!='wn-206-07-27-02-a']"   # exclude nasty node
+
+# commands
+cd /storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt
+source /opt/exp_software/gerda/user/pertoldi/bin/swmod-env.sh
+. swmod.sh load gerda-sw@v2.6.0 bat@0.9.4.1.multiproc
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/lib
+export PATH=$PATH:/storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/bin
+export GERDACPTDIR=/storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt
+export OMP_NUM_THREADS=4
+runfit --outdir $GERDACPTDIR/out/${OUTDIR} --fixfile $GERDACPTDIR/misc/fixfiles/${FIXFILE}
+unset PYTHONPATH
+export HOME=/storage/gpfs_data/gerda/gerda_scratch/pertoldi
+/storage/gpfs_data/gerda/gerda_scratch/pertoldi/programs/Python-3.6.1/install/bin/telegram-send "task ${OUTDIR}: completed"

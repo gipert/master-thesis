@@ -170,7 +170,8 @@ int main( int argc, char** argv ) {
 
     // save on disk
     std::string outname(std::getenv("GERDACPTDIR"));
-    outname += "/misc/sim2nbbspectrum.root";
+    if ( phys == "2nbb" ) outname += "/misc/sim2nbbspectrum.root";
+    if ( phys == "2nbbLV" ) outname += "/misc/sim2nbbLVspectrum.root";
     TFile outfile( outname.c_str() ,"RECREATE");
 
     histBEGe.Write();

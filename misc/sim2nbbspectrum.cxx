@@ -74,8 +74,8 @@ int main( int argc, char** argv ) {
 
     for ( int i = 0; i < 40; ++i ) { 
         if ( set.GetDetectorTypes()[i] == 1 ) {
-            AV_Nev[i] = (double)set.GetActiveVolume()[i]/N2nbb;
-            DV_Nev[i] = (double)set.GetDeadVolume()[i]/N2nbb;
+            AV_Nev[i] = ((double)set.GetActiveVolume()[i]/totVol)*N2nbb;
+            DV_Nev[i] = ((double)set.GetDeadVolume()[i]/totVol)*N2nbb;
         }
     }
 
@@ -112,7 +112,7 @@ int main( int argc, char** argv ) {
         }
 
         filename += std::to_string(i) + ".root";
-        display += std::to_string(i) + ": ";
+        display += std::to_string(i) + ": " + std::to_string(nentries) + " events: ";
 
         file = std::unique_ptr<TFile>{ TFile::Open(filename.c_str(), "READ") };
         fTree = dynamic_cast<TTree*>(file->Get("fTree"));

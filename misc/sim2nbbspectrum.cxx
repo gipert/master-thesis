@@ -40,7 +40,7 @@ int main( int argc, char** argv ) {
     int N2nbb;
     auto result = std::find(args.begin(), args.end(), "--Nev" );
     if ( result != args.end() ) N2nbb = std::stoi(*(result+1));
-    else { std::cout << "Please specify the number of 2nbb remove_extent_ts!\n"; return -1; }
+    else { std::cout << "Please specify the number of 2nbb events!\n"; return -1; }
 // ----------------------------------------------------------------------------------------------------------
 
     // define reading objects
@@ -52,30 +52,29 @@ int main( int argc, char** argv ) {
     TTreeReaderArray<float> det_edep(treereader, "det_edep");
 
     // detectors' properties
-    GERDA::DetectorSet set("MaGeOutput");
+    GERDA::DetectorSet set("MaGeInput");
 
-    // construct final histograms (MaGeOutput scheme because we are reading the MaGe output)
     TH1F histBEGe("energyBEGe", "energyBEGe", 7500, 0, 7500);
     //TH1F histCOAX("energyCOAX", "energyCOAX", 7500, 0, 7500);
 
     ProgressBar bar;
-    std::string filename, outfilename;
+    std::string filename;
     std::string display;
     int nentries;
     int size;
 
     // determine number of events from each volume
-    std::vector<int> AV_Nev(40,0);
-    std::vector<int> DV_Nev(40,0);
+    std::vector<int> AV_Nev;
+    std::vector<int> DV_Nev;
 
     // compute total volume (BEGe);
     double totVol = 0;
     for ( int i = 0; i < 40; ++i ) if ( set.GetDetectorTypes()[i] == 1 ) totVol += set.GetVolume()[i];
 
-    for ( int i = 0; i < 40; ++i ) { 
+    for ( int i = 0; i < 40; ++i ) {
         if ( set.GetDetectorTypes()[i] == 1 ) {
-            AV_Nev[i] = ((double)set.GetActiveVolume()[i]/totVol)*N2nbb;
-            DV_Nev[i] = ((double)set.GetDeadVolume()[i]/totVol)*N2nbb;
+            AV_Nev.push_back(((double)set.GetActiveVolume()[i]/totVol)*N2nbb);
+            DV_Nev.push_back(((double)set.GetDeadVolume()[i]/totVol)*N2nbb);
         }
     }
 
@@ -102,13 +101,13 @@ int main( int argc, char** argv ) {
         else if ( genopt == "A_BEGe" ) {
             filename += "AV_det5_";
             display += "AV_det5_";
-            nentries = AV_Nev[i];
+            nentries = AV_Nev[i-1];
         }
 
         else if ( genopt == "D_BEGe" ) {
             filename += "DV_det5_"; 
             display += "DV_det5_";
-            nentries = DV_Nev[i];
+            nentries = DV_Nev[i-1];
         }
 
         filename += std::to_string(i) + ".root";

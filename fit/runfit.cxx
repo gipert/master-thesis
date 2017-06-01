@@ -40,7 +40,7 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
 /////////////////////////////////////////////
 
     auto c_str = [](std::string s) { return s.c_str(); };
@@ -68,6 +68,12 @@ int main( int argc, char** argv ) {
     if ( result != args.end() ) outdirname = *(result+1);
     else                        outdirname = std::string(std::getenv("GERDACPTDIR")) + "/out";
     std::system(c_str("mkdir -p " + outdirname));
+
+    // retrieve the name of the fix file
+    result = std::find( args.begin(), args.end(), "--fixfile");
+    std::string fixfilepath;
+    if ( result != args.end() ) fixfilepath = *(result+1);
+    else                        fixfilepath = std::string(std::getenv("GERDACPTDIR")) + "/misc/fallback.fix";
 
     TH1::AddDirectory(false);
     // retrieve data
@@ -309,9 +315,10 @@ int main( int argc, char** argv ) {
     if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) BCLog::OutSummary("Adopting variable binning size ");
     else BCLog::OutSummary("Adopting fixed binning size");
     // eventually fix parameters as indicated in external file
-    std::ifstream fixfile(c_str(std::string(std::getenv("GERDACPTDIR")) + "/misc/fixfile.txt"));
+    std::ifstream fixfile(fixfilepath);
     int n, p;
-    while ( fixfile >> p >> n ) {
+    std::string comment;
+    while ( fixfile >> p >> n >> comment ) {
         if ( n == 0 ) {
             model.GetParameter(p)->Fix(0);
             std::cout << "Summary : Fixing parameter: " << model.GetParameter(p)->GetName() << '\n';

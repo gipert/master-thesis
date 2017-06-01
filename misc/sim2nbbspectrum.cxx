@@ -65,8 +65,8 @@ int main( int argc, char** argv ) {
     int size;
 
     // determine number of events from each volume
-    std::vector<int> AV_Nev(40);
-    std::vector<int> DV_Nev(40);
+    std::vector<int> AV_Nev(40,0);
+    std::vector<int> DV_Nev(40,0);
 
     // compute total volume (BEGe);
     double totVol = 0;
@@ -125,6 +125,7 @@ int main( int argc, char** argv ) {
         int j = 0;
         std::cout << display << std::flush;
         for ( int i = 0; i < nentries; ++i ) {
+            treereader.Next();
             if (verbose) {bar.Update(j); j++;}
             size = det_id.GetSize();
             for ( int k = 0; k < size; ++k ) {
@@ -134,7 +135,6 @@ int main( int argc, char** argv ) {
                     //if ( genopt == "A_COAX" or genopt == "D_COAX" ) histCOAX.Fill(det_edep[k]*1000);
                 }
             }
-            treereader.Next();
         } std::cout << ' '; if (verbose) std::cout << nentries << " entries";
 
         file->Close();

@@ -17,35 +17,29 @@ Detail  :  --> Iteration 1000
 Detail  :  --> Iteration 2000
 Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
 Detail  :        - Efficiencies:
-Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.75%) in chain 0. Set scale to 0.25
-Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.55%) in chain 0. Set scale to 0.25
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.85%) in chain 0. Set scale to 0.25
 Detail  :  --> Iteration 3000
 Detail  :  --> Iteration 4000
 Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
 Detail  :        - Efficiencies:
-Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 3.50%) in chain 0. Set scale to 0.0625
-Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.0625
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 2.50%) in chain 0. Set scale to 0.0625
 Detail  :  --> Iteration 5000
 Detail  :  --> Iteration 6000
 Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
 Detail  :        - Efficiencies:
-Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 12.40%) in chain 0. Set scale to 0.03125
-Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.05%) in chain 0. Set scale to 0.01562
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 7.65%) in chain 0. Set scale to 0.03125
 Detail  :  --> Iteration 7000
 Detail  :  --> Iteration 8000
-Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
-Detail  :        - Efficiencies:
-Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.20%) in chain 0. Set scale to 0.003906
 Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
 Detail  :  --> Iteration 9000
 Summary :  --> No convergence criterion for a single chain defined.
 Summary :  --> Markov chains ran for 10000 iterations.
 Detail  :  --> Average efficiencies:
-Detail  :  -->      parameter    0 :  21.70%
-Detail  :  -->      parameter    1 :  0.20%
+Detail  :  -->      parameter    0 :  15.50%
+Detail  :  -->      parameter    1 :  17.85%
 Detail  :  --> Average scale factors:
 Detail  :  -->      parameter    0 :  3.12%
-Detail  :  -->      parameter    1 :  0.39%
+Detail  :  -->      parameter    1 :  100.00%
 Summary : Run Metropolis MCMC...
 Summary :  --> Perform MCMC run with 1 chains, each with 10000 iterations.
 Detail  :  --> iteration number 1000 (10.00%)
@@ -60,22 +54,16 @@ Detail  :  --> iteration number 9000 (90.00%)
 Detail  :  --> iteration number 10000 (100.00%)
 Summary :  --> Markov chains ran for 10000 iterations.
 Detail  :  --> Global mode from MCMC:
-Debug   :  --> Posterior value: -1.58312e+08
-Detail  :  -->      parameter 0:   6049
-Detail  :  -->      parameter 1:   1.471e-12
-Warning : BCH1D::GetSmallestInterval : The requested content of 99% fits within one bin.
-Warning : BCH1D::GetSmallestInterval : MAKE FINER BINNING (OR CHANGE RANGE) !!!
-Warning : BCH1D::GetSmallestInterval : The requested content of 95% fits within one bin.
-Warning : BCH1D::GetSmallestInterval : MAKE FINER BINNING (OR CHANGE RANGE) !!!
-Warning : BCH1D::GetSmallestInterval : The requested content of 68% fits within one bin.
-Warning : BCH1D::GetSmallestInterval : MAKE FINER BINNING (OR CHANGE RANGE) !!!
+Debug   :  --> Posterior value: -46464.7
+Detail  :  -->      parameter 0:   0.826
+Detail  :  -->      parameter 1:   6.629e-09
 Warning : BCH1D::GetSmallestInterval : The requested content of 68% fits within one bin.
 Warning : BCH1D::GetSmallestInterval : MAKE FINER BINNING (OR CHANGE RANGE) !!!
 Summary : Building knowledge-update plots.
 Summary : Marginalize using Grid
 Detail  :  --> Global mode from Grid:
-Debug   :  --> Posterior value: 1000
-Detail  :  -->      parameter 0:   6000
+Debug   :  --> Posterior value: 50000
+Detail  :  -->      parameter 0:   0.01
 Detail  :  -->      parameter 1:   5e-08
 Summary : Finding mode using Minuit
 Summary : Exiting

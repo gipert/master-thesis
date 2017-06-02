@@ -8,16 +8,16 @@
  Model: Fit2nbbLV
  Number of parameters: 2
  List of Parameters and ranges:
-  (0) Parameter "2nbb": [0, 250]
-  (1) Parameter "2nbbLV": [0, 1]
+  (0) Parameter "2nbb": [6000, 6100]
+  (1) Parameter "2nbbLV": [0, 1e-05]
 
  Results of the optimization
  ===========================
  Optimization algorithm used: Metropolis MCMC
- Log of the maximum posterior: -2.11067e+09
+ Log of the maximum posterior: -1.58312e+08
  List of parameters and global mode:
-  (0) Parameter "2nbb": 203.665 (no error estimate available) 
-  (1) Parameter "2nbbLV": 0.0111168 (no error estimate available) 
+  (0) Parameter "2nbb": 6049.47 (no error estimate available) 
+  (1) Parameter "2nbbLV": 1.47142e-12 (no error estimate available) 
 
  Results of the marginalization
  ==============================
@@ -25,46 +25,40 @@
  List of parameters and properties of the marginalized
  distributions:
   (0) Parameter "2nbb":
-      Mean +- sqrt(V):                160.3 +- 78.24
-      Median +- central 68% interval: 203.8 +  6.75 - 196.8
-      (Marginalized) mode:            6.25
-       5% quantile:                   5.625
-      10% quantile:                   6.25
-      16% quantile:                   7
-      84% quantile:                   210.6
-      90% quantile:                   211.2
-      95% quantile:                   211.9
+      Mean +- sqrt(V):                6049 +- 0.4201
+      Median +- central 68% interval: 6049 +  0.4447 - 0.4447
+      (Marginalized) mode:            6050
+       5% quantile:                   6048
+      10% quantile:                   6049
+      16% quantile:                   6049
+      84% quantile:                   6050
+      90% quantile:                   6050
+      95% quantile:                   6050
       Smallest interval(s) containing at least 68% and local mode(s):
-       (5, 10) (local mode at 5 with rel. height 1; rel. area 0.2)
-       (167.5, 172.5) (local mode at 167.5 with rel. height 1; rel. area 0.2)
-       (202.5, 207.5) (local mode at 202.5 with rel. height 1; rel. area 0.2)
-       (207.5, 212.5) (local mode at 207.5 with rel. height 1; rel. area 0.2)
+       (6049, 6051) (local mode at 6049 with rel. height 1; rel. area 0.7646)
 
   (1) Parameter "2nbbLV":
-      Mean +- sqrt(V):                0.3319 +- 0.2656
-      Median +- central 68% interval: 0.255 +  0.557 - 0.237
-      (Marginalized) mode:            0.015
-       5% quantile:                   0.0125
-      10% quantile:                   0.015
-      16% quantile:                   0.018
-      84% quantile:                   0.8125
-      90% quantile:                   0.815
-      95% quantile:                   0.8175
+      Mean +- sqrt(V):                2.411e-10 +- 2.763e-10
+      Median +- central 68% interval: 5e-08 +  3.4e-08 - 3.4e-08
+      (Marginalized) mode:            5e-08
+       5% quantile:                   5e-09
+      10% quantile:                   1e-08
+      16% quantile:                   1.6e-08
+      84% quantile:                   8.5e-08
+      90% quantile:                   9e-08
+      95% quantile:                   9.5e-08
       Smallest interval(s) containing at least 68% and local mode(s):
-       (0.01, 0.03) (local mode at 0.01 with rel. height 1; rel. area 0.2)
-       (0.23, 0.25) (local mode at 0.23 with rel. height 1; rel. area 0.2)
-       (0.25, 0.27) (local mode at 0.25 with rel. height 1; rel. area 0.2)
-       (0.33, 0.35) (local mode at 0.33 with rel. height 1; rel. area 0.2)
+       (0, 2e-07) (local mode at 0 with rel. height 1; rel. area 1)
 
  Status of the MCMC
  ==================
  Convergence reached:                    yes
  Number of iterations until convergence: 4294967295
- Number of chains:                       5
- Number of iterations per chain:         100000
+ Number of chains:                       1
+ Number of iterations per chain:         10000
  Average pre-run efficiencies:
-  (0) Parameter "2nbb": 0%
-  (1) Parameter "2nbbLV": 0%
+  (0) Parameter "2nbb": 21.7%
+  (1) Parameter "2nbbLV": 0.2%
 
  -----------------------------------------------------
  Notation:

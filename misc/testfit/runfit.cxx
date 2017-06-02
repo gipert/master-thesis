@@ -38,7 +38,7 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 2039;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
 /////////////////////////////////////////////
 
     auto c_str = [](std::string s) { return s.c_str(); };
@@ -106,6 +106,9 @@ int main( int argc, char** argv ) {
             k+=4;
         }
     }
+
+    hSimBEGetmp[0]->SetBins(7500,0,7500);
+    hSimBEGetmp[1]->SetBins(7500,0,7500);
 
     // rebin the histograms in new histograms
     TH1F* hDataBEGe = dynamic_cast<TH1F*>(hDataBEGetmp->Rebin(nBins, "hDataBEGetmp", &dbin[0]));

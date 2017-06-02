@@ -1,0 +1,666 @@
+ +------------------------------------------------------+
+ |                                                      |
+ | BAT version 0.9.4.1                                  |
+ | Copyright (C) 2007-2014, the BAT core developer team |
+ | All rights reserved.                                 |
+ |                                                      |
+ | For the licensing terms see doc/COPYING              |
+ | For documentation see http://mpp.mpg.de/bat          |
+ |                                                      |
+ +------------------------------------------------------+
+Summary : Opening logfile logBAT.txt
+Summary : Adopting variable binning size 
+Summary : Marginalize using Metropolis
+Summary : Pre-run Metropolis MCMC...
+Summary :  --> Perform MCMC pre-run with 5 chains, each with maximum 100000 iterations
+Detail  :  --> Iteration 1000
+Detail  :  --> Iteration 2000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 2000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
+Detail  :        - Efficiencies:
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.5
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.5
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.5
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.5
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.5
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.5
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.5
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.5
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.5
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.5
+Detail  :  --> Iteration 3000
+Detail  :  --> Iteration 4000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 4000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
+Detail  :        - Efficiencies:
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.25
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.25
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.25
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.25
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.25
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.25
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.25
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.25
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.25
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.25
+Detail  :  --> Iteration 5000
+Detail  :  --> Iteration 6000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 6000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
+Detail  :        - Efficiencies:
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.125
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.125
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.125
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.125
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.125
+Detail  :  --> Iteration 7000
+Detail  :  --> Iteration 8000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 8000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
+Detail  :        - Efficiencies:
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.0625
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.0625
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.0625
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.0625
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.0625
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.0625
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.0625
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.0625
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.0625
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.0625
+Detail  :  --> Iteration 9000
+Detail  :  --> Iteration 10000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 10000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
+Detail  :        - Efficiencies:
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.03125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.03125
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.03125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.03125
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.03125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.03125
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.03125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.03125
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.03125
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.03125
+Detail  :  --> Iteration 11000
+Detail  :  --> Iteration 12000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 12000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
+Detail  :        - Efficiencies:
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.01562
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.01562
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.01562
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.01562
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.01562
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.01562
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.01562
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.01562
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.01562
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.01562
+Detail  :  --> Iteration 13000
+Detail  :  --> Iteration 14000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 14000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies not within pre-defined range.
+Detail  :        - Efficiencies:
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.007812
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 0. Set scale to 0.007812
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.007812
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 1. Set scale to 0.007812
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.007812
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 2. Set scale to 0.007812
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.007812
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 3. Set scale to 0.007812
+Detail  :          Efficiency of parameter 0 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.007812
+Detail  :          Efficiency of parameter 1 dropped below 15.00% (eps = 0.00%) in chain 4. Set scale to 0.007812
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 15000
+Detail  :  --> Iteration 16000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 16000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 17000
+Detail  :  --> Iteration 18000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 18000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 19000
+Detail  :  --> Iteration 20000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 20000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 21000
+Detail  :  --> Iteration 22000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 22000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 23000
+Detail  :  --> Iteration 24000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 24000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 25000
+Detail  :  --> Iteration 26000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 26000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 27000
+Detail  :  --> Iteration 28000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 28000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 29000
+Detail  :  --> Iteration 30000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 30000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 31000
+Detail  :  --> Iteration 32000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 32000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 33000
+Detail  :  --> Iteration 34000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 34000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 35000
+Detail  :  --> Iteration 36000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 36000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 37000
+Detail  :  --> Iteration 38000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 38000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 39000
+Detail  :  --> Iteration 40000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 40000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 41000
+Detail  :  --> Iteration 42000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 42000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 43000
+Detail  :  --> Iteration 44000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 44000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 45000
+Detail  :  --> Iteration 46000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 46000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 47000
+Detail  :  --> Iteration 48000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 48000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 49000
+Detail  :  --> Iteration 50000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 50000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 51000
+Detail  :  --> Iteration 52000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 52000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 53000
+Detail  :  --> Iteration 54000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 54000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 55000
+Detail  :  --> Iteration 56000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 56000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 57000
+Detail  :  --> Iteration 58000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 58000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 59000
+Detail  :  --> Iteration 60000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 60000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 61000
+Detail  :  --> Iteration 62000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 62000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 63000
+Detail  :  --> Iteration 64000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 64000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 65000
+Detail  :  --> Iteration 66000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 66000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 67000
+Detail  :  --> Iteration 68000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 68000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 69000
+Detail  :  --> Iteration 70000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 70000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 71000
+Detail  :  --> Iteration 72000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 72000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 73000
+Detail  :  --> Iteration 74000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 74000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 75000
+Detail  :  --> Iteration 76000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 76000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 77000
+Detail  :  --> Iteration 78000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 78000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 79000
+Detail  :  --> Iteration 80000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 80000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 81000
+Detail  :  --> Iteration 82000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 82000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 83000
+Detail  :  --> Iteration 84000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 84000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 85000
+Detail  :  --> Iteration 86000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 86000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 87000
+Detail  :  --> Iteration 88000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 88000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 89000
+Detail  :  --> Iteration 90000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 90000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 91000
+Detail  :  --> Iteration 92000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 92000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 93000
+Detail  :  --> Iteration 94000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 94000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 95000
+Detail  :  --> Iteration 96000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 96000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 97000
+Detail  :  --> Iteration 98000
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Debug   : BCMath::Rvalue: W = 0. Avoiding R = NaN.
+Detail  :      * Convergence status: Set of 5 Markov chains did not converge after 98000 iterations.
+Detail  :        - R-Values:
+Detail  :          parameter    0 :  MAX_DOUBLE <--
+Detail  :          parameter    1 :  MAX_DOUBLE <--
+Detail  :          log-likelihood :  MAX_DOUBLE <--
+Detail  :      * Efficiency status: Efficiencies within pre-defined ranges.
+Detail  :  --> Iteration 99000
+Summary :  --> Set of 5 Markov chains did not converge within 100000 iterations.
+Summary :  --> Markov chains ran for 100000 iterations.
+Detail  :  --> Average efficiencies:
+Detail  :  -->      parameter    0 :  0.00%
+Detail  :  -->      parameter    1 :  0.00%
+Detail  :  --> Average scale factors:
+Detail  :  -->      parameter    0 :  0.78%
+Detail  :  -->      parameter    1 :  0.78%
+Summary : Run Metropolis MCMC...
+Summary :  --> Perform MCMC run with 5 chains, each with 100000 iterations.
+Detail  :  --> iteration number 10000 (10.00%)
+Detail  :  --> iteration number 20000 (20.00%)
+Detail  :  --> iteration number 30000 (30.00%)
+Detail  :  --> iteration number 40000 (40.00%)
+Detail  :  --> iteration number 50000 (50.00%)
+Detail  :  --> iteration number 60000 (60.00%)
+Detail  :  --> iteration number 70000 (70.00%)
+Detail  :  --> iteration number 80000 (80.00%)
+Detail  :  --> iteration number 90000 (90.00%)
+Detail  :  --> iteration number 100000 (100.00%)
+Summary :  --> Markov chains ran for 100000 iterations.
+Detail  :  --> Global mode from MCMC:
+Debug   :  --> Posterior value: -2.12139e+07
+Detail  :  -->      parameter 0:   0.06275
+Detail  :  -->      parameter 1:   0.05763
+Summary : Building knowledge-update plots.
+Summary : Marginalize using Grid
+Detail  :  --> Global mode from Grid:
+Debug   :  --> Posterior value: 100
+Detail  :  -->      parameter 0:   0.0005
+Detail  :  -->      parameter 1:   0.0005
+Summary : Finding mode using Minuit
+Summary : Exiting

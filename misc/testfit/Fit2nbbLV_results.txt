@@ -1,0 +1,75 @@
+
+ -----------------------------------------------------
+ Summary
+ -----------------------------------------------------
+
+ Model summary
+ =============
+ Model: Fit2nbbLV
+ Number of parameters: 2
+ List of Parameters and ranges:
+  (0) Parameter "2nbb": [0, 0.1]
+  (1) Parameter "2nbbLV": [0, 0.1]
+
+ Results of the optimization
+ ===========================
+ Optimization algorithm used: Metropolis MCMC
+ Log of the maximum posterior: -2.12139e+07
+ List of parameters and global mode:
+  (0) Parameter "2nbb": 0.0627509 (no error estimate available) 
+  (1) Parameter "2nbbLV": 0.0576332 (no error estimate available) 
+
+ Results of the marginalization
+ ==============================
+ Marginalization algorithm used: Metropolis
+ List of parameters and properties of the marginalized
+ distributions:
+  (0) Parameter "2nbb":
+      Mean +- sqrt(V):                0.06607 +- 0.008387
+      Median +- central 68% interval: 0.06275 +  0.01645 - 0.00795
+      (Marginalized) mode:            0.0625
+       5% quantile:                   0.05425
+      10% quantile:                   0.0545
+      16% quantile:                   0.0548
+      84% quantile:                   0.07925
+      90% quantile:                   0.0795
+      95% quantile:                   0.07975
+      Smallest interval(s) containing at least 68% and local mode(s):
+       (0.054, 0.056) (local mode at 0.054 with rel. height 0.5; rel. area 0.2)
+       (0.062, 0.064) (local mode at 0.062 with rel. height 1; rel. area 0.4)
+       (0.071, 0.073) (local mode at 0.071 with rel. height 0.5; rel. area 0.2)
+
+  (1) Parameter "2nbbLV":
+      Mean +- sqrt(V):                0.05398 +- 0.01779
+      Median +- central 68% interval: 0.05775 +  0.01645 - 0.03695
+      (Marginalized) mode:            0.0575
+       5% quantile:                   0.02025
+      10% quantile:                   0.0205
+      16% quantile:                   0.0208
+      84% quantile:                   0.07425
+      90% quantile:                   0.0745
+      95% quantile:                   0.07475
+      Smallest interval(s) containing at least 68% and local mode(s):
+       (0.02, 0.022) (local mode at 0.02 with rel. height 0.5; rel. area 0.2)
+       (0.057, 0.059) (local mode at 0.057 with rel. height 1; rel. area 0.4)
+       (0.059, 0.061) (local mode at 0.059 with rel. height 0.5; rel. area 0.2)
+
+ Status of the MCMC
+ ==================
+ Convergence reached:                    yes
+ Number of iterations until convergence: 4294967295
+ Number of chains:                       5
+ Number of iterations per chain:         100000
+ Average pre-run efficiencies:
+  (0) Parameter "2nbb": 0%
+  (1) Parameter "2nbbLV": 0%
+
+ -----------------------------------------------------
+ Notation:
+ Mean        : mean value of the marg. pdf
+ Median      : median of the marg. pdf
+ Marg. mode  : most probable value of the marg. pdf
+ V           : Variance of the marg. pdf
+ Quantiles   : most commonly used quantiles
+ -----------------------------------------------------
+

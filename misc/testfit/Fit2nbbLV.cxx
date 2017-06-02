@@ -20,8 +20,8 @@
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
 
     // define parameters
-    /* [0] */  this->AddParameter("2nbb", 0, 0.1);
-    /* [1] */  this->AddParameter("2nbbLV", 0, 0.1);
+    /* [0] */  this->AddParameter("2nbb", 0, 250);
+    /* [1] */  this->AddParameter("2nbbLV", 0, 1);
     // priors
     TF1 invflat("inverse-flat", "1/x^2"  , 0, 1);
     //TF1 logflat("log-flat"    , "1/x"    , 0, 1);

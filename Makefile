@@ -55,11 +55,7 @@ bin/runfit : fit/runfit.cxx fit/pvalue.cxx lib/libFit2nbbLV.so lib/libProgressBa
 
 bin/exposure : misc/exposure.cxx lib/libDataReader.so lib/libDetectorSet.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
-
-bin/sim2nbbspectrum : misc/sim2nbbspectrum.cxx lib/libDetectorSet.so lib/libProgressBar.so
-	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDetectorSet -lProgressBar
 # ------------------------------------------------------------------------
-
 rundata : 
 	bin/processData >/dev/null && misc/sumallbkgext.sh >/dev/null
 runbb :

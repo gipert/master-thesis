@@ -1,0 +1,18 @@
+#BSUB -J minimalwithLV.job # Job name
+#BSUB -o /storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/out/minimalwithLV/runFit2nbbLV.out  # Job standard output
+#BSUB -e /storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/out/minimalwithLV/runFit2nbbLV.err  # Job standard error
+#BSUB -q gerda					# Job queue
+##BSUB -R "select[hname!='wn-206-07-27-02-a']"   # exclude nasty node
+
+# commands
+cd /storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt
+source /opt/exp_software/gerda/user/pertoldi/bin/swmod-env.sh
+. swmod.sh load gerda-sw@v2.6.0 bat@0.9.4.1.multiproc
+export LD_LIBRARY_PATH=/opt/exp_software/gerda/user/vonsturm/sw/bat/linux-scientific-6-x86_64/0.9.4.1.multiproc/lib:/opt/exp_software/gerda/user/vonsturm/sw/gerda-sw/linux-scientific-6-x86_64/v2.6.0/lib:/opt/exp_software/gerda/common/sw/geant4/linux-scientific-6-x86_64/9.6.4/lib64:/opt/exp_software/gerda/common/sw/xerces-c/linux-scientific-6-x86_64/3.1.2/lib:/opt/exp_software/gerda/common/sw/clhep/linux-scientific-6-x86_64/2.1.3.1/lib:/opt/exp_software/gerda/common/sw/root/linux-scientific-6-x86_64/6.04.08/lib:/opt/exp_software/gerda/common/sw/gcc/linux-scientific-6-x86_64/4.8.5/lib64:/opt/exp_software/gerda/common/sw/binutils/linux-scientific-6-x86_64/2.25/lib:/opt/exp_software/gerda/common/sw/python/linux-scientific-6-x86_64/2.7.10/lib:/opt/exp_software/gerda/common/sw/fftw3/linux-scientific-6-x86_64/3.3.4/lib:/usr/share/lsf/9.1/linux2.6-glibc2.3-x86_64/lib:/storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/lib:/storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/lib
+export PATH=/opt/exp_software/gerda/user/vonsturm/sw/bat/linux-scientific-6-x86_64/0.9.4.1.multiproc/bin:/opt/exp_software/gerda/user/vonsturm/sw/gerda-sw/linux-scientific-6-x86_64/v2.6.0/bin:/opt/exp_software/gerda/common/sw/geant4/linux-scientific-6-x86_64/9.6.4/bin:/opt/exp_software/gerda/common/sw/xerces-c/linux-scientific-6-x86_64/3.1.2/bin:/opt/exp_software/gerda/common/sw/clhep/linux-scientific-6-x86_64/2.1.3.1/bin:/opt/exp_software/gerda/common/sw/root/linux-scientific-6-x86_64/6.04.08/bin:/opt/exp_software/gerda/common/sw/gcc/linux-scientific-6-x86_64/4.8.5/bin:/opt/exp_software/gerda/common/sw/binutils/linux-scientific-6-x86_64/2.25/bin:/opt/exp_software/gerda/common/sw/python/linux-scientific-6-x86_64/2.7.10/bin:/opt/exp_software/gerda/common/sw/fftw3/linux-scientific-6-x86_64/3.3.4/bin:/opt/exp_software/gerda/user/pertoldi/bin:/opt/exp_software/gerda/common/bin:/usr/lib64/qt-3.3/bin:/usr/share/lsf/9.1/linux2.6-glibc2.3-x86_64/etc:/usr/share/lsf/9.1/linux2.6-glibc2.3-x86_64/bin:/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/bin:/storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/bin
+export GERDACPTDIR=/storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt
+export OMP_NUM_THREADS=4
+runfit --outdir /storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/out/minimalwithLV --fixfile /storage/gpfs_data/gerda/gerda_scratch/pertoldi/gerdacpt/misc/fixfiles/minimalwithLV.fix
+unset PYTHONPATH
+export HOME=/storage/gpfs_data/gerda/gerda_scratch/pertoldi
+/storage/gpfs_data/gerda/gerda_scratch/pertoldi/programs/Python-3.6.1/install/bin/telegram-send "task minimalwithLV: completed"

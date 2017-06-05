@@ -179,9 +179,9 @@ int main( int argc, char** argv ) {
  
         if ( phys == "K42" ) {
             // retrieve simulations
-            path = rootpath + "/out/processed/K42_nPlus.root";
+            path = rootpath + "/data/originals/K42_nPlus.root";
             TFile file_n(path.c_str(), "READ");
-            path = rootpath + "/out/processed/K42_pPlus.root";
+            path = rootpath + "/data/originals/K42_pPlus.root";
             TFile file_p(path.c_str(), "READ");
 
             TH1F *hBEGe_n, *hBEGe_p, *hCOAX_n, *hCOAX_p;
@@ -221,7 +221,7 @@ int main( int argc, char** argv ) {
     std::vector<TH1F*> hist;
 
     // get original spectra
-    path = rootpath + "/out/processed/" + phys + place + ".root";
+    path = rootpath + "/data/originals/" + phys + place + ".root";
     TFile infile(path.c_str(), "READ");
     if (!infile.IsOpen()) { std::cerr << "Zombie infile!\n"; return -1; }
 

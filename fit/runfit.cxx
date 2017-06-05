@@ -55,10 +55,11 @@ int main( int argc, char** argv ) {
                   << "Usage:\n\n"
                   << "    runfit [OPTIONS]\n\n"
                   << "Options:\n\n"
-                  << "    --fixbinning   : use fixed-size binning instead of the\n"
-                  << "                     default one (variable)\n"
-                  << "    --outdir [DIR] : set directory to store results\n"
-                  << "                     default : $GERDACPTDIR/out\n\n";
+                  << "    --fixbinning     : use fixed-size binning instead of the\n"
+                  << "                       default one (variable)\n"
+                  << "    --outdir [DIR]   : set directory to store results\n"
+                  << "                       default : $GERDACPTDIR/out\n"
+                  << "    --fixfile [FILE] : set fixfile\n\n";
         return 0;
     }
 
@@ -308,6 +309,7 @@ int main( int argc, char** argv ) {
     if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) BCLog::OutSummary("Adopting variable binning size ");
     else BCLog::OutSummary("Adopting fixed binning size");
     // eventually fix parameters as indicated in external file
+    BCLog::OutSummary(c_str("Fix file: " + fixfilepath));
     std::ifstream fixfile(fixfilepath);
     int n, p;
     std::string comment;
@@ -333,7 +335,7 @@ int main( int argc, char** argv ) {
     //BCLog::SetLogLevelScreen(BCLog::summary);
 
     std::cout << std::endl;
-    double pvalue = GetPValue(model, level);
+    double pvalue = GetPValue(model, level, false);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
 
     // OUTPUT

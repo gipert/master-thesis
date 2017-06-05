@@ -238,6 +238,7 @@ int main( int argc, char** argv ) {
         if ( set.GetDetectorTypes()[i] == 2 ) AddResolutionCOAX(hist[i]);
         hist[i]->Scale(totalTime[i]*M/Ngen);
     }
+    outfile.cd();
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7500);
     TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7500);

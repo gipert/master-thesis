@@ -129,7 +129,7 @@ int main( int argc, char** argv ) {
     /*[5]*/  simpath.push_back(path + "sumMaGe_Tl208fibers.root");
     /*[6]*/  simpath.push_back(path + "sumMaGe_Pb214fibers.root");
     /*[7]*/  simpath.push_back(path + "sumMaGe_Bi214fibers.root");
-    /*[8]*/  simpath.push_back(path + "alpha_model_run53-74.root");
+    /*[8]*/  simpath.push_back(path + "alpha_model_run53-79.root");
     /*[9]*/  simpath.push_back(path + "sumMaGe_K42nPlus.root");
     /*[10]*/ simpath.push_back(path + "sumMaGe_K42pPlus.root");
     /*[11]*/ simpath.push_back(path + "sumMaGe_Ac228holder.root");

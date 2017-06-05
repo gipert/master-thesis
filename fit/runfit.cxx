@@ -40,7 +40,7 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
 /////////////////////////////////////////////
 
     auto c_str = [](std::string s) { return s.c_str(); };
@@ -217,13 +217,6 @@ int main( int argc, char** argv ) {
             k+=4;
         }
     }
-
-    // the 2bb simulations are in MeV:
-    // ----> rescaling to keV
-    hSimBEGetmp[0]->SetBins(7500,0,7500);
-    hSimCOAXtmp[0]->SetBins(7500,0,7500);
-    hSimBEGetmp[1]->SetBins(7500,0,7500);
-    hSimCOAXtmp[1]->SetBins(7500,0,7500);
 
     // remove events in blinded window Qbb +- 25 keV
     for ( int i = 2014; i <= 2064; i++ ) {

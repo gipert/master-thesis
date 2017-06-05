@@ -22,6 +22,9 @@
 
 #include "DataReader.h"
 
+void AddResolutionBEGe(TH1* h);
+void AddResolutionCOAX(TH1* h);
+
 int main( int argc, char** argv ) {
 
     std::vector<std::string> args(argc);
@@ -132,15 +135,12 @@ int main( int argc, char** argv ) {
     else if ( place == "holder" ) {
         Ngen = 1E07;
         M = 0.658988; // holder's mass [kg]
-
-        if ( phys == "Pa234" ) Ngen = 1;
     }
 
     else if ( place == "cables" ) {
         Ngen = 1E07;
         M = 0.0309831; // total cables' mass
 
-        if ( phys == "Pa234" ) Ngen = 1;
         if ( phys == "Bi214" or phys == "Pb214" ) Ngen = 309831.6;
     }
 
@@ -158,12 +158,10 @@ int main( int argc, char** argv ) {
     }
     // TODO: complete here
 
-// -------------------------------------------------------------------------------------------------------------------    
+// -------------------------------------------------------------------------------------------------------------------
     // SPECIAL CASE: contacts
     else if ( place == "contacts" ) {
 
-        // simulation are already normalized to number of generated events
-        //long int Ngen;
         double MBEGe_n = 0.07423; // [Kg]
         double MBEGe_p = 5.4007716E-07; // [Kg]
         double MCOAX_n = 0.29962; // [Kg]
@@ -198,10 +196,15 @@ int main( int argc, char** argv ) {
             path = rootpath + "/data/sumMaGe_K42pPlus.root";
             TFile outfile_p(path.c_str(), "RECREATE");
 
-            hBEGe_n->Scale(MBEGe_n*ltBEGe);
-            hBEGe_p->Scale(MBEGe_p*ltBEGe);
-            hCOAX_n->Scale(MCOAX_n*ltCOAX);
-            hCOAX_p->Scale(MCOAX_p*ltCOAX);
+            AddResolutionBEGe(hBEGe_n);
+            AddResolutionBEGe(hBEGe_p);
+            AddResolutionCOAX(hCOAX_n);
+            AddResolutionCOAX(hCOAX_p);
+
+            hBEGe_n->Scale(MBEGe_n*ltBEGe*1E-07);
+            hBEGe_p->Scale(MBEGe_p*ltBEGe*1E-06);
+            hCOAX_n->Scale(MCOAX_n*ltCOAX*1E-08);
+            hCOAX_p->Scale(MCOAX_p*ltCOAX*1E-06);
 
             outfile_n.WriteObject(hBEGe_n, "energy_BEGe");
             outfile_n.WriteObject(hCOAX_n, "energy_COAX");
@@ -231,6 +234,8 @@ int main( int argc, char** argv ) {
     path = rootpath + "/data/sumMaGe_" + phys + place + ".root";
     TFile outfile(path.c_str(), "RECREATE");
     for ( int i = 0; i < 40; ++i ) {
+        if ( set.GetDetectorTypes()[i] == 1 ) AddResolutionBEGe(hist[i]);
+        if ( set.GetDetectorTypes()[i] == 2 ) AddResolutionCOAX(hist[i]);
         hist[i]->Scale(totalTime[i]*M/Ngen);
     }
 

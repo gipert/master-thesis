@@ -23,16 +23,19 @@
 
 double GetPValue(Fit2nbbLV& model, BCEngineMCMC::Precision level, bool save) {
 
-    omp_set_num_threads(4);
+    int nth = 4;
+    omp_set_num_threads(nth);
 
     long int Niter;
     if ( level == BCEngineMCMC::kLow ) Niter = 1E05;
     else                               Niter = 1E06;
 
-    std::cout << "Summary : Calculate p-value with 4 threads (" << Niter << " iterations).\nSummary : " << std::flush;
+    std::cout << "Summary : Calculate p-value with 4 threads (" << Niter << " iterations).\n";
     // get loglikelihood after marginalization
     auto bestpar = model.GetBestFitParameters();
     double logP0 = model.LogLikelihood(bestpar); // ~ -4276
+    std::cout << "Summary : logP0 = " << logP0 << std::endl;
+    std::cout << "Summary : " << std::flush;
 
     // get the best fitted function
     auto meanBEGe = model.GetFittedFncBEGe(bestpar);

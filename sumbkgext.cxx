@@ -132,15 +132,12 @@ int main( int argc, char** argv ) {
     else if ( place == "holder" ) {
         Ngen = 1E07;
         M = 0.658988; // holder's mass [kg]
-
-        if ( phys == "Pa234" ) Ngen = 1;
     }
 
     else if ( place == "cables" ) {
         Ngen = 1E07;
         M = 0.0309831; // total cables' mass
 
-        if ( phys == "Pa234" ) Ngen = 1;
         if ( phys == "Bi214" or phys == "Pb214" ) Ngen = 309831.6;
     }
 
@@ -181,9 +178,9 @@ int main( int argc, char** argv ) {
  
         if ( phys == "K42" ) {
             // retrieve simulations
-            path = rootpath + "/out/processed/K42_nPlus.root";
+            path = rootpath + "/data/originals/K42_nPlus.root";
             TFile file_n(path.c_str(), "READ");
-            path = rootpath + "/out/processed/K42_pPlus.root";
+            path = rootpath + "/data/originals/K42_pPlus.root";
             TFile file_p(path.c_str(), "READ");
 
             TH1F *hBEGe_n, *hBEGe_p, *hCOAX_n, *hCOAX_p;
@@ -198,10 +195,10 @@ int main( int argc, char** argv ) {
             path = rootpath + "/data/sumMaGe_K42pPlus.root";
             TFile outfile_p(path.c_str(), "RECREATE");
 
-            hBEGe_n->Scale(MBEGe_n*ltBEGe);
-            hBEGe_p->Scale(MBEGe_p*ltBEGe);
-            hCOAX_n->Scale(MCOAX_n*ltCOAX);
-            hCOAX_p->Scale(MCOAX_p*ltCOAX);
+            hBEGe_n->Scale(MBEGe_n*ltBEGe*1E-07);
+            hBEGe_p->Scale(MBEGe_p*ltBEGe*1E-06);
+            hCOAX_n->Scale(MCOAX_n*ltCOAX*1E-08);
+            hCOAX_p->Scale(MCOAX_p*ltCOAX*1E-06);
 
             outfile_n.WriteObject(hBEGe_n, "energy_BEGe");
             outfile_n.WriteObject(hCOAX_n, "energy_COAX");
@@ -218,7 +215,7 @@ int main( int argc, char** argv ) {
     std::vector<TH1F*> hist;
 
     // get original spectra
-    path = rootpath + "/out/processed/" + phys + place + ".root";
+    path = rootpath + "/data/originals/" + phys + place + ".root";
     TFile infile(path.c_str(), "READ");
     if (!infile.IsOpen()) { std::cerr << "Zombie infile!\n"; return -1; }
 

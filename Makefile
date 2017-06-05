@@ -17,7 +17,7 @@ GERDALIBS = $(shell gelatio-config --libs) \
 DIRS   = bin lib out
 include misc/vars.mk
 
-all : $(DIRS) bin/processData bin/processbb bin/sumbb bin/sumbkgext bin/runfit bin/exposure bin/sim2nbbspectrum
+all : $(DIRS) bin/processData bin/processbb bin/sumbb bin/sumbkgext bin/runfit bin/exposure
 
 fit : $(DIRS) bin/runfit
 

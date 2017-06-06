@@ -15,7 +15,8 @@ Contact: luigi.pertoldi@pd.infn.it
     * `exposure.cxx`            : program to calculate exposure
     * `runconfiguration_mod.db` : modified `runconfiguration.db` from `gerda-metadata` repo
     * `sumallbkgext.sh`         : shell script to reproduce all simulated spectra
-* `fit/`                        : BAT-derived class and runfit.cxx to perform the fit
+    * `fixfiles/`               : folder with files containing fixing settings for the parameters in the fit
+* `fit/`                        : BAT-derived class and runfit.cxx to perform the fit
 * `data/`                       : data needed for the fit
 * `processData.cxx`             : construct energy spectra from data
 * `processbb.cxx`               : produce 40 files (in which only one detector acts as a source) containing

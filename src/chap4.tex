@@ -27,6 +27,12 @@ For a given model $M$, $f$ is a function of the model parameters, the experiment
 \[P(\vec{D}\mid\vec{\lambda},\vec{\nu},M)=f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)\;.\]
 
 % }}}
+% {{{ THE ROLE OF PRIORS
+\marginnote{the role\\of priors} The presence of the prior distribution $P(\vec{\lambda},\vec{\nu},M)$ could generate suspects upon the statistical analysis `objectivity', in the sense that scientific conclusions may depend on `prejudices' about the value of a physical quantity. This is a logical necessity of the Bayesian approach, in which those who have done the experiment are the natural candidates to turn likelihoods in probabilistic statements.
+
+At an intuitive level, it is absolutely reasonable to draw conclusions starting from some prior knowledge, rather than in a purely automatic way. For example, in the most extreme case, if the experimental information is scarce or doubtful it is absolutely right to believe more in personal prejudices than in empirical data. Moreover, if different observers have priors which are so different that they reach divergent conclusions, it just means that the data are still not sufficiently solid to allow a high degree of intersubjectivity and we are on a sticky ground. Thus, one is expected to use different prior distributions to test the robustness of his probability statements \cite{bayesbook}.
+
+% }}}
 % {{{ PARAMETER ESTIMATION
 \marginnote{parameter\\estimation} Parameter estimation is performed while keeping the model fixed. It this case we write
 \begin{equation}P(\vec{\lambda},\vec{\nu}\mid\vec{D},M)=\frac{P(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}\mid M)}{\int P(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}\mid M)}\;,\label{eq:posterior}\end{equation}
@@ -83,7 +89,7 @@ where $N$ is the number of bins, $n_i$ is the observed number of events and $\mu
 \[\mu^i=\sum_jb_j^i=\sum_j c_jh_j^i\;,\]
 where the index $j$ runs over all the background contributions and $b_j^i$ is the expected number of events for the background source $j$ in bin $i$. The latter can be further decomposed in the product of the frequency $h_j^i$ in bin $i$ and a factor $c_j$, which does not depend on the bin and contains the $\lambda_j$ parameter of physical interest that will be estimated with the fitting procedure.
 
-We want to keep the summed energy spectra from BEGes and coaxial separate, as the contamination of radioactive sources on the electrodes can be different. All the other parameters (e.g. the double-beta decay half-life or the \ce{^{60}Co} activity in the detector assembly) are the same for the two spectra. The natural coaxial detectors were omitted from the analysis {\color{red}because\ldots} Then the likelihood can be expressed as
+We want to keep the summed energy spectra from BEGes and coaxial separate, as the contamination of radioactive sources on the electrodes can be different. All the other parameters (e.g. the double-beta decay half-life or the \ce{^{60}Co} activity in the detector assembly) are the same for the two spectra. The natural coaxial detectors were omitted from the analysis because the contribution to the double-beta decay spectrum is too small to be relevant. Then the likelihood can be expressed as
 \[P(\vec{D}\mid\vec{\lambda})=P_\text{BEGe}(\vec{D}\mid\vec{\lambda})P_\text{Coax}(\vec{D}\mid\vec{\lambda})=\prod_i^N\left[\frac{e^{-\mu_i}\mu_i^{n_i}}{n_i!}\right]_\text{BEGe}\prod_j^N\left[\frac{e^{-\mu_j}\mu_j^{n_j}}{n_j!}\right]_\text{Coax}\]
 
 % {{{ 2nbb
@@ -92,16 +98,24 @@ We want to keep the summed energy spectra from BEGes and coaxial separate, as th
 where $k$ labels the detectors, $N_A$ is the Avogadro number, $A_{76}$ is the molar weight of \ce{^{76}Ge}, $f^{76}$ is the enrichment fraction, and $t$ is the detector's live time. The detection efficiency $\epsilon_{2\nu}^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer and the intrinsic efficiency of the detector $k$. $f_{2\nu}^i$ is the theoretical absolute frequency (i.e.~the entire distribution is normalized to one) for double-beta decay in bin $i$, it is the discrete version of \ref{eq:spectstd}. We adopted the approximation $T_{1/2}\gg t$.
 
 The expression holds also for the Lorentz-violating mode, with the associated half-life $T_{1/2}^\text{LV}$. Recalling the equation \ref{eq:totwidth} we can express $T_{1/2}^\text{LV}$ in relation to $T_{1/2}$ and $\aof$:
-\[T_{1/2}^\text{LV}=\frac{T_{1/2}}{\aof}\ldots\;,\]
+\[T_{1/2}^\text{LV}=I\cdot\frac{T_{1/2}}{\aof}\qquad I=\frac{10}{\aof}\frac{\int_0^{K_0}\frac{\text{d}\delta\Gamma}{\text{d}K}\text{d}K}{\int_0^{K_0}\frac{\text{d}\Gamma_0}{\text{d}K}\text{d}K}\;,\]
 and then the $b_{2\nu\text{LV}}^i$ factor can be written as:
-\[b_{2\nu\text{LV}}^i=\frac{N_A\log2}{A_{76}T_{1/2}}\sum_{k=1}^\text{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu\text{LV}}\ldots\;,\]
+\[b_{2\nu\text{LV}}^i=\frac{\aof}{I}\frac{N_A\log2}{A_{76}T_{1/2}}\sum_{k=1}^\text{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu\text{LV}}\;,\]
 
 % }}}
 % {{{ EXTERNAL SOURCES
 \marginnote{external\\sources} For the other background sources the parameter of interest is the activity, defined as the number of events per unit of time and mass. Assuming a stable isotope contamination within the considered live times, we can express $b_j$ as
-\[b_j=a_jM\sum_k^\text{det}t_k\epsilon_j^{ik}f_j^i\;,\]
+\[b_j^i=a_jM\sum_k^\text{det}t_k\epsilon_j^{ik}f_j^i\;,\label{eq:extsources}\]
 where $a_j$ is the activity for the source $j$ and $M$ is the mass of the object in which the source is located. The detection efficiency $\epsilon_j^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer, the intrinsic efficiency and the solid angle the detector $k$ subtends at the radioactive source.
 
 It should be noted that the activities of some isotopes are correlated, for example if they come from the same decay chain. In this analysis we have two examples of this, \ce{^{212}Bi} decays in \ce{^{208}Tl} with 39.93\% branching ratio, while \ce{^{214}Pb} decays in \ce{^{214}Bi} with $\sim$100\% branching ratio.
+
+% }}}
+% {{{ SIMULATED SPECTRA
+\marginnote{simulated\\spectra} The simulated spectra, for $2\nbb$ and background sources, come from \textsc{MaGe} in the form
+\[b^{ik}_{\textsc{MaGe},j}=N_\text{gen}\epsilon^{ik}_jf_j^i\;,\]
+where $N_\text{gen}$ is the number of primary vertices simulated and $i$, $j$, $k$ label the $i$-th bin, the source and the detector, respectively. The spectra for each detector have then to be combined properly in order to be fitted to the data. In the case of external sources, for example, the form in equation \ref{eq:extsources} has to be reproduced rescaling each spectra with $N_\text{gen}$, then multiplying by $t_k$ and $M$ and finally summing over all detectors. Then the overall factor $\lambda_i$ will be the parameter to estimate with the fitting procedure:
+\[b_{\text{sim},j}^i=\lambda_jM\sum_k^\text{det}t_k\epsilon_j^{ik}f_j^i\;.\]
+
 
 % }}}

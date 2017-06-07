@@ -120,6 +120,9 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
 
     for ( int i = downBin; i <= upBin; ++i ) {
 
+        // ignore ROI
+        if ( dbin[i] >= 2014 and dbin[i+1] <= 2064 ) continue;
+
         // BEGe
         f = parameters[0]*simBEGe[0][i] + parameters[0]*parameters[1]*n2n1*simBEGe[1][i]; // 2nbb & 2nbbLV
         f += parameters[2]*simBEGe[2][i];                           // K42homLAr

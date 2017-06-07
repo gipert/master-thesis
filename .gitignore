@@ -9,5 +9,4 @@ bin/
 misc/log
 misc/paths.txt
 misc/vars.mk
-misc/outfile.root
-misc/testres
+misc/bsub

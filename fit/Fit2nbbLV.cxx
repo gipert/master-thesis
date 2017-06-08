@@ -95,11 +95,15 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     // priors
     TF1 invflat("inverse-flat", "1/x^2"  , 0, 1);
     TF1 logflat("log-flat"    , "1/x"    , 0, 1);
-    //TF1 linear ("linear"      , "(x<=[0])*(-x+[0])+(x>[0])*0" , 0, 1);
+    TF1 linear ("linear"      , "(x<=[0])*(-x+[0])+(x>[0])*0" , 0, 1);
+    TF1 invgaus("inverse-gaus", "exp(-((417.483/x-[0])^2)/(2*[1]^2))/(x^2)", 0, 1);
 
     // 2nbb
     this->SetPriorConstantAll();
-    this->SetPrior(0, &invflat);
+    //this->SetPrior(0, &invflat);
+    invgaus.SetParameter(0, 1.926);
+    invgaus.SetParameter(1, 0.095);
+    this->SetPrior(0, &invgaus);
 
     // 2nbbLV
     //linear.SetParameter(0, 1.52E-05);

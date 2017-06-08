@@ -42,7 +42,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [13] */ this->AddParameter("Co60holder",           0, 1.6E-04); // <--- Screening
     /* [14] */ this->AddParameter("K40holder",            0, 2E-02);
     /* [15] */ this->AddParameter("Bi212Tl208holder",     0, 7E-04);
-    /* [16] */ this->AddParameter("Pb214Bi214holder",     0, 30);
+    /* [16] */ this->AddParameter("Pb214Bi214holder",     0, 1E-03);
     /* [17] */ this->AddParameter("K40cable",             0, 1E00);
     /* [18] */ this->AddParameter("Bi212Tl208cables",     0, 5E-02);
     /* [19] */ this->AddParameter("Pb214Bi214cables",     0, 25);

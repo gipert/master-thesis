@@ -19,12 +19,12 @@
 18		1	#Bi212&Tl208cables
 19		0	#Pb214&Bi214cables
 20		1	#K40minishroud
-21		1	#Pa234minishroud
-22		0	#Bi207minishroud
+21		0	#Pa234minishroud
+22		1	#Bi207minishroud
 23		0	#Bi207cables
 24		0	#Bi207holder
 25		0	#Pb214&Bi214minishroud
 26		0	#K42minishroudsurf
-27		0	#Pa234cables
+27		1	#Pa234cables
 28		0	#Pa234holder
 29		0	#K42LArAA

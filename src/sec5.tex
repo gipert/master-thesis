@@ -1,0 +1,61 @@
+%! TEX root = ../main.tex
+\section{Results}
+The analysis covers the range of data collected between December 2015 and March 2017, namely from \texttt{Run53} to \texttt{Run79}, excluding \texttt{Run66} and \texttt{Run68}, in the {\gerda} nomenclature. This corresponds to an exposure of 20.46 kg$\cdot$yr for the BEGes and 16.22 kg$\cdot$yr for the enriched coaxials. As mentioned in the previous chapters, data from natural coaxials detectors are not considered in this analysis, as the contribution to the $2\nbb$ spectrum is negligible. Data corresponding to an energy deposition that lies within $\pm$25 keV around the $Q_{\beta\beta}$ are neglected in the Likelihood computation.
+
+The fit range was optimized to the present knowledge about the background model. The lower limit was set just above the \ce{^{39}Ar} $Q_\beta$, corresponding to 570 keV, because of the scarce knowledge of the contributions to the background spectra in that region. The upper limit was set to 5.3 MeV to include the $\alpha$ region and better constraint the contribution of the alpha model in the $2\nbb$ region.
+
+\marginnote{p-value\\computation} According to the Eq.~\ref{eq:pvalue}, One should compute the integral of the complete posterior distribution in order to evaluate the p-value. However, despite the powerful numerical integration tools shipped with BAT, the calculation fails if the parameter space approaches the 10-20 number of dimensions, as in the case of such a rich set of background sources. Anyway, instead of trying to solve a hard numerical problem, one can adopt a different approach applying again the MCMC methods, as suggested in \cite{p-value}. With a dataset probability modeled as a product of Poisson terms, as the case of fitting an histogram, the highest probability occurs when each bin's content matches the theoretical prediction. We used the best-fit energy histogram to define the starting point for a Markov chain. Moving the bin contents randomly up or down and applying the usual Metropolis test a large number of experiments can be quickly simulated and the p-value extracted.
+
+\marginnote{binning} At the beginning, data were binned with a fixed-size 4 keV binning. The, at a first glance to results, it was realised that the model was very poorly performant around the visible $\gamma$-lines of \ce{^{40}K} and \ce{^{42}K}. This is always the case when dealing with $\gamma$-line splitted over two or three bins, where the reliability of the energy calibration and resolution curves is essential. Thus, a variable binning that takes into account this effect has been adopted. Bins containing the most visible $\gamma$-lines in data have been merged into one, in particular: the \ce{^{42}K} line at 1461 keV, the \ce{^{40}K} line at 1525 keV, the \ce{^{208}Tl} line at 2614 keV, and the \ce{^{214}Bi} lines at 609, 1764, 2204 and 2447 keV.
+
+\marginnote{priors} For the $2\nbb$ half-life $T_{1/2}^{2\nu}$ two prior distributions have been considered: a flat one between 1.74 and 2.09 $\cdot10^{21}$ yr, corresponding to
+\[\propto\frac{1}{y^2}\]
+when fitting $y=1/T_{1/2}^{2\nu}$, and a gaussian one centered on the result of {\gerda} phase \textsc{i} \cite{gerda2nbb}:
+\[(1.926\pm0.095)\cdot10^{21}\;\text{yr}\]
+with a $\sigma$ taken equal to the quoted error. When fitting $y=1/T_{1/2}^{2\nu}$, this corresponds to a prior:
+\[\propto \frac{1}{y^2}\exp\left[-\frac{\left(\frac{1}{y}-\mu\right)^2}{2\sigma^2}\right]\;.\]
+
+Some of the results from the screening measurements of the materials, reported in Tab.~\ref{tab:screening}, have been used to set prior distributions on the background activities. A gaussian prior is set when a precise activity with error is specified, a flat distribution is set when only an upper limit, or no information, is available. A special treatment is applied for measurements concerning cable activities. In {\gerda}, four types of cables are used to transport signals and provide power supply, but only three of them were screened to study the radioactivity. Furthermore there are some specific cables that come from a separate batch that also were not screened. Thus, it has been decided not to use the available results to set priors but only to provide a post-analysis consistency check to the activities in the `cables' \textsc{MaGe} volume given by the fit. Activities from the three cable types reported in Tab.~\ref{tab:screening} were combined as follows: they were weighted considering their actual presence in terms of mass in {\gerda}. For the non-screened cable type, Tecnomec 2 mils, the same contamination of Tecnomec 2 mils was assumed.
+
+\subsection{Standard double-beta decay model}
+In a first approach in studying the background model only the standard mode of $2\nbb$ was included, in order to compare the results on the half-life with the one found in literature. The presence of all the background sources suggested by the screening measurements was tested in a first fit model, plus the \ce{^{207}Bi} which is known to be present by other studies. Then the parameters showing an exponential decay as a marginalised posterior, thus with only an upper limit, were gradually excluded from the fit to gain in the end a minimal background model. In this first analysis non-informative prior distributions are set for all parameters.
+\begin{table}
+	\caption{Results for the minimal background model with non-informative priors.}
+	\centerline{%
+	\begin{tabular}{lcccc}
+		\toprule
+		Source							&	Global mode	&	Marginalised mode	&	1$\sigma$ contour	&	BI [cts/(keV$\cdot$kg$\cdot$yr)]	\\
+		\midrule
+		$T_{1/2}^{2\nu}$ [$10^{21}$ yr]	&				&						&						&		\\
+		\cmidrule{1-5}
+		\textsc{fibers}					&				&						&						&		\\
+		\ce{^{40}K}						&				&						&						&		\\
+		\ce{^{212}Bi} + \ce{^{208}Tl}	&				&						&						&		\\
+		\ce{^{214}Pb} + \ce{^{214}Bi}	&				&						&						&		\\
+		\cmidrule{1-5}
+		\textsc{holders}				&				&						&						&		\\
+		\ce{^{40}K}						&				&						&						&		\\
+		\ce{^{214}Pb} + \ce{^{214}Bi}	&				&						&						&		\\
+		\ce{^{228}Ac}					&				&						&						&		\\
+		\ce{^{60}Co}					&				&						&						&		\\
+		\cmidrule{1-5}
+		\textsc{cables}					&				&						&						&		\\
+		\ce{^{40}K}						&				&						&						&		\\
+		\ce{^{212}Bi} + \ce{^{208}Tl}	&				&						&						&		\\
+		\ce{^{234\text{m}}Pa}			&				&						&						&		\\
+		\cmidrule{1-5}
+		\textsc{minishroud}				&				&						&						&		\\
+		\ce{^{40}K}						&				&						&						&		\\
+		\ce{^{207}Bi}					&				&						&						&		\\
+		\cmidrule{1-5}
+		\textsc{other}					&				&						&						&		\\
+		\ce{^{42}K} in LAr				&				&						&						&		\\
+		\ce{^{42}K} on \textsc{coax} p$^+$&				&						&						&		\\
+		$\alpha$-model BEGe				&				&						&						&		\\
+		$\alpha$-model \textsc{coax}	&				&						&						&		\\
+		\bottomrule
+	\end{tabular}
+	}
+	\label{tab:res1}
+\end{table}
+\marginnote{comments}

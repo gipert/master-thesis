@@ -34,10 +34,12 @@
 			\node at (axis cs:2300,1.5) {\ce{^{214}Bi}};
 			\node at (axis cs:1700,2) {\ce{^{214}Bi}};
 			\node at (axis cs:560,3.1) {\ce{^{214}Bi}};
+			\node at (axis cs:850,3.3) {\ce{^{228}Ac}};
+			\draw (axis cs:911,3.0) -- (axis cs:911,2.75);
 			% alpha
 			\node at (axis cs:4700,1.6) {\ce{^{226}Ra}};
 			\node at (axis cs:5100,1.9) {\ce{^{210}Po}};
-			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {BEGes --- 15.05 kg$\cdot$yr};
+			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {BEGes --- 20.46 kg$\cdot$yr};
 			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4.7);
 		\nextgroupplot
 			\addplot[const plot, draw = blue] file {../data/EnrCoax.dat};
@@ -53,7 +55,7 @@
 			\node at (axis cs:5100,2.1) {\ce{^{210}Po}};
 			\node at (axis cs:5370,0.7) {\ce{^{222}Rn}};
 			\node at (axis cs:5800,0.7) {\ce{^{218}Po}};
-			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {enr coax --- 12.74 kg$\cdot$yr};
+			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {enr coax --- 16.22 kg$\cdot$yr};
 			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4.7);
 		\nextgroupplot
 			\addplot[const plot, draw = black] file {../data/NatCoax.dat};
@@ -69,7 +71,7 @@
 			\node at (axis cs:5150,2.1) {\ce{^{210}Po}};
 			\node at (axis cs:5400,0.8) {\ce{^{222}Rn}};
 			\node at (axis cs:5880,1) {\ce{^{218}Po}};
-			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {nat coax --- 2.31 kg$\cdot$yr};
+			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {nat coax --- 6.68 kg$\cdot$yr};
 			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4.7);
 	\end{groupplot}
 \end{tikzpicture}

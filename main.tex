@@ -3,13 +3,13 @@
 %     Created: Mar Apr 18 06:00 pm 2017 C
 % Last Change: Mar Apr 18 06:00 pm 2017 C
 %
-\documentclass[11pt, a4paper]{book}
+\documentclass[11pt, a4paper, twoside]{article}
 	%\usepackage{pdfsync}
 	%\synctex1
 	%\usepackage[binding=5mm]{layaureo}
 	%\usepackage[marginparwidth=2cm]{geometry}
 	\usepackage{marginnote}
-	\renewcommand*{\marginfont}{\scshape}
+		\renewcommand*{\marginfont}{\scshape}
 	\usepackage{indentfirst}
 	%\setlength{\parindent}{10pt}
 	%\usepackage[parfill]{parskip}
@@ -29,19 +29,19 @@
 	\usepackage[UKenglish]{babel}
 	\usepackage[utf8]{inputenc}
 	\usepackage[T1]{fontenc}
-	%\usepackage{lmodern}
-	\usepackage[lining]{libertine}
+	\usepackage{lmodern}
+	\usepackage[lining]{ebgaramond}
+	%\usepackage[lining]{libertine}
 	\usepackage[cmbraces, libertine, varg]{newtxmath}
 	\usepackage{bm}
 	\renewcommand{\mathbf}{\bm}
-	\usepackage{ebgaramond}
 	\usepackage{microtype}
-%	\usepackage{titlesec}
-%		\titleformat*{\section}{\Large\swshape}
-%		\titleformat*{\subsection}{\large\scshape}
-%		\titleformat*{\subsubsection}{\scshape}
-	\usepackage{fontspec}
-	\setmonofont[Scale=MatchLowercase]{Inconsolata}
+	\usepackage{titlesec}
+		\titleformat*{\section}{\LARGE}
+		\titleformat*{\subsection}{\Large}
+		\titleformat*{\subsubsection}{\large}
+	%\usepackage{fontspec}
+	%\setmonofont[Scale=MatchLowercase]{Inconsolata}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\usepackage{booktabs}
 	\usepackage[labelfont=bf]{caption}
@@ -67,9 +67,17 @@
 	\usepackage{pdflscape}
 	%\usepackage{lineno}
 	%\linenumbers
-	\usepackage{csquotes}
-	\usepackage[backend=bibtex, style=science]{biblatex}
-	\addbibresource{bib-thesis}
+	%
+	%%%%%%%%%%%%%%%%%%%%%% BIBTEX
+	\usepackage[nottoc,notlot,notlof]{tocbibind}
+	\let\OLDthebibliography\thebibliography
+	\renewcommand\thebibliography[1]{
+		\OLDthebibliography{#1}
+		\setlength{\parskip}{0pt}
+		\setlength{\itemsep}{0pt plus 0.3ex}
+	}
+	\usepackage{url,doi}
+	\renewcommand{\doi}[1]{\texttt{doi:}\url{#1}}
 \begin{document}
 \begin{titlepage}
 	\thispagestyle{empty}
@@ -105,9 +113,12 @@
 %\listoftables
 %\listoffigures
 %\include{src/intro}
-%\include{src/chap1}
-%\include{src/chap2}
-%\include{src/chap3}
-\include{src/chap4}
-\printbibliography
+%\include{src/sec1}
+%\include{src/sec2}
+%\include{src/sec3}
+%\include{src/sec4}
+\include{src/sec5}
+%\printbibliography[heading=bibintoc]
+\bibliography{bib-thesis}
+\bibliographystyle{minimal}
 \end{document}

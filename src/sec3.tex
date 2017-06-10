@@ -1,5 +1,5 @@
 %! TEX root = ../main.tex
-\chapter{The {\gerda} dataset and Monte Carlo simulations}
+\section{The {\gerda} dataset and Monte Carlo simulations}
 % {{{ THE GERDA DATA STRUCTURE
 \marginnote{the\\{\gerda}\\data\\structure} In general the binary raw data format is custom defined by the different data acquisition systems. In order to optimize the analysis streaming and to provide a unique input interface for the analysis, all raw data are converted to a common standardized format. MGDO \cite{MGDO} (\textsc{Majorana} {\gerda} Data Objects) is a software library jointly developed by {\gerda} and \textsc{Majorana} \cite{majoranadem}. The core function of this software is to provide a collection of \texttt{C++} objects to encapsulate HPGe detector array event data and related analytical quantities. It also includes implementations of a number of general-purpose signal processing algorithms to support advanced detector signal analysis. The custom data objects available in the MGDO package are used as reference format to store events, waveforms, and other DAQ data (time stamps, flags). The MGDO data objects are stored as ROOT \cite{ROOT} files. The set of ROOT files produced by the conversion of raw data is named \textsc{Tier1}, and is officially distributed for the analysis.
 
@@ -20,7 +20,7 @@ The main purpose for acquiring pulses from all the detectors when an energy depo
 \marginnote{the\\energy\\spectra} With the cuts described above, the summed energy spectra from BEGe, enriched coaxial and natural coaxial detectors are presented in Fig.~\ref{fig:data}. The considered data set was taken between December 2015 and March 2017. Some prominent features can be identified. The low energy part up to 565 keV is dominated by $\beta^-$ decay of cosmogenic \ce{^{39}Ar} in all spectra. Slight differences in the spectral shape between the coaxial and BEGe type detectors result from differences in detector geometry and of the n$^+$ dead layer thickness. Between 600 and 1500 keV the spectra of the enriched detectors exhibit an enhanced continuous spectrum due to $2\nbb$ decay (see also Fig.~\ref{fig:energyspectra}). In all spectra, $\gamma$ lines from the decays of \ce{^{40}K} and \ce{^{42}K} can be identified, the spectra of the enriched coaxial detectors contain also lines from \ce{^{208}Tl} and \ce{^{214}Bi}. The peak-like structure around 3.5 MeV can be attributed to the $\alpha$-decays near the detector p$^+$ surface.
 
 % }}}
-\section*{Monte Carlo simulations}
+\subsection{Monte Carlo simulations}
 Background components that were identified in the energy spectra or that were known to be present in the vicinity of the detectors were simulated using the \textsc{MaGe} \cite{MaGe} code based on \textsc{Geant4} \cite{geant4} and jointly developed by the {\gerda} and \textsc{Majorana} \cite{majoranadem} collaborations. The detectors and the arrangement of the germanium detector array with seven detector strings were implemented into the \textsc{MaGe} code as well as the other {\gerda} components (see Fig.~\ref{fig:volumes}). During the simulation \textsc{Geant4} generates complete information about the trajectory and interactions of particles as they propagate through the detectors. Although all of this information is available to the user, it is typically processed, parsed and saved to an output file for further analysis after the simulation run is complete. Simulations of contaminations of the following hardware components were performed: on the p$^+$ and n$^+$ surfaces of the detectors, homogeneously distributed in the LAr, in the detector assembly representing contaminations in the detector holders and their components, the mini shroud surrounding the detectors, the fiber shroud, the high-voltage cables and the signal cables. The volumes representing the germanium array, the holder mounting and the cables are simulated as depicted in Fig.~\ref{fig:volumes}. The mini shroud volume is implemented as a set of cylinders surrounding each detector string, while the fiber shroud consists of the lateral surface of a cylinder.
 \begin{figure}
 	\centering
@@ -86,8 +86,8 @@ The \ce{^{210}Po} peak structure around 5.3 MeV with high statistics was used to
 In order to describe the whole energy interval dominated by $\alpha$-induced events, the simulated spectra of $\alpha$-decays of \ce{^{210}Po} as well as from \ce{^{226}Ra} and its short lived daughter nuclei on the p$^+$ surface and in LAr were used to fit the energy spectrum between 3500 and 7500 keV. In fact, while the surface decays alone can successfully describe the observed peak structures, they could not describe the whole spectrum. A contribution from an approximately flat component, like the spectra from $\alpha$-decays in LAr, is needed in the model. The number of events in the considered energy range was left as a free parameter for each $\alpha$ component.
 
 % }}}
-\section*{Screening measurements}
-There are some radioactive contaminations in the components of {\gerda}, though not evident in the energy spectra, which have been identified and systematically measured. The most relevant contributions come from the silicon of the holder mounting, the cables, the nylon mini shroud covering the detectors and the fiber shroud.
+\subsection{Screening measurements}
+There are some radioactive contaminations in the components of {\gerda}, though not evident in the energy spectra, which have been identified and systematically measured. The most relevant contributions, reported in Table \ref{tab:screening}, come from the silicon of the holder mounting, the cables, the nylon mini shroud covering the detectors and the fiber shroud.
 \begin{table}
 	\caption{Screening measurements for some of the considered {\gerda} components. The upper limits correspond to 90\% C.L.}
 	\centerline{%
@@ -112,9 +112,6 @@ There are some radioactive contaminations in the components of {\gerda}, though 
 	\label{tab:screening}
 	}
 \end{table}
-
-{\color{red}spiegare come le misure sono state combinate, ho ancora dei dubbi su questo}\\
-{\color{red}immagini catene di decadimento}
 \begin{landscape}
 \begin{figure}
 	\centering

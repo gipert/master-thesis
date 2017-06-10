@@ -286,8 +286,8 @@ int main( int argc, char** argv ) {
     BCSummaryTool summary(&model);
     // create output class
     path = outdirname + "/";
-    BCModelOutput output(&model, c_str(path + "markowChains.root"));
-    model.WriteMarkovChain(true);
+    //BCModelOutput output(&model, c_str(path + "markowChains.root"));
+    //model.WriteMarkovChain(true);
 
     // set nicer style for drawing than the ROOT default
     BCAux::SetStyle();

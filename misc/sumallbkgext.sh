@@ -20,12 +20,12 @@ echo "--holder --Ac228"
 sumbkgext --holder --Ac228
 echo "--holder --Bi212"
 sumbkgext --holder --Bi212
-#echo "--holder --Bi214"
-#sumbkgext --holder --Bi214
+echo "--holder --Bi214"
+sumbkgext --holder --Bi214
 echo "--holder --Co60"
 sumbkgext --holder --Co60
-#echo "--holder --Pb214"
-#sumbkgext --holder --Pb214
+echo "--holder --Pb214"
+sumbkgext --holder --Pb214
 echo "--holder --Tl208"
 sumbkgext --holder --Tl208
 echo "--holder --Bi207"

@@ -142,6 +142,7 @@ int main( int argc, char** argv ) {
         M = 0.0309831; // total cables' mass
 
         if ( phys == "Bi214" or phys == "Pb214" ) Ngen = 309831.6;
+        if ( phys == "Bi212" or phys == "Tl208" or phys == "K40" ) Ngen *= 1E03;
     }
 
     else if ( place == "minishroud" ) {
@@ -150,6 +151,8 @@ int main( int argc, char** argv ) {
 
         if ( phys == "Bi214" ) Ngen = 1.2381915E06;
         if ( phys == "Pb214" ) Ngen = 577063.5;
+
+        if ( phys == "234Pa" or phys == "K40" ) Ngen *= 1E03;
     }
 
     else if ( place == "minishroudsurface" ) { // NOTE: fake

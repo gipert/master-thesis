@@ -17,9 +17,9 @@ int main() {
         if ( set.GetDetectorTypes()[i] == 3 ) NatCoaxMass += set.GetMass()[i];
     }
 
-    std::cout << "The total mass of the BEGe detectors is: "    << BEGeMass/1E03 << '\n';
-    std::cout << "The total mass of the EnrCoax detectors is: " << EnrCoaxMass/1E03 << '\n';
-    std::cout << "The total mass of the NatCoax detectors is: " << NatCoaxMass/1E03 << '\n';
+    std::cout << "The total mass of the BEGe detectors is: "    << BEGeMass/1E03 << " kg\n";
+    std::cout << "The total mass of the EnrCoax detectors is: " << EnrCoaxMass/1E03 << " kg\n";
+    std::cout << "The total mass of the NatCoax detectors is: " << NatCoaxMass/1E03 << " kg\n";
 
     GERDA::DataReader reader( rootpath + "/misc/paths.txt", false, "GELATIO");
 
@@ -33,25 +33,30 @@ int main() {
     int runID, time;
     while ( timeFile >> runID >> time ) timeMap.insert(std::make_pair(runID,time));
 
+    // calculate total livetime
+    int totliv = 0;
+    for ( const auto& i : timeMap ) totliv += i.second;
+    std::cout << "The total live time is " << (double)totliv/31536000 << " yr\n" << std::flush;
+
     ////// calculate the total time each detector is ON --> detector status = 0
     // totalTime follows the GELATIO scheme
-    std::vector<int> totalTime(40, 0);
-    for ( const auto& i : dsm ) {
-        for ( int j = 0; j < 40; ++j ) {
+    std::vector<double> totalTime(40, 0);
+    for ( const auto& i : dsm ) { // <--- loop on runIDs
+        for ( int j = 0; j < 40; ++j ) { // <--- loop in detectors
             if ( i.second[j] == 0 ) totalTime[j] += timeMap[i.first];
         }
     }
 
     double BEGeExp = 0, EnrCoaxExp = 0, NatCoaxExp = 0;
     for ( int i = 0; i < 40; i++ ) {
-        if ( set.GetDetectorTypes()[i] == 1 ) BEGeExp    += (set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
-        if ( set.GetDetectorTypes()[i] == 2 ) EnrCoaxExp += (set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
-        if ( set.GetDetectorTypes()[i] == 3 ) NatCoaxExp += (set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
+        if ( set.GetDetectorTypes()[i] == 1 ) BEGeExp    += ((double)set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
+        if ( set.GetDetectorTypes()[i] == 2 ) EnrCoaxExp += ((double)set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
+        if ( set.GetDetectorTypes()[i] == 3 ) NatCoaxExp += ((double)set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
     }
 
-    std::cout << "The total exposure of the BEGe detectors is: "    << BEGeExp << '\n';
-    std::cout << "The total exposure of the EnrCoax detectors is: " << EnrCoaxExp << '\n';
-    std::cout << "The total exposure of the NatCoax detectors is: " << NatCoaxExp << '\n';
+    std::cout << "The total exposure of the BEGe detectors is: "    << BEGeExp << " kg•yr\n";
+    std::cout << "The total exposure of the EnrCoax detectors is: " << EnrCoaxExp << " kg•yr\n";
+    std::cout << "The total exposure of the NatCoax detectors is: " << NatCoaxExp << " kg•yr\n";
 
     return 0;
 }

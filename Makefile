@@ -17,7 +17,7 @@ GERDALIBS = $(shell gelatio-config --libs) \
 DIRS   = bin lib out
 include misc/vars.mk
 
-all : $(DIRS) bin/processData bin/processbb bin/sumbb bin/sumbkgext bin/runfit bin/exposure
+all : $(DIRS) bin/processData bin/processbb bin/sumbb bin/sumbkgext bin/runfit bin/exposure bin/arrayinfo
 
 fit : $(DIRS) bin/runfit
 
@@ -55,6 +55,9 @@ bin/runfit : fit/runfit.cxx fit/pvalue.cxx lib/libFit2nbbLV.so lib/libProgressBa
 
 bin/exposure : misc/exposure.cxx lib/libDataReader.so lib/libDetectorSet.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
+
+bin/arrayinfo : misc/arrayinfo.cxx lib/libDetectorSet.so
+	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDetectorSet
 # ------------------------------------------------------------------------
 rundata : 
 	bin/processData >/dev/null && misc/sumallbkgext.sh >/dev/null

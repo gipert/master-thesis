@@ -29,16 +29,16 @@ using namespace GERDA;
 
 bool DataReader::kVerbosity = false;
 
-DataReader::DataReader( std::string gerdaMetaPath, 
+DataReader::DataReader( std::string gerdaMetaPath,
                         std::string gerdaDataPath,
-                        std::string configListPath, 
+                        std::string configListPath,
                         std::string ordering ) :
-    
+
     DetectorSet("GELATIO"),
     configList(configListPath.c_str()),
     kOrdering(ordering)
 
-{ 
+{
     if ( gerdaMetaPath.back() == '/' ) gerdaMetaPath.pop_back(); gerdaMetaDir = gerdaMetaPath;
     if ( gerdaDataPath.back() == '/' ) gerdaDataPath.pop_back(); gerdaDataDir = gerdaDataPath;
 
@@ -55,11 +55,11 @@ DataReader::DataReader( std::string gerdaMetaPath,
     kMustResetEnergy = false;
 }
 // -------------------------------------------------------------------------------
-DataReader::DataReader( std::string pathsFile, bool verbose, std::string ordering ) : 
-    
+DataReader::DataReader( std::string pathsFile, bool verbose, std::string ordering ) :
+
     DetectorSet("GELATIO"),
     kOrdering(ordering)
-{ 
+{
 
     kVerbosity = verbose;
 
@@ -89,7 +89,7 @@ DataReader::DataReader( std::string pathsFile, bool verbose, std::string orderin
     kMustResetEnergy = false;
 
     for ( auto& n : runsToProcess ) this->LoadRun(n);
-/*    
+/*
     std::cout << "Loaded runs: ";
     for ( const auto& it : dataTreeMap ) std::cout << it.first << ' ';
     std::cout << ". Continue? [y/n, default=y] ";
@@ -104,7 +104,7 @@ std::string DataReader::FindRunConfiguration( unsigned int runID ) {
     if ( !configList.is_open() ) return "filenotfound";
     configList.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     configList.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    
+
     std::string dummy;
     std::string result = "runnotregistered";
     while ( configList >> dummy ) {
@@ -141,10 +141,10 @@ bool DataReader::LoadRun( unsigned int runID ) {
     TFile configFile( completePath.c_str(), "READ" );
 
     if ( configFile.IsZombie() ) { std::cerr << "Run" << runID << ": config file not found!\n"; return false; }
-    
+
     if (kVerbosity) std::cout << "Retrieving detector status...\n";
     std::unique_ptr<GETRunConfiguration> gtr(dynamic_cast<GETRunConfiguration*>(configFile.Get("RunConfiguration")));
-       
+
     std::vector<int> detector_status( gtr->GetNDetectors(), 0 );
     for ( int i = 0; i < (int)detector_status.size(); ++i ) {
         if      (  gtr->IsTrash(i) ) detector_status[i] = 2;
@@ -153,7 +153,7 @@ bool DataReader::LoadRun( unsigned int runID ) {
 
     configFile.Close();
     detectorStatusMap.insert(std::make_pair( runID, detector_status ));
- 
+
     if (kVerbosity) std::cout << "Looking for data files...\n";
     gada::FileMap myMap;
     myMap.SetRootDir(gerdaDataDir);
@@ -180,8 +180,8 @@ bool DataReader::LoadRun( unsigned int runID ) {
         std::cerr << "Data chain of run" << runID << " is Zombie! Tree not loaded.\n";
         return false;
     }*/
-    
-    dataTreeMap.insert(std::make_pair( runID, std::unique_ptr<TChain>(loader.GetUniqueMasterChain()) )); 
+
+    dataTreeMap.insert(std::make_pair( runID, std::unique_ptr<TChain>(loader.GetUniqueMasterChain()) ));
     if (kVerbosity) std::cout << "Done.\n\n";
 
     return true;
@@ -193,12 +193,12 @@ void DataReader::CreateEnergyHist( std::string opt ) {
         std::cout << opt << ": Unknown option, aborting...\n";
         return;
     }
-   
+
     if (kMustResetEnergy) {
-        std::cout << "Warning: the energy vector is non-empty, call DataReader::ResetEnergy. Aborting...\n"; 
+        std::cout << "Warning: the energy vector is non-empty, call DataReader::ResetEnergy. Aborting...\n";
         return;
     }
-    
+
     int nTP;
 
     TTreeReader treereader;
@@ -211,7 +211,7 @@ void DataReader::CreateEnergyHist( std::string opt ) {
     TTreeReaderArray<double> energyTot     (treereader, "energy");
 
     for ( const auto& it : dataTreeMap ) {
-       
+
         if (kVerbosity) std::cout << "Initializing... " << std::flush;
         nTP = 0;
         auto& chain = it.second;
@@ -220,13 +220,12 @@ void DataReader::CreateEnergyHist( std::string opt ) {
         ProgressBar bar(chain->GetEntries());
         if (!kVerbosity) bar.ShowBar(false);
         std::cout << "processing run" << it.first << ": " << std::flush;
-        
+
         auto start = std::chrono::system_clock::now();
 
-        int i = 0;
         while (treereader.Next()) {
-            
-            bar.Update(i); i++;
+
+            bar.Update();
 
             if (*isTP) nTP++;
 
@@ -234,21 +233,21 @@ void DataReader::CreateEnergyHist( std::string opt ) {
                 for ( int det = 0; det < 40; det++ ) {
 
                     if ( opt == "gauss" or opt == "GAUSS" ) {
-                    
+
                         // equivalent
                         /*if ( failedFlag->at(det) == 0 and 
                             detectorStatusMap[it.first][det] == 0 and
                             energyTot->at(det) > 0 and energyTot->at(det) < 10000 ) {
                             energy[det].Fill(energyGauss->at(det));
                         }*/
-                    
+
                         if ( energyTot[det] > 0 and energyTot[det] < 10000 ) {
                             energy[det].Fill(energyTot[det]);
                         }
                     }
 
                     else if ( opt == "zac" or opt == "ZAC" ) {
-                        
+
                         if ( failedFlag[det] == 0 and 
                             detectorStatusMap[it.first][det] == 0 and
                             energyTot[det] > 0 and energyTot[det] < 10000 ) {
@@ -264,7 +263,7 @@ void DataReader::CreateEnergyHist( std::string opt ) {
         auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - start);
         std::cout << " [" << elapsed.count()*1./1000 << "s]\n";
     }
-    
+
     return;
 }
 // -------------------------------------------------------------------------------
@@ -276,7 +275,7 @@ void DataReader::ResetEnergy() {
 }
 // -------------------------------------------------------------------------------
 std::vector<TH1D> DataReader::GetEnergyHist() {
-    
+
     if ( kOrdering == "MaGeInput" ) {
         auto v = energy;
         GERDA::ReorderAsMaGe(v, "input");
@@ -290,8 +289,8 @@ std::vector<TH1D> DataReader::GetEnergyHist() {
     else return energy;
 }
 // -------------------------------------------------------------------------------
-std::map<unsigned int, std::vector<int>> DataReader::GetDetectorStatusMap() { 
-     
+std::map<unsigned int, std::vector<int>> DataReader::GetDetectorStatusMap() {
+
     if ( kOrdering == "MaGeInput" ) {
         auto v = detectorStatusMap;
         for ( auto& i : v ) GERDA::ReorderAsMaGe(i.second, "input");
@@ -306,17 +305,17 @@ std::map<unsigned int, std::vector<int>> DataReader::GetDetectorStatusMap() {
 }
 // -------------------------------------------------------------------------------
 unsigned int DataReader::GetTime() {
-   
+
    unsigned int tmp = 0;
    for ( auto& it : timeMap ) tmp += it.second;
    return tmp;
 }
 // -------------------------------------------------------------------------------
 std::unique_ptr<TH1D> DataReader::GetEnergyHistBEGe() const {
-    
+
     std::unique_ptr<TH1D> tmp(new TH1D( "energyBEGeAll", "energyBegeAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
-    
+
     for ( int i = 0; i < 40; ++i ) {
         if ( detectorTypes[i] == 1 ) tmp->Add(&energy[i]);
     }
@@ -325,10 +324,10 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistBEGe() const {
 }
 // -------------------------------------------------------------------------------
 std::unique_ptr<TH1D> DataReader::GetEnergyHistEnrCoax() const {
-    
+
     std::unique_ptr<TH1D> tmp(new TH1D( "energyEnrCoaxAll", "energyEnrCoaxAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
-    
+
     for ( int i = 0; i < 40; ++i ) {
         if ( detectorTypes[i] == 2 ) tmp->Add(&energy[i]);
     }
@@ -337,10 +336,10 @@ std::unique_ptr<TH1D> DataReader::GetEnergyHistEnrCoax() const {
 }
 // -------------------------------------------------------------------------------
 std::unique_ptr<TH1D> DataReader::GetEnergyHistNatCoax() const {
-    
+
     std::unique_ptr<TH1D> tmp(new TH1D( "energyNatCoaxAll", "energyNatCoaxAll", 7500, 0, 7500 ));
     if (energy.empty()) { std::cerr << "DataReader::CreateEnergyHist has not been called!\n"; return tmp; }
-    
+
     for ( int i = 0; i < 40; ++i ) {
         if ( detectorTypes[i] == 3 ) tmp->Add(&energy[i]);
     }
@@ -360,7 +359,7 @@ TChain* DataReader::GetTreeFromRun( unsigned int runID ) const {
 }
 // -------------------------------------------------------------------------------
 TChain* DataReader::GetTree() {
-    
+
     if (!dataTree) {
         if (kVerbosity) std::cout << "Creating Master Tree for the first time..." << std::endl;
         dataTree = std::unique_ptr<TChain>(new TChain());

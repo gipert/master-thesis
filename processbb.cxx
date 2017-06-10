@@ -107,10 +107,10 @@ int main( int argc, char** argv ) {
             nentries = treereader.GetEntries(true);
             bar.SetNIter(nentries);
         }
-        int j = 0;
+
         std::cout << display << std::flush;
         while ( treereader.Next() ) {
-            if (verbose) {bar.Update(j); j++;}
+            if (verbose) bar.Update();
             size = det_id.GetSize();
             for ( int k = 0; k < size; ++k ) {
                 // NOTE: ignoring energy depositions in GTFs and GD02D

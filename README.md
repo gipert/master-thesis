@@ -9,8 +9,6 @@ Contact: luigi.pertoldi@pd.infn.it
 • management/                 : utilities to read and manage GERDA data, DataReader and DetectorSet classes
 • progressbar/                : simple progress bar for c++ loops (git submodule)
 • misc/
-    • drawspectra.C           : ROOT macro to draw theoretical 2bb spectra
-    • shorten.C               : ROOT macro to shrink histograms from 8500 to 7500 keV
     • BI.C                    : ROOT macro to calculate background index, works only with 4keV binning
     • exposure.cxx            : program to calculate exposure
     • runconfiguration_mod.db : modified `runconfiguration.db` from `gerda-metadata` repo

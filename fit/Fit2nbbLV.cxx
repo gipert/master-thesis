@@ -42,7 +42,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [13] */ this->AddParameter("Co60holder",           0, 1.6E-04); // <--- Screening
     /* [14] */ this->AddParameter("K40holder",            0, 2E-02);
     /* [15] */ this->AddParameter("Bi212Tl208holder",     0, 7E-04);
-    /* [16] */ this->AddParameter("Pb214Bi214holder",     0, 30);
+    /* [16] */ this->AddParameter("Pb214Bi214holder",     0, 1E-03);
     /* [17] */ this->AddParameter("K40cable",             0, 1E00);
     /* [18] */ this->AddParameter("Bi212Tl208cables",     0, 5E-02);
     /* [19] */ this->AddParameter("Pb214Bi214cables",     0, 25);
@@ -95,11 +95,15 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     // priors
     TF1 invflat("inverse-flat", "1/x^2"  , 0, 1);
     TF1 logflat("log-flat"    , "1/x"    , 0, 1);
-    //TF1 linear ("linear"      , "(x<=[0])*(-x+[0])+(x>[0])*0" , 0, 1);
+    TF1 linear ("linear"      , "(x<=[0])*(-x+[0])+(x>[0])*0" , 0, 1);
+    TF1 invgaus("inverse-gaus", "exp(-((417.483/x-[0])^2)/(2*[1]^2))/(x^2)", 0, 1);
 
     // 2nbb
     this->SetPriorConstantAll();
-    this->SetPrior(0, &invflat);
+    //this->SetPrior(0, &invflat);
+    invgaus.SetParameter(0, 1.926);
+    invgaus.SetParameter(1, 0.095);
+    this->SetPrior(0, &invgaus);
 
     // 2nbbLV
     //linear.SetParameter(0, 1.52E-05);

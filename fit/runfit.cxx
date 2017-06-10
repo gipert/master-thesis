@@ -40,7 +40,7 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
+    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
 /////////////////////////////////////////////
 
     auto c_str = [](std::string s) { return s.c_str(); };
@@ -279,8 +279,8 @@ int main( int argc, char** argv ) {
     BCSummaryTool summary(&model);
     // create output class
     path = outdirname + "/";
-    BCModelOutput output(&model, c_str(path + "markowChains.root"));
-    model.WriteMarkovChain(true);
+    //BCModelOutput output(&model, c_str(path + "markowChains.root"));
+    //model.WriteMarkovChain(true);
 
     // set nicer style for drawing than the ROOT default
     BCAux::SetStyle();

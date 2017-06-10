@@ -47,7 +47,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [18] */ this->AddParameter("Bi212Tl208cables",     0, 5E-02);
     /* [19] */ this->AddParameter("Pb214Bi214cables",     0, 25);
     /* [20] */ this->AddParameter("K40minishroud",        0, 2E-01);
-    /* [21] */ this->AddParameter("Pa234minishroud",      0, 2E-01);
+    /* [21] */ this->AddParameter("Pa234minishroud",      0, 2E-04);
     /* [22] */ this->AddParameter("Bi207minishroud",      0, 5E-03);
     /* [23] */ this->AddParameter("Bi207cables",          0, 7E-02);
     /* [24] */ this->AddParameter("Bi207holder",          0, 5E-02);

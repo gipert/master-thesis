@@ -27,7 +27,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
    
     // define parameters
     /* [0] */  this->AddParameter("2nbb",                 2E02, 2.4E02);
-    /* [1] */  this->AddParameter("2nbbLV",               0, 2E-03);
+    /* [1] */  this->AddParameter("2nbbLV",               0, 5E-04);
     /* [2] */  this->AddParameter("K42homLAr",            1E-04, 2.5E-04);
     /* [3] */  this->AddParameter("K40fibers",            0, 1E-00);
     /* [4] */  this->AddParameter("Bi212Tl208fibers",     0, 0.02);
@@ -38,8 +38,8 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [9] */  this->AddParameter("K42nPlusCOAX",         0, 3E-04);
     /* [10] */ this->AddParameter("K42pPlusBEGe",         0, 7E-01);
     /* [11] */ this->AddParameter("K42pPlusCOAX",         0, 1E-03);
-    /* [12] */ this->AddParameter("Ac228holder",          0, 3.9E-04); // <--- Screening
-    /* [13] */ this->AddParameter("Co60holder",           0, 1.6E-04); // <--- Screening
+    /* [12] */ this->AddParameter("Ac228holder",          0, 6E-04);
+    /* [13] */ this->AddParameter("Co60holder",           0, 1.6E-04);
     /* [14] */ this->AddParameter("K40holder",            0, 2E-02);
     /* [15] */ this->AddParameter("Bi212Tl208holder",     0, 7E-04);
     /* [16] */ this->AddParameter("Pb214Bi214holder",     0, 1E-03);
@@ -100,10 +100,11 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
 
     // 2nbb
     this->SetPriorConstantAll();
-    //this->SetPrior(0, &invflat);
-    invgaus.SetParameter(0, 1.926);
-    invgaus.SetParameter(1, 0.095);
-    this->SetPrior(0, &invgaus);
+    this->SetPrior(0, &invflat);
+    //invgaus.SetParameter(0, 1.926);
+    //invgaus.SetParameter(1, 0.095);
+    //this->SetPrior(0, &invgaus);
+    //this->GetParameter(0)->Fix(216.7);
 
     // 2nbbLV
     //linear.SetParameter(0, 1.52E-05);

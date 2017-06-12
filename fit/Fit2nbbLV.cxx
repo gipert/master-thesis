@@ -8,6 +8,7 @@
 #include "Fit2nbbLV.h"
 
 #include <iostream>
+#include <fstream>
 #include <math.h>
 
 #include "TH1D.h"
@@ -716,6 +717,11 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         brascan.SaveAs(name.c_str());
 
 ///////// create residuals plot
+        // table for pgfplots
+        name = path + "/residuals" + type + ".dat";
+        std::ofstream pgfin(name.c_str());
+        pgfin << "energy\tmidenergy\tres\t1sig\t2sig\t3sig\t-1sig\t-2sig\t-3sig\n";
+
         for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 3*resdraw.GetBinError(i));
         resdraw.SetMarkerStyle(0);
         resdraw.SetFillColor(kOrange-3);
@@ -725,13 +731,19 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         pad1.SetLogy(false);
         resdraw.DrawCopy("E2");
 
+        TH1D* sig3pfg = (TH1D*)resdraw.Clone();
+
         for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 2*resdraw.GetBinError(i)/3);
         resdraw.SetFillColor(kYellow);
         resdraw.DrawCopy("E2 SAME");
 
+        TH1D* sig2pfg = (TH1D*)resdraw.Clone();
+
         for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 0.5*resdraw.GetBinError(i));
         resdraw.SetFillColor(kGreen);
         resdraw.DrawCopy("E2 SAME");
+
+        TH1D* sig1pfg = (TH1D*)resdraw.Clone();
 
         for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 0.00001);
         resdraw.SetFillStyle(0);
@@ -744,6 +756,18 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
 
         name = path + "/residuals" + type + ".C";
         brascan.SaveAs(name.c_str());
+
+        for ( int i = 1; i <= nbins; ++i ) { pgfin << resdraw.GetBinLowEdge(i) << '\t'
+                                                   << resdraw.GetBinCenter(i) << '\t'
+                                                   << resdraw.GetBinContent(i) << '\t'
+                                                   << sig1pfg->GetBinError(i) << '\t'
+                                                   << sig2pfg->GetBinError(i) << '\t'
+                                                   << sig3pfg->GetBinError(i) << '\t'
+                                                   << -sig1pfg->GetBinError(i) << '\t'
+                                                   << -sig2pfg->GetBinError(i) << '\t'
+                                                   << -sig3pfg->GetBinError(i) << '\n';
+        }
+        pgfin.close();
     };
 
     drawpdf( hSimBEGe, hDataBEGe, "BEGe" );

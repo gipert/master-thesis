@@ -731,13 +731,9 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         pad1.SetLogy(false);
         resdraw.DrawCopy("E2");
 
-        TH1D* sig3pfg = (TH1D*)resdraw.Clone();
-
         for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 2*resdraw.GetBinError(i)/3);
         resdraw.SetFillColor(kYellow);
         resdraw.DrawCopy("E2 SAME");
-
-        TH1D* sig2pfg = (TH1D*)resdraw.Clone();
 
         for ( int i = 1; i <= nbins; ++i ) resdraw.SetBinError(i, 0.5*resdraw.GetBinError(i));
         resdraw.SetFillColor(kGreen);
@@ -757,15 +753,18 @@ void Fit2nbbLV::WriteHistosOnFile(std::string path) {
         name = path + "/residuals" + type + ".C";
         brascan.SaveAs(name.c_str());
 
-        for ( int i = 1; i <= nbins; ++i ) { pgfin << resdraw.GetBinLowEdge(i) << '\t'
-                                                   << resdraw.GetBinCenter(i) << '\t'
-                                                   << resdraw.GetBinContent(i) << '\t'
-                                                   << sig1pfg->GetBinError(i) << '\t'
-                                                   << sig2pfg->GetBinError(i) << '\t'
-                                                   << sig3pfg->GetBinError(i) << '\t'
-                                                   << -sig1pfg->GetBinError(i) << '\t'
-                                                   << -sig2pfg->GetBinError(i) << '\t'
-                                                   << -sig3pfg->GetBinError(i) << '\n';
+        double sigma;
+        for ( int i = 1; i <= nbins; ++i ) {
+            sigma = sqrt(sig1pfg->GetBinError(i)*sig1pfg->GetBinError(i)/resdraw.GetBinWidth(i));
+            pgfin << resdraw.GetBinLowEdge(i) << '\t'
+                                              << resdraw.GetBinCenter(i) << '\t'
+                                              << datares.GetBinContent(i)/resdraw.GetBinWidth(i) << '\t'
+                                              << sigma << '\t'
+                                              << 2*sigma << '\t'
+                                              << 3*sigma << '\t'
+                                              << -sigma << '\t'
+                                              << -2*sigma << '\t'
+                                              << -3*sigma << '\n';
         }
         pgfin.close();
     };

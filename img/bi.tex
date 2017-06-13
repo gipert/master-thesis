@@ -1,0 +1,33 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+\usetikzlibrary{pgfplots.groupplots}
+\usepackage[lining]{ebgaramond}
+\usepackage[libertine]{newtxmath}
+\usepackage{mhchem}
+\begin{document}
+\begin{tikzpicture}
+	\begin{axis}[
+				width = 10cm,
+				height = 6cm,
+				xlabel = energy {[keV]},
+				%xlabel style = {at={(axis description cs:0.5,0.07)}},
+				ylabel style = {at={(axis description cs:0.06,0.5)}},
+				ylabel = cts,
+				xmin = 1930, xmax = 2150,
+				domain=1950:2150, restrict y to domain=0:4,
+				ymin = 0, ymax = 4,
+				xtick = {1960,2000,2040,2080,2120},
+				%xticklabels = {$10^0$,$10^1$,$10^2$,$10^3$,$10^4$},
+				%grid = major,
+				/pgf/number format/1000 sep={}
+				]
+			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4);
+			\node at (axis cs:2039,3) {$Q_{\beta\beta}$};
+			\fill[orange, opacity=0.5] (axis cs:2099,0) rectangle (axis cs:2109,4);
+			\node at (axis cs:2087,3.5) {\ce{^{208}Tl}};
+			\fill[orange, opacity=0.5] (axis cs:2114,0) rectangle (axis cs:2124,4);
+			\node at (axis cs:2133,3.5) {\ce{^{214}Bi}};
+			\addplot[const plot, draw = red] file {../data/BEGe1keV.dat};
+	\end{axis}
+\end{tikzpicture}
+\end{document}

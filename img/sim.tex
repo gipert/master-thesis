@@ -1,64 +1,74 @@
 \documentclass{standalone}
 \usepackage{pgfplots}
 \usetikzlibrary{pgfplots.groupplots}
-\usepackage{ebgaramond}
+\usepackage[lining ]{ebgaramond}
 \usepackage[libertine]{newtxmath}
 \usepackage{mhchem}
 \begin{document}
 \begin{tikzpicture}
-	%\pgfplotsset{every axis legend/.append style={
-    %    at={(0.5,1.03)},
-    %    anchor=south}}
+	\pgfplotsset{every axis legend/.append style={
+        at={(1.02,1)},
+        anchor=north west}}
 	\begin{groupplot}[	group style = { group size = 2 by 2,
 										xlabels at = edge bottom,
 										%xticklabels at = edge bottom,
 										ylabels at = edge left,
-										%vertical sep = 0pt
+										%vertical sep = 0pt,
+										horizontal sep = 3cm
 										},
-						width = 8cm,
-						height = 5cm,
+						width = 10cm,
+						height = 7cm,
 						xlabel = energy {[keV]},
 						xlabel style = {at={(axis description cs:0.5,0.04)}},
-						ylabel style = {at={(axis description cs:0.05,0.5)}},
+						ylabel style = {at={(axis description cs:0.03,0.5)}},
 						ylabel = cts/$N_\text{sim}$,
 						xmin = 0,
 						%grid = major,
 						/pgf/number format/1000 sep={}
 						]
 		\nextgroupplot[xmax = 1500, ymin = -4,
-						ytick = {-7.5,-6,-4,-2,0},
-						yticklabels = {0,$10^{-6}$,$10^{-4}$,$10^{-2}$,$10^0$},
-						legend columns = 2,
-						legend pos = north west,
-						legend entries = {holders, minish., cables, fibers ($\cdot10^3$)}
+						ytick = {-4,-3,-2,-1,0},
+						yticklabels = {$10^{-4}$,$10^{-3}$,$10^{-2}$,$10^{-1}$,$10^0$},
+						%legend columns = 2,
+						%legend pos = north west,
+						legend entries = {\textsc{[h]}, \textsc{[ms]}, \textsc{[c]}, \textsc{[f]}$\cdot10^3$}
 						]
 			\addplot[const plot, draw = blue] file {../data/K40holder.dat};
-			\addplot[const plot, draw = green] file {../data/K40minishroud.dat};
+			\addplot[const plot, draw = black!50!green] file {../data/K40minishroud.dat};
 			\addplot[const plot, draw = red] file {../data/K40cables.dat};
 			\addplot[const plot, draw = black] file {../data/K40fibers.dat};
+			\node[rectangle, draw] at (axis cs:700,-1) {\large\ce{^{40}K}};
 		\nextgroupplot[xmax = 3500, ymin = -10,
-						ytick = {-10,-8,-4,0},
-						yticklabels = {0,$10^{-8}$,$10^{-4}$,$10^{-0}$},
-						legend columns = 2,
-						legend entries = {homLAr, minish., n$^+$, p$^+$}
+						ytick = {-8,-4,0},
+						yticklabels = {$10^{-8}$,$10^{-4}$,$10^{-0}$},
+						%legend columns = 2,
+						legend entries = {\textsc{[homLAr]}, \textsc{[ms]}, {[}n$^+${]}, {[}p$^+${]}}
 						]
 			\addplot[const plot, draw = blue] file {../data/K42homLAr.dat};
-			\addplot[const plot, draw = green] file {../data/K42minishroudsurf.dat};
+			\addplot[const plot, draw = black!50!green] file {../data/K42minishroudsurf.dat};
 			\addplot[const plot, draw = red] file {../data/K42nplusbege.dat};
 			\addplot[const plot, draw = black] file {../data/K42pplusbege.dat};
+			\node[rectangle, draw] at (axis cs:2700,-1) {\large\ce{^{42}K}};
 		\nextgroupplot[xmin = 570, xmax = 7500, ymin = -3.5,
-						ytick = {-3,-2,-1,0},
-						yticklabels = {$10^{-3}$,$10^{-2}$,$10^{-1}$,$10^{-0}$,},
-						legend entries = {BEGe, enr.~coax.},
-						legend pos = south west,
+						ytick = {-3,-2,-1,0,1},
+						yticklabels = {$10^{-3}$,$10^{-2}$,$10^{-1}$,$10^{0}$,$10^1$},
+						legend style={cells={align=left}},
+						legend entries = {BEGe, \textsc{enr}\\\textsc{coax}},
+						%legend pos = south west,
 						]
 			\addplot[const plot, draw = red] file {../data/alphaBEGe.dat};
 			\addplot[const plot, draw = blue] file {../data/alphaCOAX.dat};
-		\nextgroupplot
-			%\addplot[const plot, draw = blue] file {../data/K40holder.dat};
-			%\addplot[const plot, draw = green] file {../data/K40minishroud.dat};
-			%\addplot[const plot, draw = red] file {../data/K40cables.dat};
-			%\addplot[const plot, draw = black] file {../data/K40fibers.dat};
+			\node[rectangle, draw] at (axis cs:3000,-2) {\large$\alpha$-model};
+		\nextgroupplot[xmin = 570, xmax = 2500, ymin = -10, ymax = -1,
+						ytick = {-10,-8,-6,-4,-2},
+						yticklabels = {$10^{-10}$,$10^{-8}$,$10^{-6}$,$10^{-4}$,$10^{-2}$},
+						legend entries = {\ce{^{228}Ac} {[\textsc{h}]}, \ce{^{234\text{m}}Pa} {[\textsc{ms}]}, \ce{^{60}Co} {[\textsc{h}]}, \ce{^{207}Bi} {[\textsc{ms}}]},
+						%legend columns = 2
+						]
+			\addplot[const plot, draw = blue] file {../data/Ac228holder.dat};
+			\addplot[const plot, draw = black!50!green] file {../data/Pa234minishroud.dat};
+			\addplot[const plot, draw = red] file {../data/Co60holder.dat};
+			\addplot[const plot, draw = black] file {../data/Bi207minishroud.dat};
 	\end{groupplot}
 \end{tikzpicture}
 \end{document}

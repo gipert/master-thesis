@@ -1,24 +1,28 @@
 \documentclass{standalone}
 \usepackage[libertine, varg]{newtxmath}
-\usepackage{ebgaramond}
+\usepackage[lining]{ebgaramond}
 \usepackage{pgfplots}
 \begin{document}
 	\begin{tikzpicture}
 		\begin{axis}[
 					%mlineplot,
-					width=15cm, height=8cm,
+					width=10cm, height=6cm,
 					xmin=0, xmax=2.2,
 					ymin=0, ymax=0.6,
 					samples=200,
 					xlabel=Energy {[}MeV{]},
 					yticklabels={,,},
-					%ylabel=a.u.
+					%ylabel=a.ui.,
+					grid = major
 					]
 			\addplot [mark=none, color=red, line width=1pt, domain=0:2.039]
 				{x/0.511*(4-x/0.511)^4*((x/0.511)^4+10*(x/0.511)^3+40*(x/0.511)^2+60*(x/0.511)+30)/27814};
+				\node at (axis cs:0.3,0.5) {\color{blue}$2\nu\beta\beta$};
 			\addplot [mark=none, color=blue, line width=1pt, domain=0:2.039]
 				{x/0.511*(4-x/0.511)^5*((x/0.511)^4+10*(x/0.511)^3+40*(x/0.511)^2+60*(x/0.511)+30)/65749};
-			\draw[-latex,color=black!50!green, line width=1pt] (axis cs:2.039,0) -- (axis cs:2.039,0.56);
+				\node at (axis cs:1.4,0.35) {\color{red}$2\nu\beta\beta$LV};
+			\draw[-latex,color=black!50!green, line width=1pt] (axis cs:2.039,0) -- (axis cs:2.039,0.5);
+				\node at (axis cs:2.04,0.54) {\color{black!60!green}$0\nu\beta\beta$};
 		\end{axis}
 	\end{tikzpicture}
 \end{document}

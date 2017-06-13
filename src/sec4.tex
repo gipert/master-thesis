@@ -1,7 +1,7 @@
 %! TEX root = ../main.tex
-\section{Statistical analysis}
+\section{Statistical analysis}\label{sec:bayes}
 A global model that describes the background spectrum was obtained by fitting the simulated spectra of different contributions to the measured energy spectrum using a Bayesian fit. A detailed description of the statistical method is given in the following.
-\subsection{A Bayesian approach}
+\subsection*{A Bayesian approach}\addcontentsline{toc}{subsection}{A Bayesian approach}
 The gist of Bayesian statistics is not difficult to grasp. At its base is the intuitive idea that probability quantifies the `degree of belief' in an event. The probability of an event changes if other events are assumed to be `true', provided these other events are `stochastically dependent' on that event. This is the essence of Bayes' theorem. As a consequence, Bayesian statistics allows the probability of a hypothesis to be continually updated on the basis of new observation (events) that depend on that hypothesis. 
 
 % {{{ MODELING
@@ -9,7 +9,7 @@ The gist of Bayesian statistics is not difficult to grasp. At its base is the in
 \[\int g(\vec{y}\mid\vec{\lambda},M)\text{d}\vec{y}=1 \quad\text{and}\quad g(\vec{y}\mid\vec{\lambda},M)>0\]
 if continuous values are measured (in the discrete situation the integral gets replaced by a sum over all the possible outcomes). In the following, we will write formulae for the continuous case; the modification for the discrete case will be clear.
 
-The prediction from the model cannot usually be directly compared to experimental results, the modeling of the experiment will usually add extra parameters and assumptions. We will use the symbol $\vec{\nu}$ to represent these additional nuisance parameters, which could also be limited by additional information not included explicitly in the model. In the following we will implicitly assume that all available information is used in the probability distributions. We would then have $f(\vec{x}\mid\vec{\lambda},\vec{\nu},M)$ for the frequency distribution of observable quantities $\vec{x}$.
+The prediction $\vec{y}$ from the model cannot usually be directly compared to the experimental results (that we will denote with $\vec{x}$ in the latter), the modeling of the experiment will usually add extra parameters and assumptions. We will use the symbol $\vec{\nu}$ to represent these additional nuisance parameters, which could also be limited by additional information not included explicitly in the model. In the following we will implicitly assume that all available information is used in the probability distributions. We would then have $f(\vec{x}\mid\vec{\lambda},\vec{\nu},M)$ for the frequency distribution of the experimentally observable quantities $\vec{x}$.
 
 In general, the judgement on the validity on a model and the extraction of values of the parameters within the model will be based on a comparison of the data $\vec{D}$ with $f(\vec{x}\mid\vec{\lambda},\vec{\nu},M)$.
 
@@ -17,11 +17,11 @@ In general, the judgement on the validity on a model and the extraction of value
 % {{{ THE LEARNING RULE
 \marginnote{the\\learning\\rule} The probability of a model M will be quantified as $P(M)\in[0,1]$, while the probability density of the parameters are typically continuous functions. The parameters from the modeling of the experimental conditions are not correlated to the parameters of the physical model so that
 \[P(\vec{\lambda},\vec{\nu}\mid M)=P(\vec{\lambda}\mid M)P(\vec{\nu})\;.\]
-In the Bayesian approach the quantities $P(M)$ and $P(\vec{\lambda}\mid M)$ are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains out knowledge about nature and has to \emph{updated} by comparing data with the predictions of the model.
+In the Bayesian approach the quantities $P(M)$ and $P(\vec{\lambda}\mid M)$ are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains out knowledge about nature and has to be `updated' by comparing data with the predictions of the model.
 
 The procedure for learning from experiment is, according to the Bayes theorem:
 \[P_{i+1}(\vec{\lambda},\vec{\nu},M\mid\vec{D})=\frac{f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}{\sum_M\int f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}\;,\]
-where the index on $P$ represents the state-of-knowledge that gets updated from $i$ to $i+1$. The normalization factor derives from the normalization requirements on $P$ and we can also write it as $P(\vec{D})$, the probability to get the data $\vec{D}$.
+where the index on $P$ represents the state-of-knowledge that gets updated from $i$ to $i+1$. $P_i$ is called \emph{prior} probability and $P_{i+1}$ is subsequently called \emph{posterior} probability. The normalization factor derives from the normalization requirements on $P$ and we can also write it as $P(\vec{D})$, the probability to get the data $\vec{D}$.
 
 For a given model $M$, $f$ is a function of the model parameters, the experimental parameters, and the possible outcomes $\vec{x}$. When $f$ is viewed as a function of $(\vec{\lambda},\vec{\nu})$ for fixed $\vec{x}=\vec{D}$, it is known as the likelihood. If $f$ is normalized, we can write
 \[P(\vec{D}\mid\vec{\lambda},\vec{\nu},M)=f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)\;.\]
@@ -82,43 +82,42 @@ It is possible to show that, given a reasonable proposal function $g$, this algo
 \marginnote{implementation} The BAT software is \texttt{C++} based code interfaced to software packages such as ROOT \cite{ROOT}, \textsc{Minuit} \cite{MINUIT}, or the CUBA library \cite{CUBA}. Several Markov chains can optionally be run in parallel thanks to the OpenMP \cite{openmp} support. For further details about the statistical theory and implementation aspects, as well as applications to real problems, underlying the BAT package see \cite{BAT}, for a detailed description of the class structure and the methods the official documentation is available at \texttt{http://www.mppmu.mpg.de/bat/}.
 
 % }}}
-\subsection{Background decomposition}
+\subsection*{Background decomposition}\addcontentsline{toc}{subsection}{Background decomposition}
 The analysis of the energy distributions was carried out by fitting binned energy distributions. The likelihood $P(\vec{D}\mid\vec{\lambda})$ is written as the product of the probability of the data given the model and parameters in each bin:
 \[P(\vec{D}\mid\vec{\lambda})=\prod_i^{N}P(n_i\mid\mu_i)=\prod_i^N\frac{e^{-\mu_i}\mu_i^{n_i}}{n_i!}\;,\]
 where $N$ is the number of bins, $n_i$ is the observed number of events and $\mu_i$ is the expected number of events (frequency) in bin $i$. $\mu_i$ can be written as the sum of the background contributions in bin $i$:
 \[\mu^i=\sum_jb_j^i=\sum_j c_jh_j^i\;,\]
 where the index $j$ runs over all the background contributions and $b_j^i$ is the expected number of events for the background source $j$ in bin $i$. The latter can be further decomposed in the product of the frequency $h_j^i$ in bin $i$ and a factor $c_j$, which does not depend on the bin and contains the $\lambda_j$ parameter of physical interest that will be estimated with the fitting procedure.
 
-We want to keep the summed energy spectra from BEGes and coaxial separate, as the contamination of radioactive sources on the electrodes can be different. All the other parameters (e.g. the double-beta decay half-life or the \ce{^{60}Co} activity in the detector assembly) are the same for the two spectra. The natural coaxial detectors were omitted from the analysis because the contribution to the double-beta decay spectrum is too small to be relevant. Then the likelihood can be expressed as
-\[P(\vec{D}\mid\vec{\lambda})=P_\text{BEGe}(\vec{D}\mid\vec{\lambda})P_\text{Coax}(\vec{D}\mid\vec{\lambda})=\prod_i^N\left[\frac{e^{-\mu_i}\mu_i^{n_i}}{n_i!}\right]_\text{BEGe}\prod_j^N\left[\frac{e^{-\mu_j}\mu_j^{n_j}}{n_j!}\right]_\text{Coax}\]
+We want to keep the summed energy spectra from BEGes and coaxial separate, as the contamination of radioactive sources on the electrodes can be different. All the other parameters (e.g. the double-beta decay half-life or the \ce{^{60}Co} activity in the detector assembly) are the same for the two spectra. The natural coaxial detectors are omitted from the analysis because the contribution to the double-beta decay spectrum is too small to be relevant. Then the likelihood can be expressed as
+\[P(\vec{D}\mid\vec{\lambda})=P_\text{BEGe}(\vec{D}\mid\vec{\lambda})P_\textsc{coax}(\vec{D}\mid\vec{\lambda})=\prod_i^N\left[\frac{e^{-\mu_i}\mu_i^{n_i}}{n_i!}\right]_\text{BEGe}\prod_j^N\left[\frac{e^{-\mu_j}\mu_j^{n_j}}{n_j!}\right]_\textsc{coax}\]
 
 % {{{ 2nbb
-\marginnote{$2\nbb$} For the two-neutrino mode of double-beta decay we want to estimate the half-life $T_{1/2}$. In this case the contribution $b_{2\nu}^i$ can be written as
-\[b_{2\nu}^i=\frac{N_A\log2}{A_{76}T_{1/2}}\sum_{k=1}^\text{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu}\;,\]
-where $k$ labels the detectors, $N_A$ is the Avogadro number, $A_{76}$ is the molar weight of \ce{^{76}Ge}, $f^{76}$ is the enrichment fraction, and $t$ is the detector's live time. The detection efficiency $\epsilon_{2\nu}^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer and the intrinsic efficiency of the detector $k$. $f_{2\nu}^i$ is the theoretical absolute frequency (i.e.~the entire distribution is normalized to one) for double-beta decay in bin $i$, it is the discrete version of \ref{eq:spectstd}. We adopted the approximation $T_{1/2}\gg t$.
+\marginnote{$2\nbb$} For the two-neutrino mode of double-beta decay we want to estimate the half-life $T_{1/2}^{2\nu}$. In this case the contribution $b_{2\nu}^i$ can be written as
+\[b_{2\nu}^i=\frac{N_A\log2}{A_{76}T_{1/2}^{2\nu}}\sum_{k=1}^\textsc{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu}\;,\]
+where $k$ labels the detectors, $N_A$ is the Avogadro number, $A_{76}$ is the molar weight of \ce{^{76}Ge}, $f^{76}$ is the enrichment fraction, and $t$ is the detector's live time. The detection efficiency $\epsilon_{2\nu}^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer and the intrinsic efficiency of the detector $k$. $f_{2\nu}^i$ is the theoretical absolute frequency (i.e.~the entire distribution is normalized to one) for double-beta decay in bin $i$, it is the discrete version of \ref{eq:spectstd}. We adopted the approximation $T_{1/2}^{2\nu}\gg t$.
 
-The expression holds also for the Lorentz-violating mode, with the associated half-life $T_{1/2}^\text{LV}$. Recalling the equation \ref{eq:totwidth} we can express $T_{1/2}^\text{LV}$ in relation to $T_{1/2}$ and $\aof$:
-\[T_{1/2}^\text{LV}=I\cdot\frac{T_{1/2}}{\aof}\qquad I=\frac{10}{\aof}\frac{\int_0^{K_0}\frac{\text{d}\delta\Gamma}{\text{d}K}\text{d}K}{\int_0^{K_0}\frac{\text{d}\Gamma_0}{\text{d}K}\text{d}K}\;,\]
+The expression holds also for the Lorentz-violating mode, with the associated half-life $T_{1/2}^{2\nu\text{LV}}$. Recalling the equation \ref{eq:totwidth} we can express $T_{1/2}^{2\nu\text{LV}}$ in relation to $T_{1/2}^{2\nu}$ and $\aof$:
+\[T_{1/2}^{2\nu\text{LV}}=I\cdot\frac{T_{1/2}^{2\nu}}{\aof}\qquad I=\frac{10}{\aof}\frac{\int_0^{K_0}\frac{\text{d}\delta\Gamma}{\text{d}K}\text{d}K}{\int_0^{K_0}\frac{\text{d}\Gamma_0}{\text{d}K}\text{d}K}\;,\]
 and then the $b_{2\nu\text{LV}}^i$ factor can be written as:
-\[b_{2\nu\text{LV}}^i=\frac{\aof}{I}\frac{N_A\log2}{A_{76}T_{1/2}}\sum_{k=1}^\text{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu\text{LV}}\;,\]
+\[b_{2\nu\text{LV}}^i=\frac{\aof}{I}\frac{N_A\log2}{A_{76}T_{1/2}^{2\nu}}\sum_{k=1}^\textsc{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu\text{LV}}\;,\]
 
 % }}}
 % {{{ EXTERNAL SOURCES
 \marginnote{external\\sources} For the other background sources the parameter of interest is the activity, defined as the number of events per unit of time and mass. Assuming a stable isotope contamination within the considered live times, we can express $b_j$ as
-\[b_j^i=a_jM\sum_k^\text{det}t_k\epsilon_j^{ik}f_j^i\;,\label{eq:extsources}\]
-where $a_j$ is the activity for the source $j$ and $M$ is the mass of the object in which the source is located. The detection efficiency $\epsilon_j^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer, the intrinsic efficiency and the solid angle the detector $k$ subtends at the radioactive source.
-
-It should be noted that the activities of some isotopes are correlated, for example if they come from the same decay chain. In this analysis we have two examples of this, \ce{^{212}Bi} decays in \ce{^{208}Tl} with 39.93\% branching ratio, while \ce{^{214}Pb} decays in \ce{^{214}Bi} with $\sim$100\% branching ratio.
+\[b_j^i=a_jM\sum_k^\textsc{det}t_k\epsilon_j^{ik}f_j^i\;,\label{eq:extsources}\]
+where $a_j$ is the activity for the source $j$ and $M$ is the mass of the object in which the source is located. The detection efficiency $\epsilon_j^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer, the intrinsic efficiency and the solid angle the detector $k$ subtends at the radioactive source. $f_j^i$ here is the theoretical frequency of the energy outcomes for source $j$ in bin $i$.
+%It should be noted that the activities of some isotopes are correlated, for example if they come from the same decay chain. In this analysis we have two examples of this, \ce{^{212}Bi} decays in \ce{^{208}Tl} with 39.93\% branching ratio, while \ce{^{214}Pb} decays in \ce{^{214}Bi} with $\sim$100\% branching ratio.
 
 % }}}
 % {{{ SIMULATED SPECTRA
-\marginnote{simulated\\spectra} The simulated spectra, for $2\nbb$ and background sources, come from \textsc{MaGe} in the form
+\marginnote{simulated\\spectra} The simulated spectra for $2\nbb$ and background sources, come from \textsc{MaGe} in the form
 \[b^{ik}_{\textsc{MaGe},j}=N_\text{gen}\epsilon^{ik}_jf_j^i\;,\]
 where $N_\text{gen}$ is the number of primary vertices simulated and $i$, $j$, $k$ label the $i$-th bin, the source and the detector, respectively.
 
 First of all the experimental energy resolution has to be applied to the spectra with a convolution between the latter and some `resolution curves'. They were estimated using \ce{^{228}Th} sources deployed into LAr and are represented with a square-root-like function. For the present analysis we used two different global calibration curves: one for the BEGes and one for the enriched coaxials, as the differences between the single curves in the two detector's types are negligible.
 
 The spectra for each detector have then to be combined properly in order to be fitted to the data. In the case of external sources, for example, the form in equation \ref{eq:extsources} has to be reproduced rescaling each spectra with $N_\text{gen}$, then multiplying by $t_k$ and $M$ and finally summing over all detectors. Then the overall factor $\lambda_i$ will be the parameter to estimate with the fitting procedure:
-\[b_{\text{sim},j}^i=\lambda_jM\sum_k^\text{det}t_k\epsilon_j^{ik}f_j^i\;.\]
+\[b_{\text{fit},j}^i=\lambda_jM\sum_k^\textsc{det}t_k\epsilon_j^{ik}f_j^i\;.\]
 
 % }}}

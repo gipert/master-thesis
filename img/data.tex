@@ -1,7 +1,7 @@
 \documentclass{standalone}
 \usepackage{pgfplots}
 \usetikzlibrary{pgfplots.groupplots}
-\usepackage{ebgaramond}
+\usepackage[lining]{ebgaramond}
 \usepackage[libertine]{newtxmath}
 \usepackage{mhchem}
 \begin{document}
@@ -39,7 +39,7 @@
 			% alpha
 			\node at (axis cs:4700,1.6) {\ce{^{226}Ra}};
 			\node at (axis cs:5100,1.9) {\ce{^{210}Po}};
-			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {BEGes --- 20.46 kg$\cdot$yr};
+			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {BEGe --- 20.46 kg$\cdot$yr};
 			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4.7);
 		\nextgroupplot
 			\addplot[const plot, draw = blue] file {../data/EnrCoax.dat};
@@ -55,7 +55,7 @@
 			\node at (axis cs:5100,2.1) {\ce{^{210}Po}};
 			\node at (axis cs:5370,0.7) {\ce{^{222}Rn}};
 			\node at (axis cs:5800,0.7) {\ce{^{218}Po}};
-			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {enr coax --- 16.22 kg$\cdot$yr};
+			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {\textsc{enr coax} --- 16.22 kg$\cdot$yr};
 			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4.7);
 		\nextgroupplot
 			\addplot[const plot, draw = black] file {../data/NatCoax.dat};
@@ -71,7 +71,7 @@
 			\node at (axis cs:5150,2.1) {\ce{^{210}Po}};
 			\node at (axis cs:5400,0.8) {\ce{^{222}Rn}};
 			\node at (axis cs:5880,1) {\ce{^{218}Po}};
-			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {nat coax --- 6.68 kg$\cdot$yr};
+			\node[rectangle,draw,fill=white] at (axis cs:3500,3.8) {\textsc{nat coax} --- 6.68 kg$\cdot$yr};
 			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4.7);
 	\end{groupplot}
 \end{tikzpicture}

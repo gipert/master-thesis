@@ -7,7 +7,7 @@
 	%\usepackage{pdfsync}
 	%\synctex1
 	%\usepackage[binding=5mm]{layaureo}
-	%\usepackage[marginparwidth=2cm]{geometry}
+	\usepackage[pass]{geometry}
 	\usepackage{marginnote}
 		\renewcommand*{\marginfont}{\scshape}
 	\usepackage{indentfirst}
@@ -43,6 +43,7 @@
 	%\usepackage{fontspec}
 	%\setmonofont[Scale=MatchLowercase]{Inconsolata}
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\renewcommand\labelitemi{\diamond}
 	\usepackage{booktabs}
 	\usepackage[labelfont=bf]{caption}
 	\usepackage{multirow}
@@ -67,8 +68,13 @@
 	\usepackage{pdflscape}
 	%\usepackage{lineno}
 	%\linenumbers
+	\usepackage{cleveref}
+		\crefname{section}{\S}{\S\S}
+		\Crefname{section}{\S}{\S\S}
+		\crefformat{section}{\S#2#1#3}
 	%
 	%%%%%%%%%%%%%%%%%%%%%% BIBTEX
+	\usepackage{cite}
 	\usepackage[nottoc,notlot,notlof]{tocbibind}
 	\let\OLDthebibliography\thebibliography
 	\renewcommand\thebibliography[1]{
@@ -76,49 +82,55 @@
 		\setlength{\parskip}{0pt}
 		\setlength{\itemsep}{0pt plus 0.3ex}
 	}
+	\makeatletter
+	\renewcommand\@biblabel[1]{#1.}
+	\makeatother
 	\usepackage{url,doi}
 	\renewcommand{\doi}[1]{\texttt{doi:}\url{#1}}
 \begin{document}
 \begin{titlepage}
 	\thispagestyle{empty}
+	\newgeometry{a4paper, margin=2cm, tmargin=3cm, noheadfoot, nomarginpar}
 	\begin{center}
 	\includegraphics[width=3.5cm]{img/logo.pdf} \\
-	\vspace{1cm}
-	\textsl{Universit\`a degli Studi di Padova} \\
-	\textsl{Dipartimento di Fisica e Astronomia ``Galileo Galilei''} \\
-	\vspace{11pt}
-	\textsc{Tesi di Laurea Magistrale} \\
+	\vspace{0.5cm}
+	{\Large Universit\`a degli Studi di Padova} \\
+	\hrulefill \\
+	\textsw{\large Dipartimento di Fisica e Astronomia ``Galileo Galilei''} \\
+	\vspace{2cm}
+	\textsc{Tesi di Laurea Magistrale in Fisica} \\
 	\vspace{3cm}
 	\LARGE{Search for Lorentz and CPT symmetries violation in double-beta decay using data from the \textsc{Gerda} experiment}
 	\end{center}
-	%\vspace{1cm}
-	%\begin{center}\textbf{Abstract}\end{center}
-	%\small{In the last years a dedicated experimental program searching for neutrinoless double beta decay has started. A careful study of two-neutrino double beta decay is also performed by these experiments because it constitutes a background for the neutrinoless mode. The high precision of many experiments has motivated the formulation of different modes of double-beta decay so that experiments can also look for new physics through unconventional decay modes. In this work we evaluate the presence of a Lorentz and CPT violating double beta decay mode, governed by the $\aof$ parameter, in data coming from the \textsc{Gerda} experiment through a Bayesian statistical analysis.} \\
-	%\small{A central goal in modern physics is the development of a unified theory of quantum mechanics and general relativity, many approaches have been developed to combine these two descriptions of nature. It was discovered that many formulations of quantum gravity foresee the breakdown of Lorentz and CPT (the combination of Charge, Parity and Time-reversal transformations) symmetries at the Planck scale, however, the Standard Model (SM) of particle physics assumes a complete invariance under Lorentz transformations and hence CPT transformations. Direct observations at the Planck scale are not yet possible, instead it is possible that physics beyond the SM at very high energies can produce effects at lower energies, observable in current experiments. Some theoretical models predict such low energy effects to show up in the neutrino sector: for example, such effects could produce some distortions in the energy spectrum of the two neutrino double-beta decay process. In this work we evaluate the presence of a Lorentz and CPT violating double-beta decay mode using data coming from the second phase of the \textsc{Gerda} experiment at LNGS in Italy.} \\
 	\vspace{3cm}
 	\begin{multicols}{2}
 	\noindent
-	\textsl{Candidato} \\
+	\textsw{Candidato} \\
 	\textsc{Luigi Pertoldi}
 	\columnbreak
 	\flushright
-	\textsl{Relatore} \\
+	\textsw{Relatore} \\
 	\textsc{Riccardo Brugnera} \\
 	\vspace{5mm}
-	\textsl{Corelatore} \\
+	\textsw{Corelatore} \\
 	\textsc{Katharina von Sturm}
 	\end{multicols}
+	\vspace*{\fill}
+	\begin{center}
+	\hrulefill \\
+	\textsc{Anno Accademico 2016/2017}
+	\end{center}
 \end{titlepage}
-%\tableofcontents
-%\listoftables
-%\listoffigures
-%\include{src/intro}
-%\include{src/sec1}
-%\include{src/sec2}
-%\include{src/sec3}
-%\include{src/sec4}
+\restoregeometry
+\tableofcontents
+\listoftables
+\listoffigures
+\include{src/intro}
+\include{src/sec1}
+\include{src/sec2}
+\include{src/sec3}
+\include{src/sec4}
 \include{src/sec5}
-%\printbibliography[heading=bibintoc]
 \bibliography{bib-thesis}
 \bibliographystyle{minimal}
 \end{document}

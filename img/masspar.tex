@@ -14,7 +14,7 @@
 	\begin{tikzpicture}
 		\begin{axis}[
 					grid,
-					width=10cm, height = 7cm,
+					width=8cm, height = 8cm,
 					xmin=-4, xmax=4,
 					ymin=0, ymax=12,
 					samples=100,
@@ -22,6 +22,7 @@
 					xtick={-2,-1,0,1,2},
 					every axis y label/.style={at={(ticklabel cs: 0.5,-10)},rotate=90,anchor=south},
 					xticklabels={$Z-2$,$Z-1$,$Z$,$Z+1$,$Z+2$},
+					xticklabel style={rotate=90},
 					ytick=\empty,
 					yticklabels={,},
 					]
@@ -43,14 +44,18 @@
 				\node (z-1)[fill=red] at (axis cs:-1,6) {};
 				\node (z+1)[fill=red] at (axis cs:1,6) {};
 			% arrows
-			\draw [->, thick] (z-2) -- (z-1) node [midway,above left] {$\beta^-$};
-			\draw [->, thick] (z-2) -- (z)   node [midway,auto] {$\beta^-\beta^-$};
-			\draw [->, thick] (z+2) -- (z+1) node [midway,above right] {$\beta^+$};
-			\draw [->, thick] (z+2) -- (z)   node [midway,above left] {$\beta^+\beta^+$};
+			\draw [->, thick] (z-2) -- (z-1);
+			\node at (axis cs:-1.6,5.7) {$\beta^-$};
+			\draw [->, thick] (z-2) -- (z);
+			\node at (axis cs:-0.6,3.5) {$\beta^-\beta^-$};
+			\draw [->, thick] (z+2) -- (z+1);
+			\node at (axis cs:1.8,5.9) {$\beta^+$};
+			\draw [->, thick] (z+2) -- (z);
+			\node at (axis cs:0.8,3.5) {$\beta^+\beta^+$};
 			% text
-			\node at (axis cs:-3.2,9) {\color{blue}even-even};
+			\node at (axis cs:-3.1,9) {\color{blue}even-even};
 			\node at (axis cs:-1.5,11) {\color{red}odd-odd};
-			\node at (axis cs:3,1) {Even A};
+			\node at (axis cs:3,0.5) {Even A};
 		\end{axis}
 	\end{tikzpicture}
 \end{document}

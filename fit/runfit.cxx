@@ -40,7 +40,6 @@ int main( int argc, char** argv ) {
 /////////////////////////////////////////////
     const int rangeUp = 5300;  // [keV]
     const int rangeDown = 570; // [keV] above 39Ar Q-value
-    BCEngineMCMC::Precision level(BCEngineMCMC::kMedium);
 /////////////////////////////////////////////
 
     auto c_str = [](std::string s) { return s.c_str(); };
@@ -55,13 +54,22 @@ int main( int argc, char** argv ) {
                   << "Usage:\n\n"
                   << "    runfit [OPTIONS]\n\n"
                   << "Options:\n\n"
-                  << "    --fixbinning     : use fixed-size binning instead of the\n"
-                  << "                       default one (variable)\n"
-                  << "    --outdir [DIR]   : set directory to store results\n"
-                  << "                       default : $GERDACPTDIR/out\n"
-                  << "    --fixfile [FILE] : set fixfile\n\n";
+                  << "    --fixbinning [BIN WIDTH] : use fixed-size binning instead of the\n"
+                  << "                               default one (variable)\n"
+                  << "    --outdir [DIR]           : set directory to store results\n"
+                  << "                               default : $GERDACPTDIR/out\n"
+                  << "    --fixfile [FILE]         : set fixfile\n"
+                  << "    --kLow                   : set precision\n"
+                  << "    --kMedium\n"
+                  << "    --kHigh\n"
+                  << "    --kVeryHigh\n\n";
         return 0;
     }
+
+    BCEngineMCMC::Precision level(BCEngineMCMC::kLow);
+    if ( std::find( args.begin(), args.end(), "--kMedium"   ) != args.end() ) level = BCEngineMCMC::kMedium;
+    if ( std::find( args.begin(), args.end(), "--kHigh"     ) != args.end() ) level = BCEngineMCMC::kHigh;
+    if ( std::find( args.begin(), args.end(), "--kVeryHigh" ) != args.end() ) level = BCEngineMCMC::kVeryHigh;
 
     // retrieve the name of the directory containing the output
     auto result = std::find( args.begin(), args.end(), "--outdir");
@@ -187,8 +195,9 @@ int main( int argc, char** argv ) {
 
     int nBins;
     std::vector<double> dbin; // this is what ROOT wants
+    result = std::find( args.begin(), args.end(), "--fixbinning" );
 /*
-    // variable
+    // variable v1.0
     if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) {
         nBins = 1847;
         dbin = std::vector<double>(nBins+1);
@@ -210,7 +219,7 @@ int main( int argc, char** argv ) {
 */
 
     // variable v0.2
-    if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) {
+    if ( result == args.end() ) {
         nBins = 1865;
         dbin = std::vector<double>(nBins+1);
         std::vector<int> avoid = { 608, 612, 1460, 1464, 1524, 1528, 1764, 2204, 2612, 2616 };
@@ -226,14 +235,34 @@ int main( int argc, char** argv ) {
         }
     }
 
-    // fixed
-    else {
-        nBins = 1875;
-        dbin = std::vector<double>(nBins+1);
-        int k = 0;
-        for ( int i = 0; i <= nBins; ++i ) {
-            dbin[i] = k;
-            k+=4;
+    // fixed size
+    int binwidth = 4;
+    if ( result != args.end() ) {
+        binwidth = std::stoi(*(result+1));
+        if ( 7500 % binwidth != 0 ) { std::cout << "Cannot produce " << binwidth << "keV bins from a [0,7500]keV range.\n"; return -1; }
+        if ( binwidth == 10 or binwidth == 20 ) {
+            nBins = 7500/binwidth - 3;
+            dbin = std::vector<double>(nBins+1);
+            std::vector<int> avoid = { 1460, 1520, 1760 };
+            int k = 0, i = 0;
+            while (1) {
+                if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) {
+                    dbin[i] = k;
+                    i++;
+                }
+                k += binwidth;
+                if ( k > 7500 ) break;
+            }
+        }
+
+        else {
+            nBins = 7500/binwidth;
+            dbin = std::vector<double>(nBins+1);
+            int k = 0;
+            for ( int i = 0; i <= nBins; ++i ) {
+                dbin[i] = k;
+                k+=binwidth;
+            }
         }
     }
 
@@ -321,7 +350,7 @@ int main( int argc, char** argv ) {
 
     BCLog::OutSummary(c_str("Saving results in " + path));
     if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) BCLog::OutSummary("Adopting variable binning size ");
-    else BCLog::OutSummary("Adopting fixed binning size");
+    else BCLog::OutSummary(c_str("Adopting fixed binning size " + std::to_string(binwidth) + "keV"));
     // eventually fix parameters as indicated in external file
     BCLog::OutSummary(c_str("Fix file: " + fixfilepath));
     std::ifstream fixfile(fixfilepath);
@@ -348,7 +377,7 @@ int main( int argc, char** argv ) {
     //model.FindMode(model.GetBestFitParameters());
     //BCLog::SetLogLevelScreen(BCLog::summary);
 
-    std::cout << std::endl;
+    //std::cout << std::endl;
     double pvalue = GetPValue(model, level, false);
     std::cout << "Summary : pValue = " << pvalue << std::endl;
 
@@ -365,9 +394,12 @@ int main( int argc, char** argv ) {
     model.WriteHistosOnFile(path);
     // this will re-run the analysis without the LogLikelihood information
     BCLog::OutSummary("Building knowledge-update plots.");
-    BCLog::SetLogLevelScreen(BCLog::warning);
-    summary.PrintKnowledgeUpdatePlots(c_str(path + "Fit2nbbLV_update.pdf"));
-    BCLog::SetLogLevelScreen(BCLog::summary);
+
+    if ( std::find( args.begin(), args.end(), "--noknowup" ) == args.end() ) {
+        BCLog::SetLogLevelScreen(BCLog::warning);
+        summary.PrintKnowledgeUpdatePlots(c_str(path + "Fit2nbbLV_update.pdf"));
+        BCLog::SetLogLevelScreen(BCLog::summary);
+    }
 
     BCLog::OutSummary("Exiting");
     // close log file

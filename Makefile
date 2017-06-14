@@ -44,11 +44,11 @@ bin/processData : processData.cxx lib/libDataReader.so
 bin/processbb : processbb.cxx lib/libProgressBar.so
 	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lProgressBar
 
-bin/sumbb : sumbb.cxx lib/libDataReader.so lib/libDetectorSet.so
-	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
+bin/sumbb : sumbb.cxx lib/libDataReader.so lib/libDetectorSet.so addResolution.cxx
+	$(CC) $(CFLAGS) -o $@ $< addResolution.cxx $(ROOTLIBS) -lDataReader -lDetectorSet
 
-bin/sumbkgext : sumbkgext.cxx lib/libDataReader.so lib/libDetectorSet.so
-	$(CC) $(CFLAGS) -o $@ $< $(ROOTLIBS) -lDataReader -lDetectorSet
+bin/sumbkgext : sumbkgext.cxx lib/libDataReader.so lib/libDetectorSet.so addResolution.cxx
+	$(CC) $(CFLAGS) -o $@ $< addResolution.cxx $(ROOTLIBS) -lDataReader -lDetectorSet
 
 bin/runfit : fit/runfit.cxx fit/pvalue.cxx lib/libFit2nbbLV.so lib/libProgressBar.so
 	$(CC) $(CFLAGS) -o $@ $< fit/pvalue.cxx $(ROOTLIBS) $(shell bat-config --libs) -lFit2nbbLV -lProgressBar

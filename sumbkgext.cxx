@@ -22,6 +22,9 @@
 
 #include "DataReader.h"
 
+void AddResolutionBEGe(TH1* h);
+void AddResolutionCOAX(TH1* h);
+
 int main( int argc, char** argv ) {
 
     std::vector<std::string> args(argc);
@@ -139,6 +142,7 @@ int main( int argc, char** argv ) {
         M = 0.0309831; // total cables' mass
 
         if ( phys == "Bi214" or phys == "Pb214" ) Ngen = 309831.6;
+        if ( phys == "Bi212" or phys == "Tl208" or phys == "K40" ) Ngen *= 1E03;
     }
 
     else if ( place == "minishroud" ) {
@@ -147,6 +151,8 @@ int main( int argc, char** argv ) {
 
         if ( phys == "Bi214" ) Ngen = 1.2381915E06;
         if ( phys == "Pb214" ) Ngen = 577063.5;
+
+        if ( phys == "234Pa" or phys == "K40" ) Ngen *= 1E03;
     }
 
     else if ( place == "minishroudsurface" ) { // NOTE: fake
@@ -155,12 +161,10 @@ int main( int argc, char** argv ) {
     }
     // TODO: complete here
 
-// -------------------------------------------------------------------------------------------------------------------    
+// -------------------------------------------------------------------------------------------------------------------
     // SPECIAL CASE: contacts
     else if ( place == "contacts" ) {
 
-        // simulation are already normalized to number of generated events
-        //long int Ngen;
         double MBEGe_n = 0.07423; // [Kg]
         double MBEGe_p = 5.4007716E-07; // [Kg]
         double MCOAX_n = 0.29962; // [Kg]
@@ -195,6 +199,11 @@ int main( int argc, char** argv ) {
             path = rootpath + "/data/sumMaGe_K42pPlus.root";
             TFile outfile_p(path.c_str(), "RECREATE");
 
+            AddResolutionBEGe(hBEGe_n);
+            AddResolutionBEGe(hBEGe_p);
+            AddResolutionCOAX(hCOAX_n);
+            AddResolutionCOAX(hCOAX_p);
+
             hBEGe_n->Scale(MBEGe_n*ltBEGe*1E-07);
             hBEGe_p->Scale(MBEGe_p*ltBEGe*1E-06);
             hCOAX_n->Scale(MCOAX_n*ltCOAX*1E-08);
@@ -228,8 +237,11 @@ int main( int argc, char** argv ) {
     path = rootpath + "/data/sumMaGe_" + phys + place + ".root";
     TFile outfile(path.c_str(), "RECREATE");
     for ( int i = 0; i < 40; ++i ) {
+        if ( set.GetDetectorTypes()[i] == 1 ) AddResolutionBEGe(hist[i]);
+        if ( set.GetDetectorTypes()[i] == 2 ) AddResolutionCOAX(hist[i]);
         hist[i]->Scale(totalTime[i]*M/Ngen);
     }
+    outfile.cd();
 
     TH1F histBEGe("energy_BEGe", "BEGe global MaGe energy spectrum", 7500, 0, 7500);
     TH1F histCOAX("energy_COAX", "COAX global MaGe energy spectrum", 7500, 0, 7500);

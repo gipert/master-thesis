@@ -187,7 +187,7 @@ int main( int argc, char** argv ) {
 
     int nBins;
     std::vector<double> dbin; // this is what ROOT wants
-
+/*
     // variable
     if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) {
         nBins = 1847;
@@ -196,6 +196,24 @@ int main( int argc, char** argv ) {
                                    912, 968, 972, 1000, 1004, 1060, 1064,
                                    1120, 1172, 1176, 1236, 1240, 1332, 1460,
                                    1464, 1524, 1528, 1764, 2204, 2612, 2616 };
+
+        int k = 0, i = 0;
+        while (1) {
+            if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) {
+                dbin[i] = k;
+                i++;
+            }
+            k += 4;
+            if ( k > 7500 ) break;
+        }
+    }
+*/
+
+    // variable v0.2
+    if ( std::find( args.begin(), args.end(), "--fixbinning" ) == args.end() ) {
+        nBins = 1865;
+        dbin = std::vector<double>(nBins+1);
+        std::vector<int> avoid = { 608, 612, 1460, 1464, 1524, 1528, 1764, 2204, 2612, 2616 };
 
         int k = 0, i = 0;
         while (1) {

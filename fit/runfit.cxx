@@ -28,6 +28,7 @@
 #include <BAT/BCSummaryTool.h>
 #include <BAT/BCModelOutput.h>
 #include <BAT/BCParameter.h>
+#include <BAT/BCH1D.h>
 
 #include "TFile.h"
 #include "TH1D.h"
@@ -385,7 +386,11 @@ int main( int argc, char** argv ) {
     // print results of the analysis into a text file
     model.PrintResults(c_str(path + "Fit2nbbLV_results.txt"));
     // draw all marginalized distributions into a PDF file
-    //model.PrintAllMarginalized(c_str(path + "Fit2nbbLV_plots.pdf"));
+    model.PrintAllMarginalized(c_str(path + "Fit2nbbLV_plots.pdf"));
+    auto h = model.GetMarginalized("2nbbLV");
+    TFile faof(c_str(path + "aof_post.root"), "RECREATE");
+    if (h) h->GetHistogram()->Write();
+    faof.Close();
 
     // print all summary plots
     summary.PrintParameterPlot(c_str(path + "Fit2nbbLV_parameters.pdf"));

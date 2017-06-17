@@ -135,13 +135,16 @@ int main( int argc, char** argv ) {
     else if ( place == "holder" ) {
         Ngen = 1E07;
         M = 0.658988; // holder's mass [kg]
+        if ( phys == "Ac228" or phys == "Bi212" or
+             phys == "Bi214" or phys == "Pa234" or
+             phys == "Pb214" ) Ngen = 1E08;
     }
 
     else if ( place == "cables" ) {
         Ngen = 1E07;
         M = 0.0309831; // total cables' mass
 
-        if ( phys == "Bi214" or phys == "Pb214" ) Ngen = 309831.6;
+        if ( phys == "Bi214" or phys == "Pb214" or phys == "Pa234" ) Ngen = 1E08;
         if ( phys == "Bi212" or phys == "Tl208" or phys == "K40" ) Ngen *= 1E03;
     }
 

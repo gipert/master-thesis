@@ -128,8 +128,10 @@ int main( int argc, char** argv ) {
     }
 
     else if ( place == "fibers" ) {
-        Ngen = 1E08;
+        Ngen = 1E09;
         M = 1.3615078; // fibers' mass [kg]
+
+        if ( phys == "Tl208" ) Ngen = 1E08;
     }
 
     else if ( place == "holder" ) {

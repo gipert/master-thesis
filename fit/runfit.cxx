@@ -387,9 +387,11 @@ int main( int argc, char** argv ) {
     model.PrintResults(c_str(path + "Fit2nbbLV_results.txt"));
     // draw all marginalized distributions into a PDF file
     model.PrintAllMarginalized(c_str(path + "Fit2nbbLV_plots.pdf"));
-    auto h = model.GetMarginalized("2nbbLV");
+    auto h = model.GetMarginalized("2nbb");
+    auto hLV = model.GetMarginalized("2nbbLV");
     TFile faof(c_str(path + "aof_post.root"), "RECREATE");
     if (h) h->GetHistogram()->Write();
+    if (hLV) hLV->GetHistogram()->Write();
     faof.Close();
 
     // print all summary plots

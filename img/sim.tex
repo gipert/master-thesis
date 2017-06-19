@@ -26,26 +26,26 @@
 						%grid = major,
 						/pgf/number format/1000 sep={}
 						]
-		\nextgroupplot[xmax = 1500, ymin = -4,
+		\nextgroupplot[xmax = 1500, ymin = -4.5,
 						ytick = {-4,-3,-2,-1,0},
 						yticklabels = {$10^{-4}$,$10^{-3}$,$10^{-2}$,$10^{-1}$,$10^0$},
 						%legend columns = 2,
 						%legend pos = north west,
-						legend entries = {\textsc{[h]}, \textsc{[ms]}, \textsc{[c]}, \textsc{[f]}$\cdot10^3$}
+						legend entries = {\textsc{[h]}, \textsc{[ms]}, \textsc{[c]}, \textsc{[f]}$\cdot10^2$}
 						]
-			\addplot[const plot, draw = blue] file {../data/K40holder.dat};
-			\addplot[const plot, draw = black!50!green] file {../data/K40minishroud.dat};
-			\addplot[const plot, draw = red] file {../data/K40cables.dat};
-			\addplot[const plot, draw = black] file {../data/K40fibers.dat};
+			\addplot[const plot, draw = red] file {../data/K40holder.dat};
+			\addplot[const plot, draw = black] file {../data/K40minishroud.dat};
+			\addplot[const plot, draw = black!50!green] file {../data/K40cables.dat};
+			\addplot[const plot, draw = blue] file {../data/K40fibers.dat};
 			\node[rectangle, draw] at (axis cs:700,-1) {\large\ce{^{40}K}};
 		\nextgroupplot[xmax = 3500, ymin = -10,
 						ytick = {-8,-4,0},
 						yticklabels = {$10^{-8}$,$10^{-4}$,$10^{-0}$},
 						%legend columns = 2,
-						legend entries = {\textsc{[homLAr]}, \textsc{[ms]}, {[}n$^+${]}, {[}p$^+${]}}
+						legend entries = {\textsc{[homLAr]}, {[}n$^+${]}, {[}p$^+${]}}
 						]
 			\addplot[const plot, draw = blue] file {../data/K42homLAr.dat};
-			\addplot[const plot, draw = black!50!green] file {../data/K42minishroudsurf.dat};
+			%\addplot[const plot, draw = black!50!green] file {../data/K42minishroudsurf.dat};
 			\addplot[const plot, draw = red] file {../data/K42nplusbege.dat};
 			\addplot[const plot, draw = black] file {../data/K42pplusbege.dat};
 			\node[rectangle, draw] at (axis cs:2700,-1) {\large\ce{^{42}K}};

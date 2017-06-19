@@ -11,25 +11,25 @@ Once the relevant quantities have been extracted from raw waveforms they have to
 
 % }}}
 % {{{ QUALITY CUTS
-\marginnote{quality\\cuts} The data selection procedure undergoes various steps in order to purify the dataset from unphysical or unwanted events. Tn the following the different classes of events excluded from the analysis is presented.
+\marginnote{quality\\cuts} The data selection procedure undergoes various steps in order to purify the dataset from unphysical or unwanted events. In the following all the classes of events excluded from the analysis are presented.
 \begin{itemize}
-	\item There is a set of classes of events that originates from failures in the acquisition process, limitations of the hardware components (e.g.~the FADC) or failures in the reconstruction process (\textsc{Gelatio}).
-	\item There are events not related to an energy deposition, and thus consisting of a flat signal (an energy deposition in one detector triggers the sampling of the pulses from each of the 40 detectors, so it is very common to find pure-baseline signals in data), waveforms which amplitude exceeds the FADC's energy threshold (overshoot events), pile-up events, and all other unphysical events.
-	\item The main purpose for acquiring pulses from all the detectors when an energy deposition occurs anywhere is to provide the ability to discriminate multi-detector events. Such events cannot be associated to the double-beta decay electrons, which are absorbed within the detector's volume, and thus they can be discarded as background events.
+	\item There is a set of classes of events that originates from failures in the acquisition process or in the reconstruction process (e.g.~a failure of a \textsc{Gelatio} module) and thus must be tagged and removed.
+	\item A cut must also be applied on events not related to an energy deposition, and thus consisting of a flat signal (an energy deposition in one detector triggers the sampling of the pulses registered in all detectors, so it is very common to find pure-baseline signals in data), waveforms which amplitude exceeds the FADC's energy threshold (overshoot events), and pile-up events.
+	\item The main purpose for acquiring pulses from all the detectors when an energy deposition occurs anywhere is to provide the ability to discriminate multi-detector events. Such events cannot be associated to the detection of double-beta decay electrons, which are usually absorbed within the detector's volume, and thus they can be discarded as background events.
 	\item Events that leave a trace also in the water tank and/or in the upper scintillating panels and thus flagged by the muon-veto system are also discarded.
 \end{itemize}
 
 % }}}
 % {{{ THE ENERGY SPECTRA
-\marginnote{the\\energy\\spectra} With the cuts described above, the summed energy spectra from BEGe, enriched coaxial and natural coaxial detectors are presented in Fig.~\ref{fig:data}. The considered data set was taken between December 2015 and March 2017. Some prominent features can be identified. The low energy part up to 565 keV is dominated by $\beta^-$ decay of cosmogenic \ce{^{39}Ar} in all spectra. Slight differences in the spectral shape between the coaxial and BEGe type detectors result from differences in detector geometry and of the n$^+$ dead layer thickness. Between 600 and 1500 keV the spectra of the enriched detectors exhibit an enhanced continuous spectrum due to $2\nbb$ decay (see also Fig.~\ref{fig:energyspectra}). In all spectra, $\gamma$ lines from the decays of \ce{^{40}K} and \ce{^{42}K} can be identified, the spectra of the enriched coaxial detectors contain also lines from \ce{^{208}Tl} and \ce{^{214}Bi}. The peak-like structure around 3.5 MeV can be attributed to the $\alpha$-decays near the detector p$^+$ surface.
+\marginnote{the\\energy\\spectra} The summed energy spectra from BEGe, enriched coaxial and natural coaxial detectors after the application of the quality cuts are presented in Fig.~\ref{fig:data}. The considered data set was taken between December 2015 and March 2017. Some prominent features can be identified. The low energy part up to 565 keV is dominated by $\beta^-$ decay of cosmogenic \ce{^{39}Ar} in all spectra. Slight differences in the spectral shape between the coaxial and BEGe type detectors result from differences in detector geometry and of the n$^+$ dead layer thickness. Between 600 and 1500 keV the spectra of the enriched detectors exhibit an enhanced continuous spectrum due to $2\nbb$ decay (see also Fig.~\ref{fig:energyspectra}). In all spectra, $\gamma$ lines from the decays of \ce{^{40}K} and \ce{^{42}K} can be identified, and the spectra of the enriched coaxial detectors contain also lines from \ce{^{208}Tl} and \ce{^{214}Bi}. A small peak occurring at 969 keV can be attributed to the presence of \ce{^{228}Ac}. The peak-like structure around 3.5 MeV can be attributed to the $\alpha$-decays near the detector p$^+$ surface.
 
 % }}}
 % {{{ BACKGROUND INDEX
 \marginnote{background\\index} The Background Index (BI), used to estimate the background activity in the \textsc{RoI}, is defined as the number of counts over detector's mass, live time and energy range inside a energy window defined as follows (see also Fig.~\ref{fig:bi}). The window covers the energy range between 1930 keV and 2190 keV excluding the blinded window around $Q_{\beta\beta}$. Also the two lines from \ce{^{208}Tl} and \ce{^{214}Bi} occurring respectively at 2104 keV and 2119 keV are neglected in this computation. This is done removing the energy range within $\pm$5 keV around the peaks. The width of the window is then 190 keV. In Tab.~\ref{tab:bindex} the background indices for the three considered datasets are given.
 \begin{table}[b]
 	\centering
-	\label{tab:bindex}
 	\caption{Background indices for the considered datasets.}
+	\label{tab:bindex}
 	\begin{tabular}{lc}
 		\toprule
 		\multirow{2}{*}{\textsc{dataset}}	&	BI \\
@@ -54,7 +54,7 @@ Once the relevant quantities have been extracted from raw waveforms they have to
 Background components that were identified in the energy spectra or that were known to be present in the vicinity of the detectors were simulated using the \textsc{MaGe} \cite{MaGe} code based on \textsc{Geant4} \cite{geant4} and jointly developed by the {\gerda} and \textsc{Majorana} \cite{majoranadem} collaborations. The detectors and the arrangement of the germanium detector array with seven detector strings were implemented into the \textsc{MaGe} code as well as the other {\gerda} components (see Fig.~\ref{fig:volumes}). During the simulation \textsc{Geant4} generates complete information about the trajectory and interactions of particles as they propagate through the detectors. Although all of this information is available to the user, it is typically processed, parsed and saved to an output file for further analysis after the simulation run is complete. Simulations of contaminations of the following hardware components were performed:
 \begin{itemize}
 	\item on the p$^+$ and n$^+$ surfaces of the detectors;
-	\item homogeneously distributed in the LAr, in a {\color{red}???} cylinder centered in the detector array;
+	\item homogeneously distributed in the LAr, in a 17.7 m$^3$ cylinder centered in the detector array;
 	\item in the detector assembly representing contaminations in the detector holders and their components;
 	\item in the nylon mini-shroud surrounding the detectors;
 	\item in the fiber shroud;
@@ -64,7 +64,7 @@ The volumes representing the germanium array, the holder mounting and the cables
 \begin{figure}
 	\centering
 	\resizebox{\textwidth}{!}{%
-		\includegraphics[]{img/gedet.pdf}%
+		\includegraphics{img/gedet.pdf}%
 		\includegraphics{img/holders.pdf}%
 		\includegraphics{img/cables.pdf}%
 		\includegraphics{img/all.pdf}%
@@ -92,12 +92,8 @@ The expected background indices due to the neutron and muon fluxes at the LNGS u
 \marginnote{\textnormal{\ce{^{232}Th}}-chain} The characteristic $\gamma$ line at 2615 keV, a hint of the presence of isotopes from the \ce{^{232}Th} chain, can be clearly identified in the energy spectra shown in Fig.~\ref{fig:data}. Possible locations for contaminations are the detector assembly, the cables, the mini-shrouds and the fiber shroud. As \ce{^{228}Ac} and \ce{^{228}Th} do not necessarily have to be in equilibrium, the two parts of the decay chain were simulated separately. From the sub-decay chain following the \ce{^{228}Th} decay only the contributions from the \ce{^{212}Bi} and \ce{^{208}Tl} decays were simulated, as theses are the only ones emitting high energetic $\gamma$ rays and electrons that can reach the detectors. {\color{red}giustificazione da ampliare}
 
 % }}}
-% {{{ 60Co
-{\color{red}Manca 60Co}%\marginnote{\textnormal{\ce{^{60}Co}}}
-
-% }}}
-% {{{ 207Bi
-{\color{red}Manca 207Bi}%\marginnote{\textnormal{\ce{^{207}Bi}}}
+% {{{ 60Co and 207Bi
+\marginnote{\textnormal{\ce{^{60}Co} \textsc{and} \ce{^{207}Bi}}} The presence of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} was suggested by material screening measurements and earlier works. Simulations of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} in cables, holders and mini-shrouds have been carried on (see Fig.~\ref{fig:simspectra}).
 
 % }}}
 % {{{ ALPHA MODEL
@@ -116,7 +112,7 @@ In order to describe the whole energy interval dominated by $\alpha$-induced eve
 % }}}
 \subsection*{Screening measurements}
 \addcontentsline{toc}{subsection}{Screening measurements}
-There are some radioactive contaminations in the components of {\gerda}, though not evident in the energy spectra, which have been identified and systematically measured. The most relevant contributions, reported in Table \ref{tab:screening}, come from the silicon of the holder mounting, the cables, the nylon mini-shroud covering the detectors and the fiber shroud.
+There are some radioactive contaminations in the components of {\gerda}, though not evident in the energy spectra, which have been identified and systematically measured. The most relevant contributions, reported in Table \ref{tab:screening}, come from the silicon of the holder mounting, the cables, the nylon mini-shroud covering the detectors and the fiber shroud. Measurements were performed with the ICP-MS mass spectroscopy and GeMPI {\color{red}??}
 \begin{table}
 	\caption{Screening measurements for some of the considered {\gerda} components. The upper limits correspond to 90\% C.L.}
 	\centerline{%
@@ -141,6 +137,7 @@ There are some radioactive contaminations in the components of {\gerda}, though 
 	\label{tab:screening}
 	}
 \end{table}
+% {{{ landscape
 \begin{landscape}
 \begin{figure}
 	\centering
@@ -152,7 +149,21 @@ There are some radioactive contaminations in the components of {\gerda}, though 
 \begin{landscape}
 \begin{figure}
 	\includegraphics{img/sim}
-	\caption{Simulated spectra, normalized to the number of generated events $N_\text{sim}$. Legend: \textsc{[ms]} = mini-shroud, \textsc{[c]} = cables, \textsc{[h]} = holders, \textsc{[homLAr]} = homogeneous in LAr, \textsc{[n$^+$]}/\textsc{[n$^+$]} = contacts. Top left: \ce{^{40}K}; top right \ce{^{42}K}; bottom left: $\alpha$-model; bottom right: \ce{^{60}Co},\ce{^{228}Ac},\ce{^{234\text{m}}Pa} and \ce{^{207}Bi}.}
+	\caption{Simulated spectra, normalized to the number of generated events $N_\text{sim}$. All spectra refer to BEGe detectors. Legend: \textsc{[ms]} = mini-shroud, \textsc{[c]} = cables, \textsc{[h]} = holders, \textsc{[homLAr]} = homogeneous in LAr, \textsc{[n$^+$]}/\textsc{[n$^+$]} = contacts. Top left: \ce{^{40}K}; top right \ce{^{42}K}; bottom left: $\alpha$-model; bottom right: \ce{^{60}Co},\ce{^{228}Ac},\ce{^{234\text{m}}Pa} and \ce{^{207}Bi}.}
 	\label{fig:simspectra}
 \end{figure}
 \end{landscape}
+\begin{landscape}
+\begin{figure}
+	\includegraphics{img/sim2}
+	\caption{Simulated spectra, normalized to the number of generated events $N_\text{sim}$. All spectra refer to BEGe detectors. Legend: \textsc{[ms]} = mini-shroud, \textsc{[c]} = cables, \textsc{[h]} = holders, \textsc{[homLAr]} = homogeneous in LAr, \textsc{[n$^+$]}/\textsc{[n$^+$]} = contacts. Top left: \ce{^{40}K}; top right \ce{^{42}K}; bottom left: $\alpha$-model; bottom right: \ce{^{60}Co},\ce{^{228}Ac},\ce{^{234\text{m}}Pa} and \ce{^{207}Bi}.}
+	\label{fig:simspectra2}
+\end{figure}
+\end{landscape}
+	\begin{figure}
+		\centerline{%
+			\includegraphics[width=\linewidth]{img/chains.png}
+		}
+		\caption{Schemes of \ce{^{238}U} and \ce{^{232}Th} decay chains.}\label{fig:chains}
+	\end{figure}
+% }}}

@@ -1,7 +1,7 @@
 %! TEX root = ../main.tex
 \section{The double-beta decay}\label{sec:theory}
 \subsection*{The two-neutrino double-beta decay}
-\addcontentsline{toc}{subsection}{The two-neutrino double-beta decay}
+%\addcontentsline{toc}{subsection}{The two-neutrino double-beta decay}
 The two-neutrino double-beta decay ($2\nbb$) processes, first suggested by M.~Goeppert-Mayer in 1935 \cite{PhysRev.48.512}, can be schematically defined as:
 \[\begin{array}{lrl}
 		\mathcal{N}(A,Z)\longrightarrow \mathcal{N}(A,Z+2)+2e^-+2\bar{\nu}_e & \qquad [2\nu\beta^-\beta^-] & \\
@@ -19,7 +19,7 @@ where $\mathcal{N}(A,Z)$ represents a nucleus with mass number $A$ and atomic nu
 \end{figure}
 
 Since the $2\nbb$ decays have a four-body leptonic final state, the sum of the kinetic energies of the two decay electrons have a continuous spectrum from zero to the Q-value of the decay process (the recoil energy of the final nucleus is negligible), which is given by
-\[Q_{\beta\beta}=M_i-M_f-2m_e\;,\]
+\begin{equation}Q_{\beta\beta}=M_i-M_f-2m_e\;,\end{equation}
 where $M_i$ and $M_f$ are, respectively, the masses of the initial and final nuclei (i.e. the energy levels of their ground states; if the transition occurs into an excited energy level of the final nucleus, $M_f$ must be replaced with the appropriate energy).
 
 A nucleus $\mathcal{N}(A,Z)$ can decay through a $2\nbb$ process if its ground state has an energy which is larger than the ground-state energy of the nucleus $\mathcal{N}(A,Z\pm2)$ plus twice the electron mass. Moreover, if a nucleus can decay through both the $\beta$ and $2\nbb$ processes, in practice the latter is not observable, because its $\beta$ decay lifetime is much shorter than its $2\nbb$ decay lifetime (the half-life of $2\nbb$ is typically around $10^{19}-10^{24}$ yrs). Therefore, in practice the $2\nbb$ decay of a nucleus is observable only if its $\beta$ decay is energetically forbidden or strongly suppressed because of a large change of spin. The $\beta^-$ decay of a nucleus $\mathcal{N}(A,Z)$ is energetically forbidden if its ground-state energy is lower than the ground-state energy of the nucleus $\mathcal{N}(A,Z+1)$ plus the electron mass ($Q_{\beta^{-}}<0$). Typically, in $2\nu\beta^-\beta^-$ decays the energy levels of the three nuclei $\mathcal{N}(A,Z)$, $\mathcal{N}(A,Z+1)$, and $\mathcal{N}(A,Z+2)$ are of the type depicted in Fig.~\ref{fig:levelsGe76}, where the specific case of the \ce{^{76}Ge}, \ce{^{76}As}, and \ce{^{76}Se} nuclei is considered.
@@ -51,29 +51,29 @@ Since $Q_\text{EC} = Q_{\beta^+}+2m_e$, the electron-capture process (EC) can oc
 \]
 
 \marginnote{decay\\rate} The rate of $2\nbb$ can be calculated by invoking the recipe of the Fermi golden rule for simple $\beta$ decay. To a good approximation, the kinematic part (the phase space of the leptons emitted in the decay) and the nuclear part (the matrix element responsible for the transition probability between two nuclear states) can be factorized as
-\[\Gamma^{2\nu}=G^{2\nu}(Q_{\beta\beta},Z)|\mathcal{M}^{2\nu}|^2\;,\]
+\begin{equation}\Gamma^{2\nu}=G^{2\nu}(Q_{\beta\beta},Z)|\mathcal{M}^{2\nu}|^2\;,\end{equation}
 where $G^{2\nu}$ is obtained by integration over the phase space of four leptons emitted in the decay and can be calculated exactly. The nuclear matrix element $\mathcal{M}^{2\nu}$ deals with the nuclear structure of the transition and is much more difficult to evaluate.
 
 Denoting the 4-momentum of the two electrons and the two anti-neutrinos by $p^\alpha_i=(E_i,\mathbf{p}_i)$ and $q^\alpha_i=(\omega_i,\mathbf{q}_i)$, respectively ($i=1,2$), the relevant matrix element is given by
-\[i\mathcal{M}=iG^2_FV^2_{ud}[\bar{u}(p_1)\gamma^\mu(1-\gamma_5)v(q_1)][\bar{u}(p_2)\gamma^\nu(1-\gamma_5)v(q_2)]J_{\mu\nu}-(p_1\leftrightarrow p_2)\;.\]
+\begin{equation}i\mathcal{M}=iG^2_FV^2_{ud}[\bar{u}(p_1)\gamma^\mu(1-\gamma_5)v(q_1)][\bar{u}(p_2)\gamma^\nu(1-\gamma_5)v(q_2)]J_{\mu\nu}-(p_1\leftrightarrow p_2)\;.\end{equation}
 The hadronic tensor $J_{\mu\nu}$ corresponds to the product of two nuclear currents written in the impulse approximation \cite{Tomoda:1991}. Including the implementation of the long-wave and closure approximation fot the hadronic tensor \cite{Tomoda:1991}, we obtain
-\[\sum_\text{spin}|\mathcal{M}|^2=64G^4_F|V_{ud}|^4g^4_A(p_1\cdot p_2)(q_1\cdot q_2)|\mathcal{M}^{2\nu}|^2\;,\]
+\begin{equation}\sum_\text{spin}|\mathcal{M}|^2=64G^4_F|V_{ud}|^4g^4_A(p_1\cdot p_2)(q_1\cdot q_2)|\mathcal{M}^{2\nu}|^2\;,\end{equation}
 where the nuclear matrix element involves vector and axial couplings for Fermi and Gamow-Teller transitions in the form
-\[g^2_A\mathcal{M}^{2\nu}=g^2_V\mathcal{M}^{2\nu}_F-g^2_A\mathcal{M}^{2\nu}_{GT}\;.\]
+\begin{equation}g^2_A\mathcal{M}^{2\nu}=g^2_V\mathcal{M}^{2\nu}_F-g^2_A\mathcal{M}^{2\nu}_{GT}\;.\end{equation}
 
 General methods for phase-space factor calculations in double-beta decay have been developed \cite{Doi:1981,Doi:1983,Tomoda:1991}. The decay rate is given by integrating over all possible energies and angles of the leptons emitted in the decay. For the two-neutrino mode, these leptons are the two electrons and the two anti-neutrinos:
-\[\begin{split}
+\begin{equation}\begin{split}
 	%G^{2\nu} \propto \int \text{d}^3p_1\text{d}^3p_2\text{d}^3q_1\text{d}^3q_2F(Z,E_1)F(Z,E_2)\delta(E_1+E_1+\omega_1+\omega_2-E_F+E_I)\;,
 		\text{d}\Gamma=\frac{1}{4}\int & \frac{\text{d}^3p_1}{(2\pi)^32E_1}\frac{\text{d}^3p_2}{(2\pi)^32E_2}\frac{\text{d}^3q_1}{(2\pi)^32\omega_1}\frac{\text{d}^3q_2}{(2\pi)^32\omega_2} \\
 									   & \times F(Z,E_1)F(Z,E_2)\sum|\mathcal{M}|^2 \\
 									   & \times 2\pi\delta(E_1+E_2+\omega_1+\omega_2-E_F+E_I)\;, \\
-\end{split}\]
+\end{split}\end{equation}
 where $F(Z,E)$ is the Fermi function that describes the Coulomb effect on the outgoing electrons and $E_I$, $E_F$ are respectively the energies of the parent and the daughter nucleus.
 
 In the Primakoff–Rosen approximation \cite{PrimakoffRosen} for the non-relativistic Coulomb correction, the sum spectrum of the electrons energies can be analytically calculated. After a suitable change of integration variables, defining the sum of kinetic energies $K=T_1+T_2$ for the two electrons and integrating over the remaining variables we obtain
-\[\frac{\text{d}\Gamma}{\text{d}K}=\Lambda\cdot(K^5+10K^4+40K^3+60K^2+30K)(Q_{\beta\beta}-K)^5\;,\]\label{eq:spectstd}
+\begin{equation}\frac{\text{d}\Gamma}{\text{d}K}=\Lambda\cdot(K^5+10K^4+40K^3+60K^2+30K)(Q_{\beta\beta}-K)^5\;,\label{eq:spectstd}\end{equation}
 where $K$ is written in units of the electron mass. The overall constant factor is given by
-\[\Lambda=\frac{G_F^4g_A^4|V_{ud}|^4F^2_\text{PR}(Z)m_e^{11}}{7200\pi^7}|\mathcal{M}^{2\nu}|^2\;,\]
+\begin{equation}\Lambda=\frac{G_F^4g_A^4|V_{ud}|^4F^2_\text{PR}(Z)m_e^{11}}{7200\pi^7}|\mathcal{M}^{2\nu}|^2\;,\end{equation}
 with $F_\text{PR}(Z)=2\pi\alpha/Z(\-e^{-2\pi\alpha Z})$. The distribution for \ce{^{76}Ge} is plotted in Fig.~\ref{fig:energyspectra}.
 \begin{figure}
 	\centering
@@ -110,14 +110,14 @@ The four countershaded neutrino operators are of renormalizable mass dimension $
 %where $\aof$ corresponds to the isotropic component of $(a_\text{of}^{(3)})^{\alpha}$. The phase space factor takes the form in (\ref{eq:phasesp}), then the integration over all orientations leaves only the isotropic coefficient $\aof$ and the momentum-space volume element for neutrinos becomes $\text{d}^3q=4\pi(\omega^2+2\omega\aof)\text{d}\omega$. We obtain the electron sum spectrum
 
 The anti-neutrino phase space element $\text{d}^3q$ is modified by the presence of these new operators:
-\[\omega^2\text{d}\omega\text{d}\Omega \;\longmapsto\; f(\omega)\text{d}\omega\text{d}\Omega\;,\]
+\begin{equation}\omega^2\text{d}\omega\text{d}\Omega \;\longmapsto\; f(\omega)\text{d}\omega\text{d}\Omega\;,\end{equation}
 where the anti-neutrino function
-\[f(\omega)\simeq\omega^2-\frac{1}{2}m_\nu^2-2\omega\delta\omega\]
+\begin{equation}f(\omega)\simeq\omega^2-\frac{1}{2}m_\nu^2-2\omega\delta\omega\end{equation}
 encodes the Lorentz-violating modifications
-\[\delta\omega=-\sum_{jm}e^{im\omega_\oplus T_\oplus}\mathcal{N}_{jm}(a_\text{of}^{(3)})_{jm}\]
+\begin{equation}\delta\omega=-\sum_{jm}e^{im\omega_\oplus T_\oplus}\mathcal{N}_{jm}(a_\text{of}^{(3)})_{jm}\end{equation}
 arising from the modified anti-neutrino dispersion relation \cite{SMEneutrinos} $\omega=|\mathbf{q}|+m_\nu^2/|\mathbf{q}|+\delta\omega$. The sidereal time $T_\oplus$ controls the harmonic variation of the anti-neutrino function in the laboratory produced by the Earth sidereal rotation at frequency $\omega_\oplus\simeq 2\pi/(23\text{ h } 56\text{ min})$. The factors $\mathcal{N}_{jm}$ contain informations about the direction of propagation of the anti-neutrinos, expressed relative to the canonical sun-centered frame of reference \cite{frameor1,frameor2}.
 
-Following the same procedure as in the conventional two-neutrino double-beta decay, we integrate over all orientation, which implies only isotropic effects are observable and hence that the residual spectrum depends only on $\aof\equiv(a_\text{of}^{(3)})_{00}/\sqrt{4\pi}$. After a suitable change of integration variables {\color{red}[e ponendo $m_\nu=0$? Non si capisce]} and defining the sum of kinetic energies $K=T_1+T_2$ for the two electrons, we obtain the electron sum spectrum
+\marginnote{decay\\rate} Following the same procedure as in the conventional two-neutrino double-beta decay, we integrate over all orientation, which implies only isotropic effects are observable and hence that the residual spectrum depends only on $\aof\equiv(a_\text{of}^{(3)})_{00}/\sqrt{4\pi}$. After a suitable change of integration variables {\color{red}[e ponendo $m_\nu=0$? Non si capisce]} and defining the sum of kinetic energies $K=T_1+T_2$ for the two electrons, we obtain the electron sum spectrum
 \begin{equation}
 	\begin{split}
 	\frac{\text{d}\Gamma}{\text{d}K} =& \Lambda \cdot(K^5+10K^4+40K^3+60K^2+30K) \\
@@ -125,5 +125,5 @@ Following the same procedure as in the conventional two-neutrino double-beta dec
 	\end{split}\label{eq:totwidth}
 \end{equation}
 Thus the total decay rate can be expressed as an addition of two separate rates through a perturbation:
-\[\Gamma=\Gamma_0+\delta\Gamma\;,\]
+\begin{equation}\Gamma=\Gamma_0+\delta\Gamma\;,\end{equation}
 where the first term is (\ref{eq:spectstd}) and the second one contains all the new Lorentz-violating informations. The two differential decay rates are depicted in Fig.~\ref{fig:energyspectra}.

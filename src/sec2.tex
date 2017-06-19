@@ -25,7 +25,7 @@ The {\gerda} experiment \cite{gerdadescription} (GERmanium Detector Array) is de
 Experiments looking for $0\nbb$ decay of \ce{^{76}Ge} operate germanium diodes normally made from enriched material, i.e.~the number of \ce{^{76}Ge} nuclei, the isotopic fraction $f_{76}$, is enlarged from 7.8\% to 86\% or higher. In these type of experiments, the source is equal to the detector which yields high detection efficiency. Additional advantages of this technique are the superior energy resolution of 0.2\% at $Q_{\beta\beta}=2039$ keV compared to other searches with different isotopes and the high radiopurity of the crystal growing procedure. Disadvantages are the relatively low $Q_{\beta\beta}$ value since backgrounds typically fall with energy and the relative difficulty to scale to larger mass compared to e.g.~experiments using liquids and gases.
 
 {\gerda} has been built in the INFN Laboratori Nazionali del Gran Sasso (LNGS) at a depth of 3500 m w.e.~(water equivalent) and submerses bare high-purity germanium detectors enriched in \ce{^{76}Ge} into liquid argon (LAr). LAr serves simultaneously as a shield against external radioactivity and as cooling medium. Phase \textsc{i} of the experiment was intended to give a statistically unambiguous statement concerning the observation of the neutrinoless double-beta decay claimed by a subgroup of the \textsc{HdM} collaboration \cite{hdmclaim}. It ended in may 2013 with a total exposure of 21.6 kg$\cdot$yr, the analysis reported no excess of events above the background at $Q_{\beta\beta}$ \cite{resultsphase1}. More recently the statement was confirmed also with the addition of the first data from phase \textsc{ii} \cite{nature}, reaching a 34.4 kg$\cdot$yr exposure and improving the corresponding limit on the half-life up to
-\[T_{1/2}^{0\nbb}>5.3\cdot10^{25}\;\text{yr}\qquad\text{(90\% C.L.)}\;.\]
+\begin{equation}T_{1/2}^{0\nbb}>5.3\cdot10^{25}\;\text{yr}\qquad\text{(90\% C.L.)}\;.\end{equation}
 Phase \textsc{ii} of {\gerda} is expected to improve the sensitivity up to $10^{26}$ yr.
 
 % }}}
@@ -55,7 +55,7 @@ Phase \textsc{ii} came with some upgrades to improve the background rejection pe
 \marginnote{the\\germanium\\detectors} For Phase \textsc{i} detectors \texttt{ANG1}, \texttt{ANG2}, \texttt{ANG3}, \texttt{ANG4}, \texttt{ANG5} from the \textsc{HdM} \cite{hdm} and \texttt{RG1}, \texttt{RG2}, \texttt{RG3} from the \textsc{Igex} \cite{igex} collaborations were refurbished and redeployed, in addition to three detectors made of \ce{^{na}Ge} from the GENIUS--TF experiment \cite{genius1, genius2}, \texttt{GTF112}, \texttt{GTF45} and \texttt{GTF32}. A background level of an order of magnitude lower than in those former experiments was achieved. For Phase \textsc{ii} new material was purchased in order to produce new diodes. Another factor of ten in background reduction is envisioned.
 
 In p-type detectors the dimensionless `weighting potential' $\Phi$ peaks close to the p$^+$ electrode. Ionization will create electrons and holes which drift due to the applied potential and the field created by the space charge of the depleted diode. The time dependent induced current $I(t)$ on the p$^+$ electrode is given by the Ramo-Shockley theorem \cite{schockley-ramo} as:
-\[I(t)=q\cdot\mathbf{v}(\mathbf{r}(t))\cdot\nabla\Phi(\mathbf{r}(t))\;,\]
+\begin{equation}I(t)=q\cdot\mathbf{v}(\mathbf{r}(t))\cdot\nabla\Phi(\mathbf{r}(t))\;,\end{equation}
 where $q$ stands for the drifting charge and $\mathbf{v}(\mathbf{r}(t))$ for the drift velocity at position $\mathbf{r}(t)$.
 
 Phase \textsc{i} detectors are based on standard p-type HPGe detector technology from Canberra Semiconductor NV, Olen\footnote{Canberra Semiconductors, NV, Lammerdries 25, B-2250, Olen, Belgium; \texttt{http://www.canberra.com/}}. Standard closed-end coaxial detectors have a `wrap around' $\text{n}^+$ conductive lithium layer ($\sim1$ mm) that is separated from the boron implanted $\text{p}^+$ contact by a groove; the groove region is usually passivated. The detector geometry for one of the enriched detectors is shown schematically in Fig.~\ref{fig:artistviewanddet} (right). In normal DC coupled readout, the p$^+$ contact ($\sim1$ $\mu$m) is connected to a charge sensitive amplifier and the n$^+$ surface is biased with up to +4600 V.
@@ -78,7 +78,7 @@ A significant fraction of the background is induced by contaminations of bulk ma
 % }}}
 \begin{table}
 	\begin{center}
-		\caption{Some relevant properties of the detectors deployed in {\gerda} for phase \textsc{ii}. The mass, the enrichment fraction $f_{76}$, the fraction of active volume $f_{av}$ and the performance(?) are reported. {\color{red}completare + referenze}}
+		\caption{Some relevant properties of the detectors deployed in {\gerda} for phase \textsc{ii}. The mass, the enrichment fraction $f_{76}$, the fraction of active volume $f_{av}$ and the performance(?) are reported. {\color{red}completare + referenze}}\label{tab:gedet}
 	\begin{tabular}{lcccc}
 		\toprule
 		detector		&	mass [g]	&	$f_{76}$	&	$f_{av}$	&	performance(?) \\

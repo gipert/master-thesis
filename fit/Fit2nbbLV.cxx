@@ -25,31 +25,31 @@
 
 // ---------------------------------------------------------
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
-   
+
     // define parameters
-    /* [0] */  this->AddParameter("2nbb",                 2E02, 2.4E02);
+    /* [0] */  this->AddParameter("2nbb",                 2.05E02, 2.25E02);
     /* [1] */  this->AddParameter("2nbbLV",               0, 5E-04);
-    /* [2] */  this->AddParameter("K42homLAr",            1E-04, 2.5E-04);
-    /* [3] */  this->AddParameter("K40fibers",            0, 1E-00);
-    /* [4] */  this->AddParameter("Bi212Tl208fibers",     0, 0.02);
-    /* [5] */  this->AddParameter("Pb214Bi214fibers",     0, 4E-02);
-    /* [6] */  this->AddParameter("alphaBEGe",            1.1E03, 1.8E03);
-    /* [7] */  this->AddParameter("alphaCOAX",            2.6E03, 3.5E03);
+    /* [2] */  this->AddParameter("K42homLAr",            1.8E-04, 2.2E-04);
+    /* [3] */  this->AddParameter("K40fibers",            0, 1.5E-01);
+    /* [4] */  this->AddParameter("Bi212Tl208fibers",     0, 1E-02);
+    /* [5] */  this->AddParameter("Pb214Bi214fibers",     0, 4E-03);
+    /* [6] */  this->AddParameter("alphaBEGe",            1.1E03, 1.6E03);
+    /* [7] */  this->AddParameter("alphaCOAX",            2.6E03, 3.4E03);
     /* [8] */  this->AddParameter("K42nPlusBEGe",         0, 2E-04);
-    /* [9] */  this->AddParameter("K42nPlusCOAX",         0, 3E-04);
+    /* [9] */  this->AddParameter("K42nPlusCOAX",         0, 2E-04);
     /* [10] */ this->AddParameter("K42pPlusBEGe",         0, 7E-01);
     /* [11] */ this->AddParameter("K42pPlusCOAX",         0, 1E-03);
     /* [12] */ this->AddParameter("Ac228holder",          0, 6E-04);
-    /* [13] */ this->AddParameter("Co60holder",           0, 1.6E-04);
-    /* [14] */ this->AddParameter("K40holder",            0, 2E-02);
+    /* [13] */ this->AddParameter("Co60holder",           0, 2E-04);
+    /* [14] */ this->AddParameter("K40holder",            0, 1E-02);
     /* [15] */ this->AddParameter("Bi212Tl208holder",     0, 7E-04);
     /* [16] */ this->AddParameter("Pb214Bi214holder",     0, 4E-04);
-    /* [17] */ this->AddParameter("K40cable",             0, 1E00);
+    /* [17] */ this->AddParameter("K40cable",             0, 6E-01);
     /* [18] */ this->AddParameter("Bi212Tl208cables",     0, 2E-02);
     /* [19] */ this->AddParameter("Pb214Bi214cables",     0, 4E-02);
     /* [20] */ this->AddParameter("K40minishroud",        0, 2E-01);
     /* [21] */ this->AddParameter("Pa234minishroud",      0, 2E-04);
-    /* [22] */ this->AddParameter("Bi207minishroud",      0, 5E-03);
+    /* [22] */ this->AddParameter("Bi207minishroud",      0, 3E-03);
     /* [23] */ this->AddParameter("Bi207cables",          0, 7E-02);
     /* [24] */ this->AddParameter("Bi207holder",          0, 5E-02);
     /* [25] */ this->AddParameter("Pb214Bi214minishroud", 0, 30);

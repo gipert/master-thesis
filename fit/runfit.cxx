@@ -221,9 +221,9 @@ int main( int argc, char** argv ) {
 
     // variable v0.2
     if ( result == args.end() ) {
-        nBins = 1865;
+        nBins = 1863;
         dbin = std::vector<double>(nBins+1);
-        std::vector<int> avoid = { 608, 612, 1460, 1464, 1524, 1528, 1764, 2204, 2612, 2616 };
+        std::vector<int> avoid = { 608, 612, 1460, 1464, 1524, 1528, 1764, 2204, 2444, 2448, 2612, 2616 };
 
         int k = 0, i = 0;
         while (1) {

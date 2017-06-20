@@ -31,7 +31,7 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     /* [1] */  this->AddParameter("2nbbLV",               0, 5E-04);
     /* [2] */  this->AddParameter("K42homLAr",            1.8E-04, 2.2E-04);
     /* [3] */  this->AddParameter("K40fibers",            0, 1.5E-01);
-    /* [4] */  this->AddParameter("Bi212Tl208fibers",     0, 1E-02);
+    /* [4] */  this->AddParameter("Bi212Tl208fibers",     0, 1E-04);
     /* [5] */  this->AddParameter("Pb214Bi214fibers",     0, 4E-03);
     /* [6] */  this->AddParameter("alphaBEGe",            1.1E03, 1.6E03);
     /* [7] */  this->AddParameter("alphaCOAX",            2.6E03, 3.4E03);
@@ -117,6 +117,9 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     //this->SetPrior(12, &linear);
     //linear.SetParameter(0, 0.16E-03);          // Co60
     //this->SetPrior(13, &linear);
+    //
+    // fibers
+    this->SetPriorGauss(4, 5.8E-05, 1.2E-05);
 }
 // ---------------------------------------------------------
 double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {

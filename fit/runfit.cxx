@@ -364,7 +364,7 @@ int main( int argc, char** argv ) {
         }
     }
     // set parameter binning
-    if ( std::find( args.begin(), args.end(), "--kHigh" ) != args.end() ) model.SetNbins(1000);
+    if ( std::find( args.begin(), args.end(), "--kHigh" ) != args.end() ) model.SetNbins(500);
 
     // run MCMC and marginalize posterior w/r/t all parameters and all
     // combinations of two parameters

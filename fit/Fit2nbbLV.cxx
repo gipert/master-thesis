@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include "omp.h"
 
 #include "TH1D.h"
 #include "TFile.h"
@@ -123,7 +124,7 @@ double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {
 
     double logprob = 0.;
     double f;
-
+#pragma omp parallel for schedule(static) reduction (+:logprob) shared(parameters) private(f) default(none)
     for ( int i = downBin; i <= upBin; ++i ) {
 
         // ignore ROI

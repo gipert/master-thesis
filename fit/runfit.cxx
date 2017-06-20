@@ -22,6 +22,7 @@
 #include <vector>
 #include <chrono>
 #include <memory>
+#include <omp.h>
 
 #include <BAT/BCLog.h>
 #include <BAT/BCAux.h>
@@ -368,6 +369,7 @@ int main( int argc, char** argv ) {
 
     // run MCMC and marginalize posterior w/r/t all parameters and all
     // combinations of two parameters
+    omp_set_num_threads(2);
     auto start = std::chrono::system_clock::now();
     model.MarginalizeAll();
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);

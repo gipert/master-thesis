@@ -15,6 +15,6 @@ void BIhist1( TH1* h, double exposure ) {
     cout << "Counts: " << intg << endl;
     int nbins = 190;
     cout << "range: " << nbins << " keV\n";
-    cout << "BI: " << intg/(exposure*nbins*4) << endl;
+    cout << "BI: " << intg/(exposure*nbins) << endl;
     return;
 }

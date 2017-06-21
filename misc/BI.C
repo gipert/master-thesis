@@ -77,13 +77,22 @@
     cout << "Sum: " << sum << endl;
     gApplication->Terminate();
 }
-// works only with 4 keV binning!
 double BIcalc( TH1* h, double exposure ) {
+    int low_range = h->GetXaxis()->FindBin(570);
+    int up_range =h->GetXaxis()->FindBin(5300);
 
-    double intg = h->Integral(458, 523) - h->Integral(500, 502) - h->Integral(504, 506) - h->Integral(479, 491);
+    int low = h->GetXaxis()->FindBin(1930);
+    int up  = h->GetXaxis()->FindBin(2190);
+    int bli_low = h->GetXaxis()->FindBin(2014);
+    int bli_up = h->GetXaxis()->FindBin(2064);
+    int tl_low = h->GetXaxis()->FindBin(2099);
+    int tl_up = h->GetXaxis()->FindBin(2109);
+    int bi_low = h->GetXaxis()->FindBin(2114);
+    int bi_up = h->GetXaxis()->FindBin(2124);
+    double intg = h->Integral(low, up) - h->Integral(bli_low, bli_up) - h->Integral(tl_low, tl_up) - h->Integral(bi_low, bi_up);
     //cout << "Counts: " << intg << endl;
-    int nbins = 47;
+    int nbins = (up-low+1) - (bli_up-bli_low+1) - (tl_up-tl_low+1) - (bi_up-bi_low+1);
     //cout << "range: " << nbins*4 << " keV\n";
-    cout << setw(25) << left << h->GetName() << "total cts: " << setw(10) << left << h->Integral(144, 1316) << " BI: " << intg/(exposure*nbins*4) << endl;
+    cout << setw(25) << left << h->GetName() << "total cts: " << setw(10) << left << h->Integral(low_range, up_range) << " BI: " << intg/(exposure*nbins*4) << endl;
     return intg/(exposure*nbins*4);
 }

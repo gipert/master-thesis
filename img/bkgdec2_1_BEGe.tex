@@ -1,0 +1,81 @@
+\documentclass{standalone}
+\usepackage{pgfplots}
+%\pgfplotsset{compat=1.10}
+\usetikzlibrary{pgfplots.groupplots}
+\usepgfplotslibrary{fillbetween}
+\usepackage[lining]{ebgaramond}
+\usepackage[varg, libertine]{newtxmath}
+\usepackage{mhchem}
+\begin{document}
+\begin{tikzpicture}
+\pgfplotsset{every axis legend/.append style={at={(1.02,1)}, anchor=north west}}
+	\begin{groupplot}[group style = { group size = 1 by 2 ,
+										xlabels at = edge bottom,
+										xticklabels at = edge bottom,
+										ylabels at = edge left,
+										vertical sep = 0pt
+										},
+					xmin = 570, xmax = 1800,
+					/pgf/number format/1000 sep={},
+					ylabel=cts/bin,
+					xlabel=energy {[keV]},
+					xlabel style = {at={(axis description cs:0.5,0.07)}},
+					ylabel style = {at={(axis description cs:0.02,0.5)}},
+					]
+		\nextgroupplot[ytick = {-5,0,5}, yticklabels = {$10^{-5}$,$10^0$,$10^5$},
+						width = 20cm, height = 9cm,
+						ymin = -9,
+						%grid = major
+						]
+			\node[rectangle, draw] at (axis cs:1700,4) {\Large BEGe};
+			\addplot[const plot, blue] table[x=energy, y=2nbb] {../data/resBEGe.dat};
+			%\addplot[const plot, black!40!green] table[x=energy, y=K42homLAr] {../data/resBEGe.dat};
+			% K40 
+			%\addplot[const plot, orange] table[x=energy, y=K40fibers] {../data/resBEGe.dat};
+			%\addplot[const plot, ] table[x=energy, y=K40holder] {../data/resBEGe.dat};
+			%\addplot[const plot, ] table[x=energy, y=K40cables] {../data/resBEGe.dat};
+			%\addplot[const plot, ] table[x=energy, y=K40minishroud] {../data/resBEGe.dat};
+			% Bi212Tl208
+			\addplot[const plot, green!50!black] table[x=energy, y=Bi212Tl208fibers] {../data/resBEGe.dat};
+			\addplot[const plot, orange] table[x=energy, y=Bi212Tl208cables] {../data/resBEGe.dat};
+			% Pb214Bi214
+			\addplot[const plot, violet] table[x=energy, y=Pb214Bi214fibers] {../data/resBEGe.dat};
+			\addplot[const plot, ] table[x=energy, y=Pb214Bi214holder] {../data/resBEGe.dat};
+			% other
+			%\addplot[const plot, ] table[x=energy, y=Ac228holder] {../data/resBEGe.dat};
+			%\addplot[const plot, ] table[x=energy, y=Co60holder] {../data/resBEGe.dat};
+			%\addplot[const plot, ] table[x=energy, y=Pa234cables] {../data/resBEGe.dat};
+			%\addplot[const plot, ] table[x=energy, y=Bi207minishroud] {../data/resBEGe.dat};
+			%alpha
+			%\addplot[const plot, red, densely dashdotted] table[x=energy, y=alpha] {../data/resBEGe.dat};
+			\addplot[only marks, mark size = 0.5pt] table[x=midenergy, y=data] {../data/resBEGe.dat};
+			\addplot[const plot, red, thick] table[x=energy, y=sum] {../data/resBEGe.dat};
+
+			% legend
+				\addlegendentry{$2\nu\beta\beta$}
+				%\addlegendentry{\ce{^{42}K} \textsc{[homLAr]}};
+				%\addlegendentry{\ce{^{40}K} \textsc{[f]}}
+				\addlegendentry{\ce{^{214}Bi} + \ce{^{214}Pb} \textsc{[f]}}
+				\addlegendentry{\ce{^{214}Bi} + \ce{^{214}Pb} \textsc{[c]}}
+				\addlegendentry{\ce{^{212}Bi} + \ce{^{208}Tl} \textsc{[f]}}
+				\addlegendentry{\ce{^{212}Bi} + \ce{^{208}Tl} \textsc{[h]}}
+				%\addlegendentry{\ce{^{228}Ac} \textsc{[h]}}
+				%\addlegendentry{\ce{^{60}Co} \textsc{[h]}}
+				%\addlegendentry{$\alpha$-model}
+				\addlegendentry{Data}
+				\addlegendentry{Total}
+
+		\nextgroupplot[width = 20cm, height = 4cm, enlargelimits=false]
+			\addplot[const plot, orange!70, draw=none, name path = A] table[x=energy, y=3sig] {../data/residualsBEGe.dat};
+			\addplot[const plot, orange!70, draw=none, name path = B] table[x=energy, y=-3sig] {../data/residualsBEGe.dat};
+			\addplot[orange!70] fill between[of=A and B];
+			\addplot[const plot, yellow!70, draw=none, name path = C] table[x=energy, y=2sig] {../data/residualsBEGe.dat};
+			\addplot[const plot, yellow!70, draw=none, name path = D] table[x=energy, y=-2sig] {../data/residualsBEGe.dat};
+			\addplot[yellow!70] fill between[of=C and D];
+			\addplot[const plot, green!70, draw=none, name path = E] table[x=energy, y=1sig] {../data/residualsBEGe.dat};
+			\addplot[const plot, green!70, draw=none, name path = F] table[x=energy, y=-1sig] {../data/residualsBEGe.dat};
+			\addplot[green!70] fill between[of=E and F];
+			\addplot[only marks, mark size=0.5pt] table[x=midenergy, y=res] {../data/residualsBEGe.dat};
+	\end{groupplot}
+\end{tikzpicture}
+\end{document}

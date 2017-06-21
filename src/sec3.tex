@@ -35,9 +35,9 @@ Once the relevant quantities have been extracted from raw waveforms they have to
 		\multirow{2}{*}{\textsc{dataset}}	&	BI \\
 											&	cts/(keV$\cdot$kg$\cdot$yr) \\
 		\midrule
-		BEGe								&	$2.9\cdot10^{-3}$	\\
-		\textsc{enr coax}					&	$4.3\cdot10^{-3}$	\\
-		\textsc{nat coax}					&	$6.9\cdot10^{-3}$	\\
+		BEGe								&	$1.16\cdot10^{-2}$	\\
+		\textsc{enr coax}					&	$1.72\cdot10^{-2}$	\\
+		\textsc{nat coax}					&	$2.76\cdot10^{-2}$	\\
 		\bottomrule
 	\end{tabular}
 \end{table}
@@ -49,70 +49,7 @@ Once the relevant quantities have been extracted from raw waveforms they have to
 	\label{fig:bi}
 \end{figure}
 % }}}
-\subsection*{Monte Carlo simulations}
-\addcontentsline{toc}{subsection}{Monte Carlo simulations}
-Background components that were identified in the energy spectra or that were known to be present in the vicinity of the detectors were simulated using the \textsc{MaGe} \cite{MaGe} code based on \textsc{Geant4} \cite{geant4} and jointly developed by the {\gerda} and \textsc{Majorana} \cite{majoranadem} collaborations. The detectors and the arrangement of the germanium detector array with seven detector strings were implemented into the \textsc{MaGe} code as well as the other {\gerda} components (see Fig.~\ref{fig:volumes}). During the simulation \textsc{Geant4} generates complete information about the trajectory and interactions of particles as they propagate through the detectors. Although all of this information is available to the user, it is typically processed, parsed and saved to an output file for further analysis after the simulation run is complete. Simulations of contaminations of the following hardware components were performed:
-\begin{itemize}
-	\item on the p$^+$ and n$^+$ surfaces of the detectors;
-	\item homogeneously distributed in the LAr, in a 17.7 m$^3$ cylinder centered in the detector array;
-	\item in the detector assembly representing contaminations in the detector holders and their components;
-	\item in the nylon mini-shroud surrounding the detectors;
-	\item in the fiber shroud;
-	\item in the high-voltage cables and the signal cables.
-\end{itemize}
-The volumes representing the germanium array, the holder mounting and the cables are simulated as depicted in Fig.~\ref{fig:volumes}. The mini-shroud volume is implemented as a set of cylinders surrounding each detector string, while the fiber shroud consists of the lateral surface of a cylinder.
-\begin{figure}
-	\centering
-	\resizebox{\textwidth}{!}{%
-		\includegraphics{img/gedet.pdf}%
-		\includegraphics{img/holders.pdf}%
-		\includegraphics{img/cables.pdf}%
-		\includegraphics{img/all.pdf}%
-	}%
-	\caption{Implementation of the simulated volumes in \textsc{MaGe}. From left to right: the germanium detectors, the holder mounting, the cables and the three volumes put together.}\label{fig:volumes}
-\end{figure}
-
-% {{{ muons, neutrons, water tank
-The expected background indices due to the neutron and muon fluxes at the LNGS underground laboratory have been estimated to be of the order < $10^{-5}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{neutronsBI} and < $10^{-4}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{muonsBI} respectively, and then are not considered. It has been also shown in earlier works that the contributions of the cryostat and water tank components are of the order < $10^{-4}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{criowaterBI}, and then they have not been considered in this analysis.
-
-% }}}
-% {{{ 2nbb
-\marginnote{$2\nbb$} The spectrum of the two electrons emitted in the $2\nbb$ decay of \ce{^{76}Ge} is sampled according to the distribution of \cite{tables2nbb} that is implemented in the code \textsc{Decay0} \cite{decay0}. The $2\nbb$ decay distributions of \cite{tables2nbb} are in principle more precise than those based on the Primakoff-Rosen approximation, and they have been cross-checked against the high-statistics data of the \textsc{Nemo} experiment for several nuclei \cite{nemo1,nemo2,nemo3,nemo4,nemo5}. Electrons are propagated in the {\gerda} simulated setup by \textsc{MaGe} and the total energy released in the active mass of the enriched detectors is registered.
-
-% }}}
-% {{{ 42Ar
-\marginnote{\textnormal{\ce{^{42}Ar}}} While the distribution of \ce{^{42}Ar} is homogeneous inside LAr, the short lived ionized decay product \ce{^{42}K} ($T_{1/2} = 12.3$ h) can have a significantly different distribution due to drifts of the \ce{^{42}K} ions inside the electric fields that are present near the detectors. Separate spectra for two \ce{^{42}K} distributions have thus been simulated: homogeneous in LAr in a volume of centered around the full detector array, on the n$^+$ and on the p$^+$ detector surface of the detectors. As the spectral shape is not expected to vary strongly between the detectors, the isotope on the n$^+$ and p$^+$ surface was simulated only for a single detector. The simulated spectral shapes are shown in Fig.~\ref{fig:simspectra}.
-
-% }}}
-% {{{ 238U
-\marginnote{\textnormal{\ce{^{238}U}}-chain} \ce{^{214}Bi} and \ce{^{214}Pb} are the only one in the \ce{^{226}Ra} $\rightarrow$ \ce{^{210}Pb} sub-chain decaying by $\beta$ decay accompanied by emission of high energy $\gamma$ particles and they are assumed to be in equilibrium. \ce{^{214}Bi} and \ce{^{214}Pb} were simulated in the holder mounting, in the cables, in the fiber shroud and in the mini-shrouds. For the \ce{^{238}U} $\rightarrow$ \ce{^{226}Ra} the \ce{^{234\text{m}}Pa} was simulated, as the $Q_\beta$ of \ce{^{234}Th} is below the considered fitting range. {\color{red}giustificazione da ampliare}
-
-% }}}
-% {{{ 232Th
-\marginnote{\textnormal{\ce{^{232}Th}}-chain} The characteristic $\gamma$ line at 2615 keV, a hint of the presence of isotopes from the \ce{^{232}Th} chain, can be clearly identified in the energy spectra shown in Fig.~\ref{fig:data}. Possible locations for contaminations are the detector assembly, the cables, the mini-shrouds and the fiber shroud. As \ce{^{228}Ac} and \ce{^{228}Th} do not necessarily have to be in equilibrium, the two parts of the decay chain were simulated separately. From the sub-decay chain following the \ce{^{228}Th} decay only the contributions from the \ce{^{212}Bi} and \ce{^{208}Tl} decays were simulated, as theses are the only ones emitting high energetic $\gamma$ rays and electrons that can reach the detectors. {\color{red}giustificazione da ampliare}
-
-% }}}
-% {{{ 60Co and 207Bi
-\marginnote{\textnormal{\ce{^{60}Co} \textsc{and} \ce{^{207}Bi}}} The presence of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} was suggested by material screening measurements and earlier works. Simulations of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} in cables, holders and mini-shrouds have been carried on (see Fig.~\ref{fig:simspectra}).
-
-% }}}
-% {{{ ALPHA MODEL
-\marginnote{$\alpha$-model} From energies above 3.5 MeV the spectrum is dominated by $\alpha$-decay events, thus the background model in this region has been developed independently and then the resulting energy distribution has been added as a single contribution among the other background contributions.
-
-A strong contribution from \ce{^{210}Po} can be observed in Fig.~\ref{fig:data}. This is indication for a surface contamination of the detectors. However, there are also hints for other peak like structures at 4.7, 5.4 and 5.9 MeV that can be attributed to the decays of \ce{^{226}Ra}, \ce{^{222}Rn} and \ce{^{218}Po} on p$^+$ detectors surfaces, respectively.
-
-Due to the short range of $\alpha$-particles in germanium and LAr of the order of tens of $\mu$m, only decays occurring on or in the close vicinity (few $\mu$m) of the p$^+$ surface (assumed dead layer thickness roughly 300 nm) can contribute to the measured energy spectrum as the n$^+$ dead layer thickness is roughly 1 mm. The energy deposited in the active volume of the detector by surface or close to surface $\alpha$-particles is very sensitive to the thickness of the dead layer and on the distance of the decaying nucleus from the detector surface.
-
-All $\alpha$-decays in the \ce{^{226}Ra} to \ce{^{210}Pb} sub-decay chain and the \ce{^{210}Po} decay have been simulated on the p$^+$ detector surface separately. Additionally, the decays in the chain following the \ce{^{226}Ra} decay were simulated assuming a homogeneous distribution in a volume extending up to 1 mm from the p$^+$ surface in LAr. The individual decays on the p$^+$ surface result in a peak-like structure with its maximum at slightly lower energies than the corresponding $\alpha$-decay energy with a quasi-exponential tail towards lower energy. The decays occurring in LAr close to the p$^+$ surface result in a quasi-flat spectrum without any peak-like structure extending to lower energies.
-
-The \ce{^{210}Po} peak structure around 5.3 MeV with high statistics was used to determine the effective dead layer model. Spectra from \ce{^{210}Po} $\alpha$-decay simulations on the p$^+$ surface with different dead layer thicknesses were used to fit the spectrum in the energy region dominated by the \ce{^{210}Po} peak, i.e.~between 4850 and 5250 keV. The weight of each spectrum was left as a free parameter. A combination of the spectra for 300, 400, 500 and 600 nm dead layer thicknesses describes the observed peak structure well and results in a good fit, whereas a spectrum with a single dead layer thickness does not give a sufficiently good fit. Consequently the derived dead layer model was used for the later fits of $\alpha$-induced spectra.
-
-In order to describe the whole energy interval dominated by $\alpha$-induced events, the simulated spectra of $\alpha$-decays of \ce{^{210}Po} as well as from \ce{^{226}Ra} and its short lived daughter nuclei on the p$^+$ surface and in LAr were used to fit the energy spectrum between 3500 and 7500 keV. In fact, while the surface decays alone can successfully describe the observed peak structures, they could not describe the whole spectrum. A contribution from an approximately flat component, like the spectra from $\alpha$-decays in LAr, is needed in the model. The number of events in the considered energy range was left as a free parameter for each $\alpha$-component.
-
-% }}}
-\subsection*{Screening measurements}
-\addcontentsline{toc}{subsection}{Screening measurements}
-There are some radioactive contaminations in the components of {\gerda}, though not evident in the energy spectra, which have been identified and systematically measured. The most relevant contributions, reported in Table \ref{tab:screening}, come from the silicon of the holder mounting, the cables, the nylon mini-shroud covering the detectors and the fiber shroud. Measurements were performed with the ICP-MS mass spectroscopy and GeMPI {\color{red}??}
+\marginnote{screening\\measurements} There are some radioactive contaminations in the components of {\gerda}, though not evident in the energy spectra, which have been identified and systematically measured. The most relevant contributions, reported in Table \ref{tab:screening}, come from the silicon of the holder mounting, the cables, the nylon mini-shroud covering the detectors and the fiber shroud. Measurements were performed with the ICP-MS mass spectroscopy or with a germanium detector (GeMPI) installed at LNGS.
 \begin{table}
 	\caption{Screening measurements for some of the considered {\gerda} components. The upper limits correspond to 90\% C.L.}
 	\centerline{%
@@ -137,7 +74,69 @@ There are some radioactive contaminations in the components of {\gerda}, though 
 	\label{tab:screening}
 	}
 \end{table}
+\subsection*{Monte Carlo simulations}
+\addcontentsline{toc}{subsection}{Monte Carlo simulations}
+Background components that were identified in the energy spectra or that were known to be present in the vicinity of the detectors were simulated using the \textsc{MaGe} \cite{MaGe} code based on \textsc{Geant4} \cite{geant4} and jointly developed by the {\gerda} and \textsc{Majorana} \cite{majoranadem} collaborations. The detectors and the arrangement of the germanium detector array with seven detector strings were implemented into the \textsc{MaGe} code as well as the other {\gerda} components (see Fig.~\ref{fig:volumes}). During the simulation \textsc{Geant4} generates complete information about the trajectory and interactions of particles as they propagate through the detectors. Although all of this information is available to the user, it is typically processed, parsed and saved to an output file for further analysis after the simulation run is complete. Simulations of contaminations of the following hardware components were performed:
+\begin{itemize}
+	\item on the p$^+$ and n$^+$ surfaces of the detectors;
+	\item homogeneously distributed in the LAr, in a 17.7 m$^3$ cylinder centered in the detector array;
+	\item in the detector assembly representing contaminations in the detector holders and their components;
+	\item in the nylon mini-shroud surrounding the detectors;
+	\item in the fiber shroud;
+	\item in the high-voltage cables and the signal cables.
+\end{itemize}
+The volumes representing the germanium array, the holder mounting and the cables are simulated as depicted in Fig.~\ref{fig:volumes}. The mini-shroud volume is implemented as a set of cylinders surrounding each detector string, while the fiber shroud consists of the lateral surface of a cylinder.
+\begin{figure}[t]
+	\centering
+	\resizebox{\textwidth}{!}{%
+		\includegraphics{img/gedet.pdf}%
+		\includegraphics{img/holders.pdf}%
+		\includegraphics{img/cables.pdf}%
+		\includegraphics{img/all.pdf}%
+	}%
+	\caption{Implementation of the simulated volumes in \textsc{MaGe}. From left to right: the germanium detectors, the holder mounting, the cables and the three volumes put together.}\label{fig:volumes}
+\end{figure}
+
+% {{{ muons, neutrons, water tank
+The expected background indices due to the neutron and muon fluxes at the LNGS underground laboratory have been estimated to be of the order < $10^{-5}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{neutronsBI} and < $10^{-4}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{muonsBI} respectively, and then are not considered. It has been also shown in earlier works that the contributions of the cryostat and water tank components are of the order < $10^{-4}$ cts/(keV$\cdot$kg$\cdot$yr) \cite{criowaterBI}, and then they have not been considered in this analysis.
+
+% }}}
+% {{{ 2nbb
+\marginnote{$2\nbb$} The spectrum of the two electrons emitted in the $2\nbb$ decay of \ce{^{76}Ge} is sampled according to the distribution of \cite{tables2nbb} that is implemented in the code \textsc{Decay0} \cite{decay0}. The $2\nbb$ decay distributions of \cite{tables2nbb} are in principle more precise than those based on the Primakoff-Rosen approximation, and they have been cross-checked against the high-statistics data of the \textsc{Nemo} experiment for several nuclei \cite{nemo1,nemo2,nemo3,nemo4,nemo5}. Electrons are propagated in the {\gerda} simulated setup by \textsc{MaGe} and the total energy released in the active mass of the enriched detectors is registered. The two spectra are shown in \ref{fig:simspectra2}.
+
+% }}}
+% {{{ 42Ar
+\marginnote{\textnormal{\ce{^{42}Ar}}} While the distribution of \ce{^{42}Ar} is homogeneous inside LAr, the short lived ionized decay product \ce{^{42}K} ($T_{1/2} = 12.3$ h) can have a significantly different distribution due to drifts of the \ce{^{42}K} ions inside the electric fields that are present near the detectors. Separate spectra for two \ce{^{42}K} distributions have thus been simulated: homogeneous in LAr in a volume of centered around the full detector array, on the n$^+$ and on the p$^+$ detector surface of the detectors. As the spectral shape is not expected to vary strongly between the detectors, the isotope on the n$^+$ and p$^+$ surface was simulated only for a single detector. The simulated spectral shapes are shown in Fig.~\ref{fig:simspectra}.
+
+% }}}
+% {{{ 238U
+\marginnote{\textnormal{\ce{^{238}U}}-chain} \ce{^{214}Bi} and \ce{^{214}Pb} are the only one in the \ce{^{226}Ra} $\rightarrow$ \ce{^{210}Pb} sub-chain decaying by $\beta$ decay accompanied by emission of high energy $\gamma$ particles and they are assumed to be in equilibrium. \ce{^{214}Bi} and \ce{^{214}Pb} were simulated in the holder mounting, in the cables, in the fiber shroud and in the mini-shrouds (Fig.~\ref{fig:simspectra2}). For the \ce{^{238}U} $\rightarrow$ \ce{^{226}Ra} the \ce{^{234\text{m}}Pa} was simulated (Fig.~\ref{fig:simspectra}, as the $Q_\beta$ of \ce{^{234}Th} is below the considered fitting range. {\color{red}giustificazione da ampliare}
+
+% }}}
+% {{{ 232Th
+\marginnote{\textnormal{\ce{^{232}Th}}-chain} The characteristic $\gamma$ line at 2615 keV, a hint of the presence of isotopes from the \ce{^{232}Th} chain, can be clearly identified in the energy spectra shown in Fig.~\ref{fig:data}. Possible locations for contaminations are the detector assembly, the cables, the mini-shrouds and the fiber shroud. As \ce{^{228}Ac} and \ce{^{228}Th} do not necessarily have to be in equilibrium, the two parts of the decay chain were simulated separately. From the sub-decay chain following the \ce{^{228}Th} decay only the contributions from the \ce{^{212}Bi} and \ce{^{208}Tl} decays were simulated (Fig.~\ref{fig:simspectra2}, as these are the only ones emitting high energetic $\gamma$ rays and electrons that can reach the detectors. {\color{red}giustificazione da ampliare}
+
+% }}}
+% {{{ 60Co and 207Bi
+\marginnote{\textnormal{\ce{^{60}Co} \textsc{and} \ce{^{207}Bi}}} The presence of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} was suggested by material screening measurements and earlier works. Simulations of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} in cables, holders and mini-shrouds have been carried on (see Fig.~\ref{fig:simspectra}).
+
+% }}}
+% {{{ ALPHA MODEL
+\marginnote{$\alpha$-model} From energies above 3.5 MeV the spectrum is dominated by $\alpha$-decay events, thus the background model in this region has been developed independently and then the resulting energy distribution has been added as a single contribution among the other background contributions.
+
+A strong contribution from \ce{^{210}Po} can be observed in Fig.~\ref{fig:data}. This is indication for a surface contamination of the detectors. However, there are also hints for other peak like structures at 4.7, 5.4 and 5.9 MeV that can be attributed to the decays of \ce{^{226}Ra}, \ce{^{222}Rn} and \ce{^{218}Po} on p$^+$ detectors surfaces, respectively.
+
+Due to the short range of $\alpha$-particles in germanium and LAr of the order of tens of $\mu$m, only decays occurring on or in the close vicinity (few $\mu$m) of the p$^+$ surface (assumed dead layer thickness roughly 300 nm) can contribute to the measured energy spectrum as the n$^+$ dead layer thickness is roughly 1 mm. The energy deposited in the active volume of the detector by surface or close to surface $\alpha$-particles is very sensitive to the thickness of the dead layer and on the distance of the decaying nucleus from the detector surface.
+
+All $\alpha$-decays in the \ce{^{226}Ra} to \ce{^{210}Pb} sub-decay chain and the \ce{^{210}Po} decay have been simulated on the p$^+$ detector surface separately. Additionally, the decays in the chain following the \ce{^{226}Ra} decay were simulated assuming a homogeneous distribution in a volume extending up to 1 mm from the p$^+$ surface in LAr. The individual decays on the p$^+$ surface result in a peak-like structure with its maximum at slightly lower energies than the corresponding $\alpha$-decay energy with a quasi-exponential tail towards lower energy. The decays occurring in LAr close to the p$^+$ surface result in a quasi-flat spectrum without any peak-like structure extending to lower energies.
+
+The \ce{^{210}Po} peak structure around 5.3 MeV with high statistics was used to determine the effective dead layer model. Spectra from \ce{^{210}Po} $\alpha$-decay simulations on the p$^+$ surface with different dead layer thicknesses were used to fit the spectrum in the energy region dominated by the \ce{^{210}Po} peak, i.e.~between 4850 and 5250 keV. The weight of each spectrum was left as a free parameter. A combination of the spectra for 300, 400, 500 and 600 nm dead layer thicknesses describes the observed peak structure well and results in a good fit, whereas a spectrum with a single dead layer thickness does not give a sufficiently good fit. Consequently the derived dead layer model was used for the later fits of $\alpha$-induced spectra.
+
+In order to describe the whole energy interval dominated by $\alpha$-induced events, the simulated spectra of $\alpha$-decays of \ce{^{210}Po} as well as from \ce{^{226}Ra} and its short lived daughter nuclei on the p$^+$ surface and in LAr were used to fit the energy spectrum between 3500 and 7500 keV. In fact, while the surface decays alone can successfully describe the observed peak structures, they could not describe the whole spectrum. A contribution from an approximately flat component, like the spectra from $\alpha$-decays in LAr, is needed in the model. The number of events in the considered energy range was left as a free parameter for each $\alpha$-component. The final spectra for BEGe and coaxial detectors are shown in Fig.~\ref{fig:simspectra2}.
+
+% }}}
 % {{{ landscape
+\newgeometry{margin=4cm}
 \begin{landscape}
 \begin{figure}
 	\centering
@@ -149,14 +148,14 @@ There are some radioactive contaminations in the components of {\gerda}, though 
 \begin{landscape}
 \begin{figure}
 	\includegraphics{img/sim}
-	\caption{Simulated spectra, normalized to the number of generated events $N_\text{sim}$. All spectra refer to BEGe detectors. Legend: \textsc{[ms]} = mini-shroud, \textsc{[c]} = cables, \textsc{[h]} = holders, \textsc{[homLAr]} = homogeneous in LAr, \textsc{[n$^+$]}/\textsc{[n$^+$]} = contacts. Top left: \ce{^{40}K}; top right \ce{^{42}K}; bottom left: $\alpha$-model; bottom right: \ce{^{60}Co},\ce{^{228}Ac},\ce{^{234\text{m}}Pa} and \ce{^{207}Bi}.}
+	\caption{Simulated spectra, normalized to activity = 1 Bq/kg, as described in \ref{sec:bayes}, except for the $\alpha$-model which is simply normalized to the number of generated events. All spectra refer to BEGe detectors. Legend: \textsc{[ms]} = mini-shroud, \textsc{[c]} = cables, \textsc{[h]} = holders, \textsc{[f]} = fiber-shroud, \textsc{[homLAr]} = homogeneous in LAr, \textsc{[n$^+$]}/\textsc{[n$^+$]} = contacts. Top left: \ce{^{40}K}; top right: \ce{^{42}K}; bottom left: $\alpha$-model; bottom right: \ce{^{60}Co},\ce{^{228}Ac},\ce{^{234\text{m}}Pa} and \ce{^{207}Bi}.}
 	\label{fig:simspectra}
 \end{figure}
 \end{landscape}
 \begin{landscape}
 \begin{figure}
 	\includegraphics{img/sim2}
-	\caption{Simulated spectra, normalized to the number of generated events $N_\text{sim}$. All spectra refer to BEGe detectors. Legend: \textsc{[ms]} = mini-shroud, \textsc{[c]} = cables, \textsc{[h]} = holders, \textsc{[homLAr]} = homogeneous in LAr, \textsc{[n$^+$]}/\textsc{[n$^+$]} = contacts. Top left: \ce{^{40}K}; top right \ce{^{42}K}; bottom left: $\alpha$-model; bottom right: \ce{^{60}Co},\ce{^{228}Ac},\ce{^{234\text{m}}Pa} and \ce{^{207}Bi}.}
+	\caption{Simulated spectra, normalized to activity = 1 Bq/kg (except for $2\nbb$), as described in \ref{sec:bayes}. All spectra refer to BEGe detectors. Legend: \textsc{[ms]} = mini-shroud, \textsc{[c]} = cables, \textsc{[h]} = holders, \textsc{[f]} = fiber-shroud. Top left: \ce{^{212}Bi} and \ce{^{208}Tl} summed spectra; top right: \ce{^{214}Bi} and \ce{^{214}Pb} summed spectra; bottom left: the Standard Model and Lorentz-violating double-beta decay modes.}
 	\label{fig:simspectra2}
 \end{figure}
 \end{landscape}
@@ -166,4 +165,5 @@ There are some radioactive contaminations in the components of {\gerda}, though 
 		}
 		\caption{Schemes of \ce{^{238}U} and \ce{^{232}Th} decay chains.}\label{fig:chains}
 	\end{figure}
+\restoregeometry
 % }}}

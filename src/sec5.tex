@@ -40,6 +40,108 @@ with a $\sigma$ equal to the quoted error. When fitting $y=1/T_{1/2}^{2\nu}$, th
 
 Some of the results from the screening measurements of the materials, reported in Tab.~\ref{tab:screening}, have been used to set prior distributions on the background activities. A gaussian prior is set when a precise activity with error is specified, a flat distribution is set when only an upper limit, or no information, is available. A special treatment is applied for measurements concerning cable activities. In {\gerda}, four types of cables are used to transport signals and provide power supply, but only three of them were screened to study their radioactivity. Furthermore there are some specific cables that come from a separate batch that were not screened too. Thus, it has been decided not to use the available results to set priors but only to provide a post-analysis consistency check to the activities in the \textsc{MaGe} volume for the cables given by the fit. Activities from the three cable types reported in Tab.~\ref{tab:screening} were combined as follows: they were weighted considering their actual presence in terms of mass in {\gerda}. For the non-screened cable type, Tecnomec 2 mils, the same contamination of Tecnomec 3 mils was assumed.
 
+\subsection*{Standard Model double-beta decay mode}\addcontentsline{toc}{subsection}{Standard Model double-beta decay mode}
+In a first approach in studying the background model only the standard mode of $2\nbb$ was included, in order to compare the results on the half-life with the one found in literature. The presence of all the background sources suggested by the screening measurements, plus the \ce{^{207}Bi} which is known to be present by other studies, was tested in a first fit model. Then the parameters showing an exponential decay as a marginalised posterior, thus with only an upper limit, were gradually excluded from the fit to gain in the end a minimal background model. In this first analysis non-informative prior distributions are set for all parameters. The results of the fit with the minimal model and non-informative priors are given in Tab.~\ref{tab:res1}.
+
+\begin{table}
+	\caption{Results for the minimal background model with non-informative priors. The units are mBq/kg if not specified after the source name. Upper limits are given at 90\% C.L. The background index field is left blank when the Q-value of the background source is below the \textsc{RoI}.}
+	\centerline{%
+	\begin{tabular}{lccccc}
+		\toprule
+		\multirow{2}{*}{Source}			&	Global	&	Marg.	&	1$\sigma$	&	BI[BEGe]	&	BI[\textsc{coax}]	\\
+										&	[mBq/kg]&	[mBq/kg]&	[mBq/kg]	& \multicolumn{2}{c}{[$10^{-2}$cts/(keV$\cdot$kg$\cdot$yr)]}	\\
+		\midrule
+		$T_{1/2}^{2\nu}$ [$10^{21}$ yr]	&	1.993	&	1.986	&	$^{+0.022}_{-0.021}$&	0.001	&	0.001	\\
+		\cmidrule{1-6}
+		\textsc{fibers}					&			&			&						&			&			\\
+		\ce{^{40}K}						&	94		&	88		&	$^{+13}_{-15}$		&	--		&	--		\\
+		\ce{^{212}Bi} + \ce{^{208}Tl}	&	1.3		&	2.1		&	$^{+2.1}_{-1.6}$	&	0.04	&	0.04	\\
+		\ce{^{214}Pb} + \ce{^{214}Bi}	&	1.58	&	2.07	&	$^{+0.63}_{-0.77}$	&	0.13	&	0.15	\\
+		\cmidrule{1-6}
+		\textsc{holders}				&			&			&						&			&			\\
+		\ce{^{40}K}						&	4.8		&	2.1		&	$^{+2.1}_{-1.9}$	&	--		&	--		\\
+		\ce{^{214}Pb} + \ce{^{214}Bi}	&	0.108	&	0.049	&	$^{+0.064}_{-0.052}$&	0.12	&	0.08	\\
+		\ce{^{228}Ac}					&	0.314	&	0.321	&	$\pm0.075$			&	0.005	&	0.005	\\
+		\ce{^{60}Co}					&	0.110	&	0.098	&	$\pm0.025$			&	0.06	&	0.04	\\
+		\cmidrule{1-6}
+		\textsc{cables}					&			&			&						&			&			\\
+		\ce{^{40}K}						&	--		&	$<300$	&	--					&	--		&	--		\\
+		\ce{^{212}Bi} + \ce{^{208}Tl}	&	10.7	&	9.5		&	$^{+2.6}_{-3.0}$	&	0.2		&	0.2		\\
+		\ce{^{234\text{m}}Pa}			&	7.0		&	5.7		&	$^{+4.3}_{-3.8}$	&	0.002	&	0.003	\\
+		\cmidrule{1-6}
+		\textsc{mini-shroud}			&			&			&						&			&			\\
+		\ce{^{207}Bi}					&	0.72	&	0.59	&	$^{+0.44}_{-0.38}$	&	0.001	&	0.004	\\
+		\cmidrule{1-6}
+		\textsc{other}					&			&			&						&			&			\\
+		\ce{^{42}K} in LAr				&	0.2004	&	0.2002	&	$\pm0.0038$			&	0.38	&	0.47	\\
+		\ce{^{42}K} on \textsc{coax} p$^+$ [cts]&0.074	&0.081	&	$\pm0.022$			&	--		&	0.32	\\
+		$\alpha$-model BEGe [cts]		&	1315	&	1332	&	$\pm50$				&	0.41	&	--		\\
+		$\alpha$-model \textsc{coax} [cts]&	2960	&	2962	&	$\pm78$				&	--		&	0.47	\\
+		\cmidrule{1-6}
+		\textsc{total}					&			&			&						&	1.38	&	1.80	\\
+		p-value							&			&			&						&			&	0.93	\\
+		\bottomrule
+	\end{tabular}
+	}
+	\label{tab:res1}
+\end{table}
+% {{{ COMMENTS
+\marginnote{comments} The double-beta decay half-life is in great agreement with the one extracted from phase \textsc{i} data (\ref{eq:2nbbph1}). One of the first notable things about the results of the background model is that the \ce{^{40}K} activity is much greater than the expectations in cables and in the fiber-shroud. In the case of fibers the measure from material screening is four orders of magnitude less than the output of the fit, for the cables this reduces approximatively to one order of magnitude while the result on the holder mounting is compatible with expectations. This is a clear indication for the presence of additional \ce{^{40}K} contaminations both in the vicinity of and at a higher distance from the detector array. A later surface contamination, perhaps occurred during the assembling, is more realistic. For all the other activities the results are compatible with expectations, where available. A p-value of 0.94 strongly supports the reliability of the background model.
+
+% }}}
+% {{{ RESULTS WITH PRIORS
+\marginnote{adding\\priors} The results on the \ce{^{40}K} activity on the fiber shroud and the cables clearly indicates the inadequacy of the screening measurements to describe the actual contamination. Hence, only the gaussian prior distribution on the \ce{^{40}K} activity on the holder mounting has been added to the fit, as the result on it perfectly fits the expectations. A gaussian prior on $T_{1/2}^{2\nu}$ has also been set. Results are given in Tab.~\ref{tab:res2}.
+\begin{figure}
+	\centering
+	\includegraphics{img/2nbb_post.pdf}
+	\caption{Prior and posterior distributions.}
+\end{figure}
+
+\begin{table}
+	\caption{Results for the minimal background model with informative priors. The units are mBq/kg if not specified after the source name. The background index field is left blank when the Q-value of the background source is below the \textsc{RoI}.}
+	\centerline{%
+	\begin{tabular}{lccccc}
+		\toprule
+		\multirow{2}{*}{Source}			&	Global	&	Marg.	&	1$\sigma$	&	BI [BEGe]	&	BI [\textsc{coax}]	\\
+										&	[mBq/kg]&	[mBq/kg]&	[mBq/kg]	& \multicolumn{2}{c}{[$10^{-2}$cts/(keV$\cdot$kg$\cdot$yr)]}	\\
+		\midrule
+		$T_{1/2}^{2\nu}$ [$10^{21}$ yr]	&	1.984	&	1.980	&	$\pm0.020$			&	0.001	&	0.001	\\
+		\cmidrule{1-6}
+		\textsc{fibers}					&			&			&						&			&			\\
+		\ce{^{40}K}						&	89.71	&	88.65	&	$^{+11}_{-14}$		&	--		&	--		\\
+		\ce{^{212}Bi} + \ce{^{208}Tl}	&	0.0583	&	0.0595	&	$\pm0.012$			&	0.002	&	0.002	\\
+		\ce{^{214}Pb} + \ce{^{214}Bi}	&	2.08	&	2.13	&	$^{+0.64}_{-0.77}$	&	0.1		&	0.2		\\
+		\cmidrule{1-6}
+		\textsc{holders}				&			&			&						&			&			\\
+		\ce{^{40}K}						&	4.00	&	4.17	&	$0.83$				&	--		&	--		\\
+		\ce{^{214}Pb} + \ce{^{214}Bi}	&	0.064	&	0.052	&	$^{+0.065}_{-0.052}$&	0.08	&	0.06	\\
+		\ce{^{228}Ac}					&	0.315	&	0.305	&	$\pm0.075$			&	0.005	&	0.005	\\
+		\ce{^{60}Co}					&	0.086	&	0.099	&	$\pm0.025$			&	0.05	&	0.04	\\
+		\cmidrule{1-6}
+		\textsc{cables}					&			&			&						&			&			\\
+		\ce{^{40}K}						&	79		&	46		&	$^{+89}_{-63}$		&	--		&	--		\\
+		\ce{^{212}Bi} + \ce{^{208}Tl}	&	12.1	&	11.9	&	$\pm1.6$			&	0.29	&	0.23	\\
+		\ce{^{234\text{m}}Pa}			&	7.2		&	6.0		&	$^{+4.3}_{-3.8}$	&	0.002	&	0.002	\\
+		\cmidrule{1-6}
+		\textsc{mini-shroud}			&			&			&						&			&			\\
+		\ce{^{207}Bi}					&	0.50	&	0.56	&	$^{+0.44}_{-0.37}$	&	0.001	&	0.003	\\
+		\cmidrule{1-6}
+		\textsc{other}					&			&			&						&			&			\\
+		\ce{^{42}K} in LAr				&	0.2019	&	0.2004	&	$\pm0.0038$			&	0.38	&	0.47	\\
+		\ce{^{42}K} on \textsc{coax} p$^+$ [cts]&	21.3	&	24.3	&	$\pm6.6$	&	--		&	0.38	\\
+		$\alpha$-model BEGe [cts]		&	1343	&	1332	&	$\pm50$				&	0.4		&	--		\\
+		$\alpha$-model \textsc{coax} [cts]&	2955	&	2962	&	$\pm78$				&	--		&	0.5		\\
+		\cmidrule{1-6}
+		\textsc{total}					&			&			&						&	1.38	&	1.83	\\
+		\cmidrule{1-6}
+		p-value							&			&			&						&			&	0.94	\\
+		\bottomrule
+	\end{tabular}
+	}
+	\label{tab:res2}
+\end{table}
+
+% }}}
 \subsection*{Systematic uncertainties}
 To give an estimate of the systematic error associated to the two-neutrino double-beta decay half-life and the upper limit on $\aof$ various sources of systematic uncertainties have to be considered. The following discussion refers to the model containing only the Standard Model double-decay mode, then a method to extend the conclusions to the Lorentz-violating case will be presented.
 \begin{itemize}
@@ -56,120 +158,33 @@ To give an estimate of the systematic error associated to the two-neutrino doubl
 The single contributions to the systematic uncertainty are listed in Tab.~\ref{tab:sys}. The total systematic uncertainty on $T_{1/2}^{2\nu}$ was obtained by summing in quadrature the single contributions.
 
 To compute the systematic uncertainty on the $\aof$ estimate the following method has been adopted. Once the total lower and upper systematic uncertainties on $T_{1/2}^{2\nu}$ are known, an asymmetric gaussian distribution representing the systematic uncertainty can be built. This distribution was composed by two normal distributions centered in $\mu=1$ with widths corresponding to the positive and negative part of the systematic uncertainty, respectively. In order to fold this function in the posterior probability distribution of $\aof$, for each entry $p$ in the posterior distribution, a random number $r$ following the systematic uncertainty distribution was generated. A new histogram was filled with the product $p\cdot r$. This new distribution represents the final posterior distribution, comprising the statistical and systematic uncertainties. The final result for $\aof$ was determined ad the 90\% quantile of this distribution (see Fig.~\ref{fig:aofpost}).
+
 \begin{table}
 	\centering
 	\caption{Single contributions to the systematic uncertainty on $T_{1/2}^{2\nu}.$}\label{tab:sys}
 	{\renewcommand{\arraystretch}{1.1}
 	\begin{tabular}{lc}
 			\toprule
-			Contribution	&	Uncertainty [\%]	\\
+			Contribution					&	Uncertainty [\%]	\\
 			\midrule
-			Binning			&	+2.1	\\
-			MC geometry		&	$\pm$1	\\
-			MC tracking		&	$\pm$2	\\
-			Active volume fraction 	&	$^{+6.0}_{-5.3}$	\\
-			Enrichment fraction		&	$^{+3.0}_{-2.9}$	\\
-			Data acquisition and selection		&	$\pm0.5$	\\
+			Binning							&	+2.1				\\
+			MC geometry						&	$\pm$1.0			\\
+			MC tracking						&	$\pm$2.0			\\
+			Active volume fraction 			&	$^{+6.0}_{-5.3}$	\\
+			Enrichment fraction				&	$^{+3.0}_{-2.9}$	\\
+			Data acquisition and selection	&	$\pm0.5$			\\
 			\midrule
-			Total			&	$^{+7.4}_{-6.5}$	\\
+			Total							&	$^{+7.4}_{-6.5}$	\\
 			\bottomrule
 	\end{tabular}}
 \end{table}
-\subsection*{Standard Model double-beta decay mode}\addcontentsline{toc}{subsection}{Standard Model double-beta decay mode}
-In a first approach in studying the background model only the standard mode of $2\nbb$ was included, in order to compare the results on the half-life with the one found in literature. The presence of all the background sources suggested by the screening measurements, plus the \ce{^{207}Bi} which is known to be present by other studies, was tested in a first fit model. Then the parameters showing an exponential decay as a marginalised posterior, thus with only an upper limit, were gradually excluded from the fit to gain in the end a minimal background model. In this first analysis non-informative prior distributions are set for all parameters. The results of the fit with the minimal model and non-informative priors are given in Tab.~\ref{tab:res1}.
-
-\begin{table}
-	\caption{Results for the minimal background model with non-informative priors.}
-	\centerline{%
-	\begin{tabular}{lcccc}
-		\toprule
-		Source							&	Global mode	&	Marginalised mode	&	1$\sigma$ contour	&	BI [cts/(keV$\cdot$kg$\cdot$yr)]	\\
-		\midrule
-		$T_{1/2}^{2\nu}$ [$10^{21}$ yr]	&				&						&						&	--	\\
-		\cmidrule{1-5}
-		\textsc{fibers} [mBq/kg]		&				&						&						&		\\
-		\ce{^{40}K}						&				&						&						&		\\
-		\ce{^{212}Bi} + \ce{^{208}Tl}	&				&						&						&		\\
-		\ce{^{214}Pb} + \ce{^{214}Bi}	&				&						&						&		\\
-		\cmidrule{1-5}
-		\textsc{holders} [mBq/kg]		&				&						&						&		\\
-		\ce{^{40}K}						&				&						&						&		\\
-		\ce{^{214}Pb} + \ce{^{214}Bi}	&				&						&						&		\\
-		\ce{^{228}Ac}					&				&						&						&		\\
-		\ce{^{60}Co}					&				&						&						&		\\
-		\cmidrule{1-5}
-		\textsc{cables} [mBq/kg]		&				&						&						&		\\
-		\ce{^{40}K}						&				&						&						&		\\
-		\ce{^{212}Bi} + \ce{^{208}Tl}	&				&						&						&		\\
-		\ce{^{234\text{m}}Pa}			&				&						&						&		\\
-		\cmidrule{1-5}
-		\textsc{mini-shroud} [mBq/kg]	&				&						&						&		\\
-		\ce{^{40}K}						&				&						&						&		\\
-		\ce{^{207}Bi}					&				&						&						&		\\
-		\cmidrule{1-5}
-		\textsc{other} [mBq/kg]			&				&						&						&		\\
-		\ce{^{42}K} in LAr				&				&						&						&		\\
-		\ce{^{42}K} on \textsc{coax} p$^+$&				&						&						&		\\
-		$\alpha$-model BEGe [cts]		&				&						&						&		\\
-		$\alpha$-model \textsc{coax} [cts]&				&						&						&		\\
-		\cmidrule{1-5}
-		p-value							&	\multicolumn{4}{c}{0.953}	\\
-		\bottomrule
-	\end{tabular}
-	}
-	\label{tab:res1}
-\end{table}
-% {{{ COMMENTS
-\marginnote{comments} The double-beta decay half-life is in great agreement with the one extracted from phase \textsc{i} data (\ref{eq:2nbbph1}). One of the first notable things about the results of the background model is that the \ce{^{40}K} activity is much greater than the expectations everywhere except for the holder mounting. In the case of fibers the measure from material screening is four orders of magnitude less than the output of the fit, for the cables this reduces approximatively to one order of magnitude while the result on the holder mounting is compatible with expectations. This is a clear indication for the presence of additional \ce{^{40}K} contaminations both in the vicinity of and at a higher distance from the detector array. As we do not have measures of the \ce{^{40}K} activity on the mini-shroud materials we cannot make statements on that, however, as all the {\gerda} instrumentation was built in low background conditions, such an high intrinsic contamination of the materials is not plausible. Instead, a later surface contamination, perhaps occurred during the assembling, is more realistic. For all the other activities the results are compatible with expectations, where available. A p-value of 0.95 strongly supports the reliability of the background model.
-
-% }}}
-% {{{ RESULTS WITH PRIORS
-\marginnote{adding\\priors} The results on the \ce{^{40}K} activity on the fiber shroud and the cables clearly indicates the inadequacy of the screening measurements to describe the actual contamination. Hence, only the gaussian prior distribution on the \ce{^{40}K} activity on the holder mounting has been added to the fit, as the result on it perfectly fits the expectations. A gaussian prior on $T_{1/2}^{2\nu}$ has also been set. Results are given in Tab.~\ref{tab:res2}. The final result on $\Tnu$, with the statistic and systematic uncertainties, is
-\begin{equation}\Tnu=(1.926\quad^{+}_{-\;\text{stat}}\quad^{+}_{-\;\text{sys}})\cdot10^{21}\;\text{yr}\;.\end{equation}
-
-\begin{table}
-	\caption{Results for the minimal background model with informative priors.}
-	\centerline{%
-	\begin{tabular}{lcccc}
-		\toprule
-		Source							&	Global	&	Marginalized	&	1$\sigma$	&	BI [cts/(keV$\cdot$kg$\cdot$yr)]	\\
-		\midrule
-		$T_{1/2}^{2\nu}$ [$10^{21}$ yr]	&				&						&						&	--	\\
-		\cmidrule{1-5}
-		\textsc{fibers} [mBq/kg]		&				&						&						&		\\
-		\ce{^{40}K}						&				&						&						&		\\
-		\ce{^{212}Bi} + \ce{^{208}Tl}	&				&						&						&		\\
-		\ce{^{214}Pb} + \ce{^{214}Bi}	&				&						&						&		\\
-		\cmidrule{1-5}
-		\textsc{holders} [mBq/kg]		&				&						&						&		\\
-		\ce{^{40}K}						&				&						&						&		\\
-		\ce{^{214}Pb} + \ce{^{214}Bi}	&				&						&						&		\\
-		\ce{^{228}Ac}					&				&						&						&		\\
-		\ce{^{60}Co}					&				&						&						&		\\
-		\cmidrule{1-5}
-		\textsc{cables} [mBq/kg]		&				&						&						&		\\
-		\ce{^{40}K}						&				&						&						&		\\
-		\ce{^{212}Bi} + \ce{^{208}Tl}	&				&						&						&		\\
-		\ce{^{234\text{m}}Pa}			&				&						&						&		\\
-		\cmidrule{1-5}
-		\textsc{mini-shroud} [mBq/kg]	&				&						&						&		\\
-		\ce{^{40}K}						&				&						&						&		\\
-		\ce{^{207}Bi}					&				&						&						&		\\
-		\cmidrule{1-5}
-		\textsc{other} [mBq/kg]			&				&						&						&		\\
-		\ce{^{42}K} in LAr				&				&						&						&		\\
-		\ce{^{42}K} on \textsc{coax} p$^+$&				&						&						&		\\
-		$\alpha$-model BEGe [cts]		&				&						&						&		\\
-		$\alpha$-model \textsc{coax} [cts]&				&						&						&		\\
-		\cmidrule{1-5}
-		p-value							&	\multicolumn{4}{c}{0.953}	\\
-		\bottomrule
-	\end{tabular}
-	}
-	\label{tab:res2}
-\end{table}
-
-% }}}
+The final result on $\Tnu$, with the statistic and systematic uncertainties, is
+\begin{equation}
+	\begin{split}
+		\Tnu &=({1.984\;\;^{+0.020}_{-0.020\text{stat}}}\;\;{^{+0.147}_{-0.099\text{sys}}})\cdot10^{21}\;\text{yr}\\
+				   &=(1.98\;\;^{+0.15}_{-0.10})\cdot10^{21}\;\text{yr}\;.\\
+	\end{split}
+\end{equation}
 \subsection*{Lorentz-violating double-beta decay mode}\addcontentsline{toc}{subsection}{Lorentz-violating double-beta decay mode}
 The minimal background model described in the previous section and the result on $\Tnu$ were used to evaluate the presence of the Lorentz-violating double-beta decay component simply adding the new spectrum shape with $\aof$ as the fitting parameter as described in \ref{sec:bayes}. The marginalized posterior distribution for $\aof$, in electron mass units, before and after folding in the systematic uncertainties distribution, is shown in Fig.~\ref{fig:aofpost}. The final result for $\aof$ was determined as the 90\% quantile of this distribution:
 \begin{equation}\aof<3425 \text{GeV}\qquad(\text{90\% C.L.})\end{equation}
@@ -224,3 +239,68 @@ The minimal background model described in the previous section and the result on
 \end{table}
 \clearpage
 \subsection*{Acknowledgements}
+
+\newgeometry{margin=4cm}
+\begin{landscape}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec1_1_BEGe.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec2_1_BEGe.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec3_1_BEGe.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec1_1_COAX.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec2_1_COAX.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec3_1_COAX.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec1_2_BEGe.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec2_2_BEGe.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec1_2_COAX.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec2_2_COAX.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec1_3_BEGe.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\includegraphics{img/bkgdec1_3_COAX.pdf}
+		\caption{Background decomposition for the summed BEGe energy spectrum resulting from the minimal model with informative priors.}
+	\end{figure}
+\end{landscape}
+\restoregeometry

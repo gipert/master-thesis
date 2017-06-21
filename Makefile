@@ -12,6 +12,8 @@ LC   = latexmk
 COPT = -pdflua -outdir=log -M -MP -MF log/$*.deps
 DIRS = log log/src
 
+-include img/Makefile
+
 all : $(PROJ).pdf
 
 $(PROJ).pdf : $(PROJ).tex $(DIRS) FORCE_MAKE

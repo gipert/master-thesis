@@ -12,7 +12,7 @@
 	\begin{groupplot}[	group style = { group size = 2 by 2,
 										xlabels at = edge bottom,
 										%xticklabels at = edge bottom,
-										ylabels at = edge left,
+										%ylabels at = edge left,
 										%vertical sep = 0pt,
 										horizontal sep = 3cm
 										},
@@ -39,6 +39,7 @@
 			%\addplot[const plot, draw = black] file {../data/K40fibers.dat};
 			\node[rectangle, draw] at (axis cs:1200,0) {\large\ce{^{212}Bi} + \ce{^{208}Tl}};
 		\nextgroupplot[xmax = 3000, ymin = -2,
+						xlabel = energy {[keV]},
 						ytick = {-2,0,2,4,6},
 						yticklabels = {$10^{-2}$,$10^{0}$,$10^{2}$,$10^4$,$10^6$},
 						%legend columns = 2,

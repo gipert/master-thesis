@@ -9,8 +9,8 @@
     std::ofstream fout(name.c_str());
     TFile::Open("outBATHist.root");
 
-    if ( a == 'c' ) fout << "energy\tmidenergy\tdata\tsum\t2nbb\tK42homLAr\tK40fibers\tBi212Tl208fibers\tPb214Bi214fibers\tAc228holder\tCo60holder\tK40holder\tPb214Bi214holder\tK40cables\tBi212Tl208cables\tK40minishroud\tPa234cables\talpha\tK42nPlus\n";
-    else fout << "energy\tmidenergy\tdata\tsum\t2nbb\tK42homLAr\tK40fibers\tBi212Tl208fibers\tPb214Bi214fibers\tAc228holder\tCo60holder\tK40holder\tPb214Bi214holder\tK40cables\tBi212Tl208cables\tK40minishroud\tPa234cables\talpha\n";
+    if ( a == 'c' ) fout << "energy\tmidenergy\tdata\tsum\t2nbb\tK42homLAr\tK40fibers\tBi212Tl208fibers\tPb214Bi214fibers\tAc228holder\tCo60holder\tK40holder\tPb214Bi214holder\tK40cables\tBi212Tl208cables\tBi207minishroud\tPa234cables\talpha\tK42nPlus\n";
+    else fout << "energy\tmidenergy\tdata\tsum\t2nbb\tK42homLAr\tK40fibers\tBi212Tl208fibers\tPb214Bi214fibers\tAc228holder\tCo60holder\tK40holder\tPb214Bi214holder\tK40cables\tBi212Tl208cables\tBi207minishroud\tPa234cables\talpha\n";
 
     std::vector<TH1D*> h;
     if ( a == 'b' ) {
@@ -31,7 +31,7 @@
         h.push_back(hK40cablesBEGe);
             hBi212cablesBEGe->Add(hTl208cablesBEGe);
         h.push_back(hBi212cablesBEGe);
-        h.push_back(hK40minishroudBEGe);
+        h.push_back(hBi207minishroudBEGe);
         h.push_back(Pa234cablesBEGe);
         h.push_back(hAlphaBEGe);
     }
@@ -54,7 +54,7 @@
         h.push_back(hK40cablesCOAX);
             hBi212cablesCOAX->Add(hTl208cablesCOAX);
         h.push_back(hBi212cablesCOAX);
-        h.push_back(hK40minishroudCOAX);
+        h.push_back(hBi207minishroudCOAX);
         h.push_back(Pa234cablesCOAX);
         h.push_back(hAlphaCOAX);
         h.push_back(hK42nPlusCOAX);
@@ -74,6 +74,6 @@
 }
 
 double safelog( double a ) {
-    if ( a <= 0 ) return -10;
+    if ( a <= 0 ) return -20;
     else return TMath::Log(a);
 }

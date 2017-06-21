@@ -102,12 +102,28 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
 
     // 2nbb
     this->SetPriorConstantAll();
-    this->SetPrior(0, &invflat);
-    //invgaus.SetParameter(0, 1.926);
-    //invgaus.SetParameter(1, 0.095);
-    //this->SetPrior(0, &invgaus);
-    //this->GetParameter(0)->Fix(216.7);
-
+    //this->SetPrior(0, &invflat);
+    invgaus.SetParameter(0, 1.926);
+    invgaus.SetParameter(1, 0.095);
+    this->SetPrior(0, &invgaus);
+/*
+    this->GetParameter(0)->Fix(210.3);
+    this->GetParameter(2)->Fix(0.000199089);
+    this->GetParameter(3)->Fix(0.0897755);
+    this->GetParameter(4)->Fix(5.92018e-05);
+    this->GetParameter(5)->Fix(0.00178813);
+    this->GetParameter(6)->Fix(1348.48);
+    this->GetParameter(7)->Fix(2929.16);
+    this->GetParameter(9)->Fix(8.61288e-05);
+    this->GetParameter(12)->Fix(0.000323493);
+    this->GetParameter(13)->Fix(0.000103206);
+    this->GetParameter(14)->Fix(0.00465651);
+    this->GetParameter(16)->Fix(8.24569e-05);
+    this->GetParameter(17)->Fix(0.0543932);
+    this->GetParameter(18)->Fix(0.0122142);
+    this->GetParameter(22)->Fix(0.000536992);
+    this->GetParameter(27)->Fix(0.00585797);
+*/
     // 2nbbLV
     //linear.SetParameter(0, 1.52E-05);
     //this->SetPriorGauss(1, 0, 1.38E-04);

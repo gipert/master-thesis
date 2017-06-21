@@ -64,7 +64,9 @@ int main( int argc, char** argv ) {
                   << "    --kLow                   : set precision\n"
                   << "    --kMedium\n"
                   << "    --kHigh\n"
-                  << "    --kVeryHigh\n\n";
+                  << "    --kVeryHigh\n"
+                  << "    --quick                  : do not compute p-value and knowledge\n"
+                  << "                               update plots\n\n";
         return 0;
     }
 
@@ -328,15 +330,15 @@ int main( int argc, char** argv ) {
     BCSummaryTool summary(&model);
     // create output class
     path = outdirname + "/";
-    //BCModelOutput output(&model, c_str(path + "markowChains.root"));
-    //model.WriteMarkovChain(true);
+    BCModelOutput output(&model, c_str(path + "markowChains.root"));
+    model.WriteMarkovChain(true);
 
     // set nicer style for drawing than the ROOT default
     BCAux::SetStyle();
 
     // open log file
     BCLog::SetLogLevelFile(BCLog::detail);
-    BCLog::SetLogLevelScreen(BCLog::summary);
+    BCLog::SetLogLevelScreen(BCLog::detail);
     BCLog::OpenLog(c_str(path + "logBAT.txt"));
 
     // set precision (number of samples in Markov chain)
@@ -370,6 +372,7 @@ int main( int argc, char** argv ) {
     // run MCMC and marginalize posterior w/r/t all parameters and all
     // combinations of two parameters
     omp_set_num_threads(2);
+    model.SetMarginalizationMethod(BCIntegrate::kMargMetropolis);
     auto start = std::chrono::system_clock::now();
     model.MarginalizeAll();
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);
@@ -381,8 +384,10 @@ int main( int argc, char** argv ) {
     //BCLog::SetLogLevelScreen(BCLog::summary);
 
     //std::cout << std::endl;
-    double pvalue = GetPValue(model, level, false);
-    std::cout << "Summary : pValue = " << pvalue << std::endl;
+    if ( std::find( args.begin(), args.end(), "--quick" ) == args.end() ) {
+        double pvalue = GetPValue(model, level, false);
+        std::cout << "Summary : pValue = " << pvalue << std::endl;
+    }
 
     // OUTPUT
     // print results of the analysis into a text file
@@ -402,7 +407,7 @@ int main( int argc, char** argv ) {
     // this will re-run the analysis without the LogLikelihood information
     BCLog::OutSummary("Building knowledge-update plots.");
 
-    if ( std::find( args.begin(), args.end(), "--noknowup" ) == args.end() ) {
+    if ( std::find( args.begin(), args.end(), "--quick" ) == args.end() ) {
         BCLog::SetLogLevelScreen(BCLog::warning);
         summary.PrintKnowledgeUpdatePlots(c_str(path + "Fit2nbbLV_update.pdf"));
         BCLog::SetLogLevelScreen(BCLog::summary);

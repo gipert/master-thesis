@@ -259,6 +259,21 @@ int main( int argc, char** argv ) {
             }
         }
 
+        if ( binwidth == 25 ) {
+            nBins = 7500/binwidth - 1;
+            dbin = std::vector<double>(nBins+1);
+            std::vector<int> avoid = { 1525 };
+            int k = 0, i = 0;
+            while (1) {
+                if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) {
+                    dbin[i] = k;
+                    i++;
+                }
+                k += binwidth;
+                if ( k > 7500 ) break;
+            }
+        }
+
         else {
             nBins = 7500/binwidth;
             dbin = std::vector<double>(nBins+1);

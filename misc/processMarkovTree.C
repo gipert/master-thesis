@@ -37,8 +37,8 @@
     }
 
     ofstream f("2nbb_post.dat");
-    f << "point\tpost\tprior\n";
-    for ( int i = 1; i < h->GetNbinsX(); ++i ) f << h->GetBinLowEdge(i) << '\t' << h->GetBinContent(i) << '\t' << hp->GetBinContent(i) << '\n';
+    f << "point\tpost\tpriorgaus\tpriorflat\n";
+    for ( int i = 1; i < h->GetNbinsX(); ++i ) f << h->GetBinLowEdge(i) << '\t' << h->GetBinContent(i) << '\t' << hp->GetBinContent(i) << '\t' << hpp->GetBinContent(i) << '\n';
     f.close();
     h->Draw();
     hp->Draw("same");

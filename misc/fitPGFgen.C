@@ -74,6 +74,6 @@
 }
 
 double safelog( double a ) {
-    if ( a <= 0 ) return -20;
+    if ( a <= 0 ) return -13;
     else return TMath::Log(a);
 }

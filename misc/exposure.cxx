@@ -12,6 +12,7 @@ int main() {
     int BEGeMass = 0, EnrCoaxMass = 0, NatCoaxMass = 0;
 
     for ( int i = 0; i < 40; i++ ) {
+        if ( set.GetDetectorNames()[i] == "GD02D" ) continue;
         if ( set.GetDetectorTypes()[i] == 1 ) BEGeMass += set.GetMass()[i];
         if ( set.GetDetectorTypes()[i] == 2 ) EnrCoaxMass += set.GetMass()[i];
         if ( set.GetDetectorTypes()[i] == 3 ) NatCoaxMass += set.GetMass()[i];
@@ -49,6 +50,7 @@ int main() {
     // calculate livetimes
     double ltBEGe = 0, ltEnrCOAX = 0, ltNatCOAX = 0;
     for ( int i = 0; i < 40; i++ ) {
+        if ( set.GetDetectorNames()[i] == "GD02D" ) continue;
         if      ( set.GetDetectorTypes()[i] == 1 ) ltBEGe += totalTime[i];
         else if ( set.GetDetectorTypes()[i] == 2 ) ltEnrCOAX += totalTime[i];
         else if ( set.GetDetectorTypes()[i] == 3 ) ltNatCOAX += totalTime[i];
@@ -60,6 +62,7 @@ int main() {
 
     double BEGeExp = 0, EnrCoaxExp = 0, NatCoaxExp = 0;
     for ( int i = 0; i < 40; i++ ) {
+        if ( set.GetDetectorNames()[i] == "GD02D" ) continue;
         if ( set.GetDetectorTypes()[i] == 1 ) BEGeExp    += ((double)set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
         if ( set.GetDetectorTypes()[i] == 2 ) EnrCoaxExp += ((double)set.GetMass()[i]/1E3)*(totalTime[i]/31536000);
         if ( set.GetDetectorTypes()[i] == 3 ) NatCoaxExp += ((double)set.GetMass()[i]/1E3)*(totalTime[i]/31536000);

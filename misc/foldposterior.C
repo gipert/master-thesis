@@ -31,7 +31,7 @@ void foldposterior() {
     double bincent;
     double u;
     TRandom3 rand(0);
-    for ( int i = 1; i < 10/*hin->GetNbinsX()*/; i++ ) {
+    for ( int i = 1; i < hin->GetNbinsX(); i++ ) {
         nentries = hin->GetBinContent(i);
         bincent = hin->GetBinCenter(i);
         for ( int j = 0; j < nentries; j++ ) {
@@ -40,6 +40,9 @@ void foldposterior() {
             else hout->Fill(bincent*rand.Gaus(1,sup));
         }
     }
+    TFile fout("aof_folded.root", "RECREATE");
+    gausdown.Write();
+    gausup.Write();
     hout->Write("hist_0_2nbbLV_out");
     return;
 }

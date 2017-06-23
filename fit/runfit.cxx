@@ -259,6 +259,21 @@ int main( int argc, char** argv ) {
             }
         }
 
+        if ( binwidth == 25 ) {
+            nBins = 7500/binwidth - 1;
+            dbin = std::vector<double>(nBins+1);
+            std::vector<int> avoid = { 1525 };
+            int k = 0, i = 0;
+            while (1) {
+                if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) {
+                    dbin[i] = k;
+                    i++;
+                }
+                k += binwidth;
+                if ( k > 7500 ) break;
+            }
+        }
+
         else {
             nBins = 7500/binwidth;
             dbin = std::vector<double>(nBins+1);
@@ -367,7 +382,7 @@ int main( int argc, char** argv ) {
         }
     }
     // set parameter binning
-    //m.SetNbins(1000);
+    if ( std::find( args.begin(), args.end(), "--kHigh" ) != args.end() ) model.SetNbins(500);
 
     // run MCMC and marginalize posterior w/r/t all parameters and all
     // combinations of two parameters
@@ -394,9 +409,11 @@ int main( int argc, char** argv ) {
     model.PrintResults(c_str(path + "Fit2nbbLV_results.txt"));
     // draw all marginalized distributions into a PDF file
     model.PrintAllMarginalized(c_str(path + "Fit2nbbLV_plots.pdf"));
-    auto h = model.GetMarginalized("2nbbLV");
+    auto h = model.GetMarginalized("2nbb");
+    auto hLV = model.GetMarginalized("2nbbLV");
     TFile faof(c_str(path + "aof_post.root"), "RECREATE");
     if (h) h->GetHistogram()->Write();
+    if (hLV) hLV->GetHistogram()->Write();
     faof.Close();
 
     // print all summary plots

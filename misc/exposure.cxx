@@ -46,6 +46,17 @@ int main() {
             if ( i.second[j] == 0 ) totalTime[j] += timeMap[i.first];
         }
     }
+    // calculate livetimes
+    double ltBEGe = 0, ltEnrCOAX = 0, ltNatCOAX = 0;
+    for ( int i = 0; i < 40; i++ ) {
+        if      ( set.GetDetectorTypes()[i] == 1 ) ltBEGe += totalTime[i];
+        else if ( set.GetDetectorTypes()[i] == 2 ) ltEnrCOAX += totalTime[i];
+        else if ( set.GetDetectorTypes()[i] == 3 ) ltNatCOAX += totalTime[i];
+    }
+
+    std::cout << "BEGe livetime: " << ltBEGe/31536000 << " yr\n";
+    std::cout << "EnrCOAX livetime: " << ltEnrCOAX/31536000 << " yr\n";
+    std::cout << "NatCOAX livetime: " << ltNatCOAX/31536000 << " yr\n";
 
     double BEGeExp = 0, EnrCoaxExp = 0, NatCoaxExp = 0;
     for ( int i = 0; i < 40; i++ ) {

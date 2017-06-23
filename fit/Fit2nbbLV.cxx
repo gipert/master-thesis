@@ -26,36 +26,36 @@
 
 // ---------------------------------------------------------
 Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false) {
-   
+
     // define parameters
-    /* [0] */  this->AddParameter("2nbb",                 2E02, 2.4E02);
+    /* [0] */  this->AddParameter("2nbb",                 2.05E02, 2.25E02);
     /* [1] */  this->AddParameter("2nbbLV",               0, 5E-04);
-    /* [2] */  this->AddParameter("K42homLAr",            1E-04, 2.5E-04);
-    /* [3] */  this->AddParameter("K40fibers",            0, 1E-00);
-    /* [4] */  this->AddParameter("Bi212Tl208fibers",     0, 0.02);
-    /* [5] */  this->AddParameter("Pb214Bi214fibers",     0, 1E-01);
-    /* [6] */  this->AddParameter("alphaBEGe",            1.1E03, 1.8E03);
-    /* [7] */  this->AddParameter("alphaCOAX",            2.6E03, 3.5E03);
+    /* [2] */  this->AddParameter("K42homLAr",            1.8E-04, 2.2E-04);
+    /* [3] */  this->AddParameter("K40fibers",            0, 1.5E-01);
+    /* [4] */  this->AddParameter("Bi212Tl208fibers",     0, 1E-04);
+    /* [5] */  this->AddParameter("Pb214Bi214fibers",     0, 4E-03);
+    /* [6] */  this->AddParameter("alphaBEGe",            1.1E03, 1.6E03);
+    /* [7] */  this->AddParameter("alphaCOAX",            2.6E03, 3.4E03);
     /* [8] */  this->AddParameter("K42nPlusBEGe",         0, 2E-04);
-    /* [9] */  this->AddParameter("K42nPlusCOAX",         0, 3E-04);
+    /* [9] */  this->AddParameter("K42nPlusCOAX",         0, 2E-04);
     /* [10] */ this->AddParameter("K42pPlusBEGe",         0, 7E-01);
     /* [11] */ this->AddParameter("K42pPlusCOAX",         0, 1E-03);
     /* [12] */ this->AddParameter("Ac228holder",          0, 6E-04);
-    /* [13] */ this->AddParameter("Co60holder",           0, 1.6E-04);
-    /* [14] */ this->AddParameter("K40holder",            0, 2E-02);
+    /* [13] */ this->AddParameter("Co60holder",           0, 2E-04);
+    /* [14] */ this->AddParameter("K40holder",            0, 1E-02);
     /* [15] */ this->AddParameter("Bi212Tl208holder",     0, 7E-04);
-    /* [16] */ this->AddParameter("Pb214Bi214holder",     0, 1E-03);
-    /* [17] */ this->AddParameter("K40cable",             0, 1E00);
-    /* [18] */ this->AddParameter("Bi212Tl208cables",     0, 5E-02);
-    /* [19] */ this->AddParameter("Pb214Bi214cables",     0, 25);
+    /* [16] */ this->AddParameter("Pb214Bi214holder",     0, 4E-04);
+    /* [17] */ this->AddParameter("K40cable",             0, 6E-01);
+    /* [18] */ this->AddParameter("Bi212Tl208cables",     0, 2E-02);
+    /* [19] */ this->AddParameter("Pb214Bi214cables",     0, 4E-02);
     /* [20] */ this->AddParameter("K40minishroud",        0, 2E-01);
     /* [21] */ this->AddParameter("Pa234minishroud",      0, 2E-04);
-    /* [22] */ this->AddParameter("Bi207minishroud",      0, 5E-03);
+    /* [22] */ this->AddParameter("Bi207minishroud",      0, 3E-03);
     /* [23] */ this->AddParameter("Bi207cables",          0, 7E-02);
     /* [24] */ this->AddParameter("Bi207holder",          0, 5E-02);
     /* [25] */ this->AddParameter("Pb214Bi214minishroud", 0, 30);
     /* [26] */ this->AddParameter("K42minishroudsurface", 0, 1E-03);
-    /* [27] */ this->AddParameter("Pa234cables",          0, 3E-01);
+    /* [27] */ this->AddParameter("Pa234cables",          0, 3E-02);
     /* [28] */ this->AddParameter("Pa234holder",          0, 1E-02);
     /* [29] */ this->AddParameter("K42homLArAA",          0, 2E-03);
 
@@ -102,12 +102,28 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
 
     // 2nbb
     this->SetPriorConstantAll();
-    this->SetPrior(0, &invflat);
-    //invgaus.SetParameter(0, 1.926);
-    //invgaus.SetParameter(1, 0.095);
-    //this->SetPrior(0, &invgaus);
-    //this->GetParameter(0)->Fix(216.7);
-
+    //this->SetPrior(0, &invflat);
+    invgaus.SetParameter(0, 1.926);
+    invgaus.SetParameter(1, 0.095);
+    this->SetPrior(0, &invgaus);
+/*
+    this->GetParameter(0)->Fix(210.3);
+    this->GetParameter(2)->Fix(0.000199089);
+    this->GetParameter(3)->Fix(0.0897755);
+    this->GetParameter(4)->Fix(5.92018e-05);
+    this->GetParameter(5)->Fix(0.00178813);
+    this->GetParameter(6)->Fix(1348.48);
+    this->GetParameter(7)->Fix(2929.16);
+    this->GetParameter(9)->Fix(8.61288e-05);
+    this->GetParameter(12)->Fix(0.000323493);
+    this->GetParameter(13)->Fix(0.000103206);
+    this->GetParameter(14)->Fix(0.00465651);
+    this->GetParameter(16)->Fix(8.24569e-05);
+    this->GetParameter(17)->Fix(0.0543932);
+    this->GetParameter(18)->Fix(0.0122142);
+    this->GetParameter(22)->Fix(0.000536992);
+    this->GetParameter(27)->Fix(0.00585797);
+*/
     // 2nbbLV
     //linear.SetParameter(0, 1.52E-05);
     //this->SetPriorGauss(1, 0, 1.38E-04);
@@ -118,6 +134,9 @@ Fit2nbbLV::Fit2nbbLV(std::string name) : BCModel(name.c_str()), kUseRange(false)
     //this->SetPrior(12, &linear);
     //linear.SetParameter(0, 0.16E-03);          // Co60
     //this->SetPrior(13, &linear);
+    //
+    // fibers
+    this->SetPriorGauss(4, 5.8E-05, 1.2E-05);
 }
 // ---------------------------------------------------------
 double Fit2nbbLV::LogLikelihood(const std::vector<double> & parameters) {

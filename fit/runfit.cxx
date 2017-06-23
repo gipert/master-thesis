@@ -64,7 +64,9 @@ int main( int argc, char** argv ) {
                   << "    --kLow                   : set precision\n"
                   << "    --kMedium\n"
                   << "    --kHigh\n"
-                  << "    --kVeryHigh\n\n";
+                  << "    --kVeryHigh\n"
+                  << "    --quick                  : do not compute p-value and knowledge\n"
+                  << "                               update plots\n\n";
         return 0;
     }
 
@@ -257,6 +259,21 @@ int main( int argc, char** argv ) {
             }
         }
 
+        if ( binwidth == 25 ) {
+            nBins = 7500/binwidth - 1;
+            dbin = std::vector<double>(nBins+1);
+            std::vector<int> avoid = { 1525 };
+            int k = 0, i = 0;
+            while (1) {
+                if ( std::find( avoid.begin(), avoid.end(), k) == avoid.end() ) {
+                    dbin[i] = k;
+                    i++;
+                }
+                k += binwidth;
+                if ( k > 7500 ) break;
+            }
+        }
+
         else {
             nBins = 7500/binwidth;
             dbin = std::vector<double>(nBins+1);
@@ -328,15 +345,15 @@ int main( int argc, char** argv ) {
     BCSummaryTool summary(&model);
     // create output class
     path = outdirname + "/";
-    //BCModelOutput output(&model, c_str(path + "markowChains.root"));
-    //model.WriteMarkovChain(true);
+    BCModelOutput output(&model, c_str(path + "markowChains.root"));
+    model.WriteMarkovChain(true);
 
     // set nicer style for drawing than the ROOT default
     BCAux::SetStyle();
 
     // open log file
     BCLog::SetLogLevelFile(BCLog::detail);
-    BCLog::SetLogLevelScreen(BCLog::summary);
+    BCLog::SetLogLevelScreen(BCLog::detail);
     BCLog::OpenLog(c_str(path + "logBAT.txt"));
 
     // set precision (number of samples in Markov chain)
@@ -365,11 +382,12 @@ int main( int argc, char** argv ) {
         }
     }
     // set parameter binning
-    //m.SetNbins(1000);
+    if ( std::find( args.begin(), args.end(), "--kHigh" ) != args.end() ) model.SetNbins(500);
 
     // run MCMC and marginalize posterior w/r/t all parameters and all
     // combinations of two parameters
     omp_set_num_threads(2);
+    model.SetMarginalizationMethod(BCIntegrate::kMargMetropolis);
     auto start = std::chrono::system_clock::now();
     model.MarginalizeAll();
     auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now()-start);
@@ -381,17 +399,21 @@ int main( int argc, char** argv ) {
     //BCLog::SetLogLevelScreen(BCLog::summary);
 
     //std::cout << std::endl;
-    double pvalue = GetPValue(model, level, false);
-    std::cout << "Summary : pValue = " << pvalue << std::endl;
+    if ( std::find( args.begin(), args.end(), "--quick" ) == args.end() ) {
+        double pvalue = GetPValue(model, level, false);
+        std::cout << "Summary : pValue = " << pvalue << std::endl;
+    }
 
     // OUTPUT
     // print results of the analysis into a text file
     model.PrintResults(c_str(path + "Fit2nbbLV_results.txt"));
     // draw all marginalized distributions into a PDF file
     model.PrintAllMarginalized(c_str(path + "Fit2nbbLV_plots.pdf"));
-    auto h = model.GetMarginalized("2nbbLV");
+    auto h = model.GetMarginalized("2nbb");
+    auto hLV = model.GetMarginalized("2nbbLV");
     TFile faof(c_str(path + "aof_post.root"), "RECREATE");
     if (h) h->GetHistogram()->Write();
+    if (hLV) hLV->GetHistogram()->Write();
     faof.Close();
 
     // print all summary plots
@@ -402,7 +424,7 @@ int main( int argc, char** argv ) {
     // this will re-run the analysis without the LogLikelihood information
     BCLog::OutSummary("Building knowledge-update plots.");
 
-    if ( std::find( args.begin(), args.end(), "--noknowup" ) == args.end() ) {
+    if ( std::find( args.begin(), args.end(), "--quick" ) == args.end() ) {
         BCLog::SetLogLevelScreen(BCLog::warning);
         summary.PrintKnowledgeUpdatePlots(c_str(path + "Fit2nbbLV_update.pdf"));
         BCLog::SetLogLevelScreen(BCLog::summary);

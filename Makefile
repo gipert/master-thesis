@@ -12,11 +12,10 @@ LC   = latexmk
 COPT = -pdflua -outdir=log -M -MP -MF log/$*.deps
 DIRS = log log/src
 
--include img/Makefile
-
 all : $(PROJ).pdf
 
 $(PROJ).pdf : $(PROJ).tex $(DIRS) FORCE_MAKE
+	cd img && make all && cd ..
 	$(LC) $(COPT) $<
 	if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
 
@@ -27,8 +26,7 @@ $(DIRS) :
 	mkdir -p $(DIRS)
 
 clean :
-	$(LC) -CA
-	-rm -rf $(DIRS)
+	$(LC) $(COPT) -C
 
 .PHONY : FORCE_MAKE preview clean
 -include log/*.deps

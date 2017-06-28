@@ -14,18 +14,30 @@
 										%xticklabels at = edge bottom,
 										%ylabels at = edge left,
 										%vertical sep = 0pt,
-										horizontal sep = 3cm
+										horizontal sep = 3.5cm
 										},
 						width = 10cm,
 						height = 7cm,
 						xlabel = energy {[keV]},
 						xlabel style = {at={(axis description cs:0.5,0.04)}},
 						ylabel style = {at={(axis description cs:0.03,0.5)}},
-						ylabel = cts,
+						ylabel = counts,
 						xmin = 0,
 						%grid = major,
 						/pgf/number format/1000 sep={}
 						]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 2NBB %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		\nextgroupplot[xmin = 570, xmax = 2039, ymin = -5.5,
+						ytick = {-4,-2,0},
+						yticklabels = {$10^{-4}$,$10^{-2}$,$10^{0}$},
+						legend style={cells={align=left}},
+						legend entries = {$2\nu\beta\beta$, $2\nu\beta\beta$LV},
+						%legend pos = south west,
+						]
+			\addplot[const plot, draw = red] file {../data/2nbb.dat};
+			\addplot[const plot, draw = blue] file {../data/2nbbLV.dat};
+			%\node[rectangle, draw] at (axis cs:3000,-2) {\large$\alpha$-model};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% K40 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		\nextgroupplot[xmax = 1500, ymin = 0,
 						ytick = {1,2,3,4,5},
 						yticklabels = {$10^{1}$,$10^{2}$,$10^{3}$,$10^{4}$,$10^5$},
@@ -38,6 +50,7 @@
 			\addplot[const plot, draw = black!50!green] file {../data/K40cables.dat};
 			\addplot[const plot, draw = blue] file {../data/K40fibers.dat};
 			\node[rectangle, draw] at (axis cs:700,4) {\large\ce{^{40}K}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% K42 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		\nextgroupplot[xmax = 3500, ymin = 0.5,
 						ytick = {2,4,6,8},
 						yticklabels = {$10^{2}$,$10^{4}$,$10^{6}$,$10^8$},
@@ -49,27 +62,20 @@
 			\addplot[const plot, draw = red] file {../data/K42nPlus.dat};
 			\addplot[const plot, draw = black] file {../data/K42pPlus.dat};
 			\node[rectangle, draw] at (axis cs:1000,2) {\large\ce{^{42}K}};
-		\nextgroupplot[xmin = 570, xmax = 7500, ymin = -3.5,
-						ylabel = cts/$N_\text{sim}$,
-						ytick = {-3,-2,-1,0,1},
-						yticklabels = {$10^{-3}$,$10^{-2}$,$10^{-1}$,$10^{0}$,$10^1$},
-						legend style={cells={align=left}},
-						legend entries = {BEGe, \textsc{enr}\\\textsc{coax}},
-						%legend pos = south west,
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% 214Bi + 214Pb %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		\nextgroupplot[xmax = 3000, ymin = -2,
+						xlabel = energy {[keV]},
+						ytick = {-2,0,2,4,6},
+						yticklabels = {$10^{-2}$,$10^{0}$,$10^{2}$,$10^4$,$10^6$},
+						%legend columns = 2,
+						legend entries = {\textsc{[f]}, \textsc{[h]}, \textsc{[c]}}
 						]
-			\addplot[const plot, draw = red] file {../data/alphaBEGe.dat};
-			\addplot[const plot, draw = blue] file {../data/alphaCOAX.dat};
-			\node[rectangle, draw] at (axis cs:3000,-2) {\large$\alpha$-model};
-		\nextgroupplot[xmin = 570, xmax = 2500, ymin = -1.5,
-						ytick = {0,2,4,6,8},
-						yticklabels = {$10^0$,$10^{2}$,$10^{4}$,$10^{6}$,$10^8$},
-						legend entries = {\ce{^{228}Ac} {[\textsc{h}]}, \ce{^{234\text{m}}Pa} {[\textsc{ms}]}, \ce{^{60}Co} {[\textsc{h}]}, \ce{^{207}Bi} {[\textsc{ms}}]},
-						%legend columns = 2 
-						]
-			\addplot[const plot, draw = blue] file {../data/Ac228holder.dat};
-			\addplot[const plot, draw = black!50!green] file {../data/Pa234minishroud.dat};
-			\addplot[const plot, draw = red] file {../data/Co60holder.dat};
-			\addplot[const plot, draw = black] file {../data/Bi207minishroud.dat};
+			\addplot[const plot, draw = blue] file {../data/Bi214Pb214fibers.dat};
+			\addplot[const plot, draw = red] file {../data/Bi214Pb214holder.dat};
+			\addplot[const plot, draw = black!50!green] file {../data/Bi214Pb214cables.dat};
+			%\addplot[const plot, draw = black] file {../data/K42pplusbege.dat};
+			\node[rectangle, draw] at (axis cs:1000,0) {\large\ce{^{214}Bi} + \ce{^{214}Pb}};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	\end{groupplot}
 \end{tikzpicture}
 \end{document}

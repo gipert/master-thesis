@@ -1,95 +1,119 @@
 %! TEX program = lualatex
 %        File: main.tex
 %     Created: Mar Apr 18 06:00 pm 2017 C
-% Last Change: Mar Apr 18 06:00 pm 2017 C
 %
-\documentclass[11pt, a4paper, twoside, draft]{article}
-	%\usepackage{pdfsync}
-	%\synctex1
-	%\usepackage[binding=5mm]{layaureo}
-	\usepackage[pass]{geometry}
-	\usepackage{marginnote}
-		\renewcommand*{\marginfont}{\scshape}
-	\usepackage{indentfirst}
-	%\setlength{\parindent}{10pt}
-	%\usepackage[parfill]{parskip}
-	\pagestyle{plain}
-	%\usepackage{syntonly}
-	%\syntaxonly
-	\usepackage[hidelinks]{hyperref}
-	\usepackage{graphicx}
-	\usepackage{subfigure}
-	\usepackage{xcolor}
-	\usepackage{amsmath, amssymb}
-		\renewcommand{\epsilon}{\varepsilon}
-		\renewcommand{\theta}{\vartheta}
-		\renewcommand{\rho}{\varrho}
-		\renewcommand{\phi}{\varphi}
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\usepackage[UKenglish]{babel}
-	\usepackage[utf8]{inputenc}
-	\usepackage[T1]{fontenc}
-	\usepackage{lmodern}
-	\usepackage[lining]{ebgaramond}
-	%\usepackage[lining]{libertine}
-	\usepackage[cmbraces, libertine, varg]{newtxmath}
-	\usepackage{bm}
-	\renewcommand{\mathbf}{\bm}
-	\usepackage{microtype}
-	\usepackage{titlesec}
-		\titleformat*{\section}{\LARGE}
-		\titleformat*{\subsection}{\Large}
-		\titleformat*{\subsubsection}{\large}
-	%\usepackage{fontspec}
-	%\setmonofont[Scale=MatchLowercase]{Inconsolata}
-	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\renewcommand\labelitemi{\diamond}
-	\usepackage{booktabs}
-	\usepackage[labelfont=bf]{caption}
-	\usepackage{multirow}
-	\captionsetup[table]{position=top}
-	\usepackage{tikz}
-	\usepackage{pgfplots}
-	\usepackage[mode=image]{standalone}
-	%\usepackage{adjustbox}
+\documentclass[11pt, a4paper, twoside]{article}
+%%% GEOMETRY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[pass]{geometry}
+\usepackage{marginnote}\renewcommand*{\marginfont}{\scshape}
+\usepackage{indentfirst}
+%\setlength{\parindent}{10pt}
+%\usepackage[parfill]{parskip}
+\pagestyle{plain}
+%%% FONT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[UKenglish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% GARAMOND TEMPLATE. COMMANDS:
+% \liningnums, \oldstylenums, \tabnums      : different styles for numbers
+% \initial{<letter>}{<text in sc>}          : create the first fancy big letter: A D F G L N O Q I
+% \decorationA \decorationB \decorationC    : decorations
+% \textit \textsw \textsc \textinit         : available shapes
+% \nicefrac                                 : nice inline fraction style
+% \darkred                                  : nice dark red colour
+%
+%
+% Here you can set global settings
+\usepackage{fontspec}
+	\defaultfontfeatures{%
+		RawFeature={%
+			+calt   % *Contextual alternates
+			,+clig  % *contextual ligatures
+			,+ccmp  % *composition & decomposition
+			,+lnum  % lining numbers
+			,+tnum  % tabular numbers
+			%,+frac  % nice fractions
+			%,+tlig  % 'tex-ligatures': `` '' -- --- !` ?` << >>
+			%,+cv06  % narrow guillemets
+			% ...
+		}%
+	}
+\setmainfont{EBGaramond12-Regular}[
+	ItalicFont = EBGaramond12-Italic
+]
+% use typewriter computer modern as monospaced font
+\setmonofont{cmuntt.otf}[Scale=MatchLowercase]
+\newcommand{\darkred}[1]{{\addfontfeature{Color=980000}#1}}
+\newcommand{\textsw}[1]{\textit{\addfontfeature{RawFeature=+swsh}#1}}
+\newcommand{\tabnums}[1]{{\addfontfeature{RawFeature=+tnum}#1}}
+\newcommand{\leftdecA}{\char"E001}
+\newcommand{\rightdecA}{\char"E002}
+\newcommand{\leftdecB}{\char"2619}
+\newcommand{\rightdecB}{\char"2767}
+\newcommand{\decorationA}{\darkred{\fontsize{36}{36}\selectfont\char"E001\char"E002}}
+\newcommand{\decorationB}{\darkred{\fontsize{30}{30}\selectfont\char"2619\char"2767}}
+\newcommand{\decorationC}{\darkred{\fontsize{30}{30}\selectfont\char"2766}}
+\newcommand{\nicefrac}[1]{{\addfontfeature{RawFeature=+frac}#1}}
+% initials
+\usepackage{lettrine}
+\newfontface{\initsh}{EBGaramond-Initials}
+\newcommand{\textinit}[1]{{\initsh #1}}
+\newcommand{\initial}[2]{\lettrine[lines=3, depth=1, findent=2pt, nindent=0em]{\initsh #1}{#2}}
+% math
+\usepackage[cmbraces, varg, libertine]{newtxmath}
+\usepackage{bm}\renewcommand{\mathbf}{\bm}
+\usepackage{amsmath, amssymb}
+	\renewcommand{\epsilon}{\varepsilon}
+	\renewcommand{\theta}{\vartheta}
+	\renewcommand{\rho}{\varrho}
+	\renewcommand{\phi}{\varphi}
 	\newcommand{\gerda}{\textsc{Gerda}}
 	\newcommand{\nbb}{\nu\beta\beta}
 	\newcommand{\aof}{\mathring{a}_\text{of}^{(3)}}
 	\newcommand{\Tnu}{T_{1/2}^{2\nu}}
-	\usepackage[version=4]{mhchem}
-	%\usepackage{listings}
-	%\lstset{language=C++}
-	%\lstset{
-	%        basicstyle=\small\ttfamily,
-	%        keywordstyle=\color{blue}\bfseries,
-	%        commentstyle=\color{darkgray},
-	%        stringstyle=\color{orange}
-	%        }
-	\usepackage{multicol, multirow}
-	\usepackage{pdflscape}
-	%\usepackage{lineno}
-	%\linenumbers
-	\usepackage{cleveref}
-		\crefname{section}{\S}{\S\S}
-		\Crefname{section}{\S}{\S\S}
-		\crefformat{section}{\S#2#1#3}
-	%
-	\usepackage[tocgraduated, toctextentriesindented]{tocstyle}
-	\usetocstyle{standard}
-	%%%%%%%%%%%%%%%%%%%%%% BIBTEX
-	\usepackage{cite}
-	\usepackage[nottoc,notlot,notlof]{tocbibind}
-	\let\OLDthebibliography\thebibliography
-	\renewcommand\thebibliography[1]{
-		\OLDthebibliography{#1}
-		\setlength{\parskip}{0pt}
-		\setlength{\itemsep}{0pt plus 0.3ex}
-	}
-	\makeatletter
-	\renewcommand\@biblabel[1]{#1.}
-	\makeatother
-	\usepackage{url,doi}
-	\renewcommand{\doi}[1]{\texttt{doi:}\url{#1}}
+\usepackage[version=4]{mhchem}
+\usepackage{microtype}
+%%% FIGURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage[mode=image]{standalone}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}
+\usepackage{titlesec}
+	\titleformat*{\section}{\huge}
+	\titleformat*{\subsection}{\LARGE}
+	\titleformat*{\subsubsection}{\Large}
+\renewcommand{\labelitemi}{$\diamond$}
+\usepackage{booktabs, multicol, multirow}
+\usepackage{caption}\captionsetup[table]{position=top}
+\usepackage[hidelinks]{hyperref}
+\usepackage{pdflscape}
+%\usepackage{lineno}
+%\linenumbers
+\usepackage{cleveref}
+	\crefname{section}{\S}{\S\S}
+	\Crefname{section}{\S}{\S\S}
+	\crefformat{section}{\S#2#1#3}
+%%% TABLE OF CONTENTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[tocgraduated, toctextentriesindented]{tocstyle}
+\usetocstyle{standard}
+%%% BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{cite}
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+\let\OLDthebibliography\thebibliography
+\renewcommand\thebibliography[1]{
+	\OLDthebibliography{#1}
+	\setlength{\parskip}{0pt}
+	\setlength{\itemsep}{0pt plus 0.3ex}
+}
+\makeatletter
+\renewcommand\@biblabel[1]{#1.}
+\makeatother
+\usepackage{doi}
+\renewcommand{\doi}[1]{\texttt{doi:}\url{#1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{titlepage}
 	\thispagestyle{empty}
@@ -126,15 +150,15 @@
 	\textsc{Anno Accademico \oldstylenums{2016/2017}}
 	\end{center}
 \end{titlepage}
-%\restoregeometry
-%\tableofcontents
+\restoregeometry
+\tableofcontents
 %\listoftables
 %\listoffigures
-%\include{src/intro}
-%\include{src/sec1}
-%\include{src/sec2}
-%\include{src/sec3}
-%\include{src/sec4}
+\include{src/intro}
+\include{src/sec1}
+\include{src/sec2}
+\include{src/sec3}
+\include{src/sec4}
 \include{src/sec5}
 \bibliography{bib-thesis}
 \bibliographystyle{minimal}

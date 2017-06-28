@@ -5,7 +5,7 @@ A global model that describes the background spectrum was obtained by fitting th
 The gist of Bayesian statistics is not difficult to grasp. At its base is the intuitive idea that probability quantifies the `degree of belief' in an event. The probability of an event changes if other events are assumed to be `true', provided these other events are `stochastically dependent' on that event. This is the essence of Bayes' theorem. As a consequence, Bayesian statistics allows the probability of a hypothesis to be continually updated on the basis of new observation (events) that depend on that hypothesis. 
 
 % {{{ MODELING
-\marginnote{modeling} The theory or model can be used to provide `direct probabilities'; i.e., relative frequencies of possible outcomes of the results were one to reproduce the experiment many times under identical conditions. The function $g(\vec{y}\mid\vec{\lambda},M)$ gives the relative frequency of getting results $\vec{y}$ assuming the model $M$ and parameters $\vec{\lambda}$. It should satisfy:
+\marginnote{modeling} The theory or model can be used to provide `direct probabilities'; i.e., relative frequencies of possible outcomes of the results if an experiment is reproduced many times under identical conditions. The function $g(\vec{y}\mid\vec{\lambda},M)$ gives the relative frequency of getting results $\vec{y}$ assuming the model $M$ and parameters $\vec{\lambda}$. It should satisfy:
 \begin{equation}\int g(\vec{y}\mid\vec{\lambda},M)\text{d}\vec{y}=1 \quad\text{and}\quad g(\vec{y}\mid\vec{\lambda},M)>0\end{equation}
 if continuous values are measured (in the discrete situation the integral gets replaced by a sum over all the possible outcomes). In the following, we will write formulae for the continuous case; the modification for the discrete case will be clear.
 
@@ -17,7 +17,7 @@ In general, the judgement on the validity on a model and the extraction of value
 % {{{ THE LEARNING RULE
 \marginnote{the\\learning\\rule} The probability of a model M will be quantified as $P(M)\in[0,1]$, while the probability density of the parameters are typically continuous functions. The parameters from the modeling of the experimental conditions are not correlated to the parameters of the physical model so that
 \begin{equation}P(\vec{\lambda},\vec{\nu}\mid M)=P(\vec{\lambda}\mid M)P(\vec{\nu})\;.\end{equation}
-In the Bayesian approach the quantities $P(M)$ and $P(\vec{\lambda}\mid M)$ are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains out knowledge about nature and has to be `updated' by comparing data with the predictions of the model.
+In the Bayesian approach the quantities $P(M)$, $P(\vec{\lambda}\mid M)$ etc.~are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains out knowledge about nature and has to be `updated' by comparing data with the predictions of the model.
 
 The procedure for learning from experiment is, according to the Bayes theorem:
 \begin{equation}P_{i+1}(\vec{\lambda},\vec{\nu},M\mid\vec{D})=\frac{f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}{\sum_M\int f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}\;,\end{equation}
@@ -36,7 +36,7 @@ At an intuitive level, it is absolutely reasonable to draw conclusions starting 
 % {{{ PARAMETER ESTIMATION
 \marginnote{parameter\\estimation} Parameter estimation is performed while keeping the model fixed. It this case we write
 \begin{equation}P(\vec{\lambda},\vec{\nu}\mid\vec{D},M)=\frac{P(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}\mid M)}{\int P(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_0(\vec{\lambda},\vec{\nu}\mid M)}\;,\label{eq:posterior}\end{equation}
-The output of the evaluation is a normalized probability density for the parameters, including all correlations, and hence it can be used to give best-fit values, probability intervals for the parameters, etc.
+where the prior distribution is now denoted with $P_0$. The output of the evaluation is a normalized probability density for the parameters, including all correlations, and hence it can be used to give best-fit values, probability intervals for the parameters, etc.
 
 When working with the posterior probability density function (or \emph{pdf}) \ref{eq:posterior}, it is often the case that one is interested not in the full \emph{pdf}, but in the probability distribution for only one, or a few, parameters. These distributions are determined via marginalization. For example, the probability distribution for parameter $\lambda_i$ is:
 \begin{equation}P(\lambda_i\mid\vec{D},M)=\int P(\vec{\lambda},\vec{\nu}\mid\vec{D},M)\text{d}\vec{\lambda}_{i\neq j}\text{d}\vec{\nu}\;.\end{equation}
@@ -60,7 +60,7 @@ One should also keep in mind that p-values cannot be turned into probabilistic s
 
 % }}}
 % {{{ COMPUTATIONAL ASPECTS
-\marginnote{computational\\aspects} There are several ways to calculate the posterior in \ref{eq:posterior} and the marginalized \emph{pdf}s, and even with few parameters $(\vec{\lambda},\vec{\nu})$ the computation can easily become highly time consuming. However, the application of Markov Chain Monte Carlo (MCMC) methods in this field has revolutionized Bayesian computation. The BAT package \cite{BAT} implements several tools to perform a Bayesia data analysis.
+\marginnote{computational\\aspects} There are several ways to calculate the posterior in \ref{eq:posterior} and the marginalized \emph{pdf}s, and even with few parameters $(\vec{\lambda},\vec{\nu})$ the computation can easily become highly time consuming. However, the application of Markov Chain Monte Carlo (MCMC) methods in this field has revolutionized Bayesian computation. The BAT package \cite{BAT} implements several tools to perform a Bayesian data analysis.
 
 Markov chains are sequences of random numbers (or, in general, vectors of numbers), $X_t$, which follow a well-defined limiting distribution, $\pi(x)$. The fundamental property of a Markov chain is that the probability distribution for the next element in the sequence, $X_{t+1}$, depends only on the current state, and not on any previous history. A Markov chain is completely defined by the one-step probability transition matrix, $P(X_{t+1}\mid X_t)$. Under certain conditions (recurrence, irreducibility, aperiodicity), it can be proven that the chain is ergodic; i.e., that the limiting probability to be in a given state does not depend on the starting point of the chain. An MCMC is an algorithm producing an ergodic Markov chain which stationary distribution is the distribution of interest. In our case, the BAT package produces a Markov chain where the stationary distribution is the desired posterior \emph{pdf}.
 
@@ -95,7 +95,7 @@ We want to keep the summed energy spectra from BEGes and coaxial separate, as th
 % {{{ 2nbb
 \marginnote{$2\nbb$} For the two-neutrino mode of double-beta decay we want to estimate the half-life $T_{1/2}^{2\nu}$. In this case the contribution $b_{2\nu}^i$ can be written as
 \begin{equation}b_{2\nu}^i=\frac{N_A\log2}{A_{76}T_{1/2}^{2\nu}}\sum_{k=1}^\textsc{det}m_kt_kf^{76}_k\left[\epsilon^i_kf^i\right]_{2\nu}\;,\end{equation}
-where $k$ labels the detectors, $N_A$ is the Avogadro number, $A_{76}$ is the molar weight of \ce{^{76}Ge}, $f^{76}$ is the enrichment fraction, and $t$ is the detector's live time. The detection efficiency $\epsilon_{2\nu}^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer and the intrinsic efficiency of the detector $k$. $f_{2\nu}^i$ is the theoretical absolute frequency (i.e.~the entire distribution is normalized to one) for double-beta decay in bin $i$, it is the discrete version of \ref{eq:spectstd}. We adopted the approximation $T_{1/2}^{2\nu}\gg t$.
+where $k$ labels the detectors, $N_A$ is the Avogadro number, $A_{76}$ is the molar weight of \ce{^{76}Ge}, $f^{76}$ is the enrichment fraction, and $t$ is the detector's live time. The detection efficiency $\epsilon_{2\nu}^{ik}$ has to be intended as a generalized efficiency which comprises the effect of the presence of the dead layer and the intrinsic efficiency of the detector $k$. $f_{2\nu}^i$ is the theoretical absolute frequency (i.e.~the entire distribution is normalized to one) for double-beta decay in bin $i$, it is the discrete version of (\ref{eq:spectstd}). We have assumed $T_{1/2}^{2\nu}\gg t$.
 
 The expression holds also for the Lorentz-violating mode, with the associated half-life $T_{1/2}^{2\nu\text{LV}}$. Recalling the equation \ref{eq:totwidth} we can express $T_{1/2}^{2\nu\text{LV}}$ in relation to $T_{1/2}^{2\nu}$ and $\aof$:
 \begin{equation}T_{1/2}^{2\nu\text{LV}}=I\cdot\frac{T_{1/2}^{2\nu}}{\aof}\qquad I=\frac{10}{\aof}\frac{\int_0^{K_0}\frac{\text{d}\delta\Gamma}{\text{d}K}\text{d}K}{\int_0^{K_0}\frac{\text{d}\Gamma_0}{\text{d}K}\text{d}K}\;,\end{equation}
@@ -110,12 +110,17 @@ where $a_j$ is the activity for the source $j$ and $M$ is the mass of the object
 %It should be noted that the activities of some isotopes are correlated, for example if they come from the same decay chain. In this analysis we have two examples of this, \ce{^{212}Bi} decays in \ce{^{208}Tl} with 39.93\% branching ratio, while \ce{^{214}Pb} decays in \ce{^{214}Bi} with $\sim$100\% branching ratio.
 
 % }}}
+\begin{figure}
+	\centering
+	\includegraphics{img/rescurves.pdf}
+	\caption{Combined resolution curves for the BEGes (red) and enriched coaxials (blue) detectors.}\label{fig:rescurves}
+\end{figure}
 % {{{ SIMULATED SPECTRA
 \marginnote{simulated\\spectra} The simulated spectra for $2\nbb$ and background sources, come from \textsc{MaGe} in the form
 \begin{equation}b^{ik}_{\textsc{MaGe},j}=N_\text{gen}\epsilon^{ik}_jf_j^i\;,\end{equation}
 where $N_\text{gen}$ is the number of primary vertices simulated and $i$, $j$, $k$ label the $i$-th bin, the source and the detector, respectively.
 
-First of all the experimental energy resolution has to be applied to the spectra with a convolution between the latter and some `resolution curves'. They were estimated using \ce{^{228}Th} sources deployed into LAr and are represented with a square-root-like function. For the present analysis we used two different global calibration curves: one for the BEGes and one for the enriched coaxials, as the differences between the single curves in the two detector's types are negligible.
+First of all the experimental energy resolution has to be applied to the spectra with a convolution between the latter and some `resolution curves'. They were estimated using \ce{^{228}Th} sources deployed into LAr and are represented with a square-root-like function. For the present analysis we used two different global calibration curves: one for the BEGes and one for the enriched coaxials (Fig.~\ref{fig:rescurves}), as the differences between the single curves in the two detector's types are negligible.
 
 The spectra for each detector have then to be combined properly in order to be fitted to the data. In the case of external sources, for example, the form in equation \ref{eq:extsources} has to be reproduced rescaling each spectra with $N_\text{gen}$, then multiplying by $t_k$ and $M$ and finally summing over all detectors. Then the overall factor $\lambda_i$ will be the parameter to estimate with the fitting procedure:
 \begin{equation}b_{\text{fit},j}^i=\lambda_jM\sum_k^\textsc{det}t_k\epsilon_j^{ik}f_j^i\;.\end{equation}

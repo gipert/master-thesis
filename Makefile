@@ -17,7 +17,8 @@ all : $(PROJ).pdf
 $(PROJ).pdf : $(PROJ).tex $(DIRS) FORCE_MAKE
 	cd img && make all && cd ..
 	$(LC) $(COPT) $<
-	if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
+	cp log/main.pdf ./main.pdf
+#if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
 
 preview : $(DIRS)
 	$(LC) $(COPT) -pvc $(PROJ).tex

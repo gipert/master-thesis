@@ -23,14 +23,12 @@ $(PROJ).pdf : $(PROJ).tex $(DIRS) FORCE_MAKE
 abstract : abstract/abstract.tex FORCE_MAKE
 	cd abstract && make all && cd ..
 
-preview : $(DIRS)
-	$(LC) $(COPT) -pvc $(PROJ).tex
-
 $(DIRS) :
 	mkdir -p $(DIRS)
 
 clean :
 	$(LC) $(COPT) -C
+	-rm -rf log abstract/log img/log
 
-.PHONY : FORCE_MAKE preview clean
+.PHONY : FORCE_MAKE clean
 -include log/.deps

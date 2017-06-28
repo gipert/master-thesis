@@ -1,13 +1,26 @@
 #!/bin/make
+#
+# supports parallel compilation
 
-FILES = $(basename $(wildcard *.tex))
-FLAGS = -pdf -pdflatex="pdflatex -interaction=batchmode %O %S" -outdir=log
+SRCS  = $(wildcard *.tex)
+PDFS  = $(patsubst %.tex, %.pdf, $(SRCS))
+LC    = latexmk
+FLAGS = -pdf -silent -time -outdir=log -M -MP -MF log/$*.deps
+DIRS  = log
 
-all :
-	latexmk $(FLAGS) -M -MP -MF log/$*.deps;
-	for i in $(FILES); do { if [ ! -h $$i.pdf ]; then ln -s log/$$i.pdf ./$$i.pdf; fi; }; done
+all : $(PDFS)
+
+%.pdf : %.tex  $(DIRS) FORCE_MAKE
+	$(LC) $(FLAGS) $<
+	if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
+
+$(DIRS) :
+	mkdir -p $(DIRS)
 
 clean :
-	latexmk $(FLAGS) -c
+	latexmk $(FLAGS) -C
+	rm $(PDFS)
+	rm -rf log
 
+.PHONY : FORCE_MAKE clean
 -include log/*.deps

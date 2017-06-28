@@ -1,27 +1,25 @@
 #!/bin/make
 #
-# makefile for latex projects based on latexmk.
+# Makefile for latex projects based on latexmk.
+# Please set the project name before usage.
+# Put source .bib or .tex files in src/
 #
 # Author: Luigi Pertoldi
 # Created: 19/04/2017
 #
 # Notes: \input does not work with latexmk
 #
-PROJ = main
+PROJ = abstract
 LC   = latexmk
-COPT = -silent -time -pdflua -outdir=log -M -MP -MF log/.deps
+COPT = -silent -time -pdf -outdir=log -M -MP -MF log/.deps
 DIRS = log log/src
 
-all : $(PROJ).pdf abstract
+all : $(PROJ).pdf
 
 $(PROJ).pdf : $(PROJ).tex $(DIRS) FORCE_MAKE
-	cd img && make all && cd ..
 	$(LC) $(COPT) $<
-	cp log/main.pdf ./main.pdf
-#if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
-
-abstract : abstract/abstract.tex FORCE_MAKE
-	cd abstract && make all && cd ..
+	cp log/abstract.pdf ./abstract.pdf
+#	if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
 
 preview : $(DIRS)
 	$(LC) $(COPT) -pvc $(PROJ).tex
@@ -30,7 +28,8 @@ $(DIRS) :
 	mkdir -p $(DIRS)
 
 clean :
-	$(LC) $(COPT) -C
+	$(LC) -CA
+	-rm -rf $(DIRS)
 
 .PHONY : FORCE_MAKE preview clean
 -include log/.deps

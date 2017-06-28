@@ -1,32 +1,20 @@
 #!/bin/make
 #
-# makefile for latex projects based on latexmk.
-#
-# Author: Luigi Pertoldi
-# Created: 19/04/2017
-#
-# Notes: \input does not work with latexmk
-#
 PROJ = slides
-LC   = latexmk
-COPT = -xelatex -outdir=log -M -MP -MF log/$*.deps
 DIRS = log log/src
+LC = xelatex -interaction=batchmode
+DEPS = $(wildcard img/*.pdf)
 
 all : $(PROJ).pdf
 
-$(PROJ).pdf : $(PROJ).tex $(DIRS) FORCE_MAKE
-	$(LC) $(COPT) $<
-	if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
-
-preview : $(DIRS)
-	$(LC) $(COPT) -pvc $(PROJ).tex
+$(PROJ).pdf : $(PROJ).tex $(DIRS) $(DEPS)
+	$(LC)  $<
+	cp log/slides.pdf ./slides.pdf
 
 $(DIRS) :
 	mkdir -p $(DIRS)
 
 clean :
-	$(LC) -CA
 	-rm -rf $(DIRS)
 
-.PHONY : FORCE_MAKE preview clean
--include log/*.deps
+.PHONY : clean

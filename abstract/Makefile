@@ -11,25 +11,23 @@
 #
 PROJ = abstract
 LC   = latexmk
-COPT = -silent -time -pdf -outdir=log -M -MP -MF log/.deps
-DIRS = log log/src
+COPT = -silent -pdf -outdir=log -M -MP -MF log/.deps
+DIRS = log
 
 all : $(PROJ).pdf
 
 $(PROJ).pdf : $(PROJ).tex $(DIRS) FORCE_MAKE
-	$(LC) $(COPT) $<
-	cp log/abstract.pdf ./abstract.pdf
+	@echo "Compiling $@..."
+	@$(LC) $(COPT) $<
+	@cp log/abstract.pdf ./abstract.pdf
 #	if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
 
-preview : $(DIRS)
-	$(LC) $(COPT) -pvc $(PROJ).tex
-
 $(DIRS) :
-	mkdir -p $(DIRS)
+	@mkdir -p $(DIRS)
 
 clean :
-	$(LC) -CA
 	-rm -rf $(DIRS)
+	-rm -f $(PROJ).pdf
 
 .PHONY : FORCE_MAKE preview clean
 -include log/.deps

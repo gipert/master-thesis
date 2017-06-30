@@ -9,25 +9,25 @@
 #
 PROJ = main
 LC   = latexmk
-COPT = -silent -time -pdflua -outdir=log -M -MP -MF log/.deps
+COPT = -pdflua -outdir=log -M -MP -MF log/.deps
 DIRS = log log/src
 
-all : $(PROJ).pdf abstract
+all : abstract $(PROJ).pdf
 
 $(PROJ).pdf : $(PROJ).tex $(DIRS) FORCE_MAKE
-	cd img && make all && cd ..
-	$(LC) $(COPT) $<
-	cp log/main.pdf ./main.pdf
+	@cd img && make all && cd ..
+	@echo "Compiling $@..."
+	@$(LC) $(COPT) $<
+	@cp log/main.pdf ./main.pdf
 #if [ ! -h $@ ]; then ln -s log/$@ ./$@; fi
 
 abstract : abstract/abstract.tex FORCE_MAKE
-	cd abstract && make all && cd ..
+	@cd abstract && make all && cd ..
 
 $(DIRS) :
-	mkdir -p $(DIRS)
+	@mkdir -p $(DIRS)
 
 clean :
-	$(LC) $(COPT) -C
 	-rm -rf log abstract/log img/log
 
 .PHONY : FORCE_MAKE clean

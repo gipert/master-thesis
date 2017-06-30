@@ -44,6 +44,7 @@
 % use typewriter computer modern as monospaced font
 \setmonofont{cmuntt.otf}[Scale=MatchLowercase]
 \newcommand{\darkred}[1]{{\addfontfeature{Color=980000}#1}}
+\newcommand{\swshape}{\itshape\addfontfeature{RawFeature=+swsh}}
 \newcommand{\textsw}[1]{\textit{\addfontfeature{RawFeature=+swsh}#1}}
 \newcommand{\tabnums}[1]{{\addfontfeature{RawFeature=+tnum}#1}}
 \newcommand{\leftdecA}{\char"E001}
@@ -88,20 +89,18 @@
 \renewcommand{\labelitemi}{$\diamond$}
 \usepackage{booktabs, multicol, multirow}
 \usepackage{caption}\captionsetup[table]{position=top}
-\usepackage[hidelinks]{hyperref}
 \usepackage{pdflscape}
 %\usepackage{lineno}
 %\linenumbers
+\usepackage[hidelinks]{hyperref} % must be loaded before cleveref
 \usepackage{cleveref}
 	\crefname{section}{\S}{\S\S}
 	\Crefname{section}{\S}{\S\S}
 	\crefformat{section}{\S#2#1#3}
-%%% TABLE OF CONTENTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[tocgraduated, toctextentriesindented]{tocstyle}
-\usetocstyle{standard}
 %%% BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{cite}
-\usepackage[nottoc,notlot,notlof]{tocbibind}
+\usepackage[nottoc,notlot,notlof, other]{tocbibind}
+\settocbibname{\hspace{1.5em}References}
 \let\OLDthebibliography\thebibliography
 \renewcommand\thebibliography[1]{
 	\OLDthebibliography{#1}
@@ -113,6 +112,11 @@
 \makeatother
 \usepackage{doi}
 \renewcommand{\doi}[1]{\texttt{doi:}\url{#1}}
+%%% TABLE OF CONTENTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[subfigure, titles]{tocloft}
+\setlength{\cftsubsecindent}{1cm}
+\renewcommand{\cftsecfont}{\large}
+\renewcommand{\cftsubsecfont}{\swshape}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{titlepage}

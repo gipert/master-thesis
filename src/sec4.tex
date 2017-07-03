@@ -11,13 +11,13 @@ if continuous values are measured (in the discrete situation the integral gets r
 
 The prediction $\vec{y}$ from the model cannot usually be directly compared to the experimental results (that we will denote with $\vec{x}$ in the latter), the modeling of the experiment will usually add extra parameters and assumptions. We will use the symbol $\vec{\nu}$ to represent these additional nuisance parameters, which could also be limited by additional information not included explicitly in the model. In the following we will implicitly assume that all available information is used in the probability distributions. We would then have $f(\vec{x}\mid\vec{\lambda},\vec{\nu},M)$ for the frequency distribution of the experimentally observable quantities $\vec{x}$.
 
-In general, the judgement on the validity on a model and the extraction of values of the parameters within the model will be based on a comparison of the data $\vec{D}$ with $f(\vec{x}\mid\vec{\lambda},\vec{\nu},M)$.
+In general, the judgement on the validity of a model and the extraction of values of the parameters within the model will be based on a comparison of the data $\vec{D}$ with $f(\vec{x}\mid\vec{\lambda},\vec{\nu},M)$.
 
 % }}}
 % {{{ THE LEARNING RULE
 \marginnote{the\\learning\\rule} The probability of a model M will be quantified as $P(M)\in[0,1]$, while the probability density of the parameters are typically continuous functions. The parameters from the modeling of the experimental conditions are not correlated to the parameters of the physical model so that
 \begin{equation}P(\vec{\lambda},\vec{\nu}\mid M)=P(\vec{\lambda}\mid M)P(\vec{\nu})\;.\end{equation}
-In the Bayesian approach the quantities $P(M)$, $P(\vec{\lambda}\mid M)$ etc.~are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains out knowledge about nature and has to be `updated' by comparing data with the predictions of the model.
+In the Bayesian approach the quantities $P(M)$, $P(\vec{\lambda}\mid M)$ etc.~are treated as probabilities (probability densities), although they are not in any sense frequency distributions and are more accurately described as \emph{degrees-of-belief} \cite{bayesbook}. The \emph{degree-of-belief} contains our knowledge about nature and has to be `updated' by comparing data with the predictions of the model.
 
 The procedure for learning from experiment is, according to the Bayes theorem:
 \begin{equation}P_{i+1}(\vec{\lambda},\vec{\nu},M\mid\vec{D})=\frac{f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}{\sum_M\int f(\vec{x}=\vec{D}\mid\vec{\lambda},\vec{\nu},M)P_i(\vec{\lambda},\vec{\nu},M)}\;,\end{equation}
@@ -44,7 +44,7 @@ Note that the parameter values which maximize the full posterior \emph{pdf} usua
 
 We will mainly interested in estimating the mode of $\lambda_i$, i.e.~the value of $\lambda_i$ which maximizes the marginalized posterior \emph{pdf}
 \begin{equation}\text{argmax}\left[ P(\lambda_i\mid\vec{D},M) \right]\end{equation}
-and confidence intervals such that a certain fraction $\alpha$ of the total area is contained in it:
+and credibility intervals such that a certain fraction $\alpha$ of the total area is contained in it:
 \begin{equation}\alpha=\int^{\lambda_\text{upper}}_{\lambda_\text{lower}}P(\lambda_i\mid\vec{D},M)\text{d}\lambda_i\;,\end{equation}
 where the desired interval is $[\lambda_\text{lower},\lambda_\text{upper}]$.
 
@@ -54,12 +54,13 @@ where the desired interval is $[\lambda_\text{lower},\lambda_\text{upper}]$.
 \begin{equation}\hat{f}(\vec{x})=P(\vec{x}\mid\hat{\vec{\lambda}},\hat{\vec{\nu}},M)\;,\end{equation}
 where $(\hat{\vec{\lambda}},\hat{\vec{\nu}})$ is the set of parameters at the mode of the full \emph{pdf}. We then define the p-value as
 \begin{equation}p=\frac{\int_{\hat{f}(\vec{x})<\hat{f}(\vec{D})}\hat{f}(\vec{x})\text{d}\vec{x}}{\int \hat{f}(\vec{x})\text{d}\vec{x}}\;.\label{eq:pvalue}\end{equation}
-$p$ is the tail area probability to have found a result with $\hat{f}(\vec{x})<\hat{f}(\vec{D})$, assuming that the model $M$ is valid and all experimental effects are perfectly known. It is the probability that the Likelihood could have been lower than the observed in the data, so it the model does not give a good representation of the data, then $p$ will be a small number. If the modeling is correct, $p$ will have a flat probability distribution in $[0,1]$, but it should be clear that incorrect formulations of the data fluctuations will bias the p-value distribution to lower (if the data fluctuations are underestimated) or higher (if the data fluctuations are overestimated) values. Also, if the existing data is used to modify the parameter values, the extracted p-value will be biased to higher values.
+$p$ is the tail area probability to have found a result with $\hat{f}(\vec{x})<\hat{f}(\vec{D})$, assuming that the model $M$ is valid and all experimental effects are perfectly known. It is the probability that the Likelihood could have been lower than the observed in the data, so if the model does not give a good representation of the data, then $p$ will be a small number. If the modeling is correct, $p$ will have a flat probability distribution in $[0,1]$, but it should be clear that incorrect formulations of the data fluctuations will bias the p-value distribution to lower (if the data fluctuations are underestimated) or higher (if the data fluctuations are overestimated) values. Also, if the existing data is used to modify the parameter values, the extracted p-value will be biased to higher values.
 
 One should also keep in mind that p-values cannot be turned into probabilistic statements about the model being correct without priors, and should therefore be handled with care. General guidelines suggest that one should check if the p-value distribution is reasonably flat, keeping in mind that sharply falling distributions starting at $p=0$ are usually originated by a bad model. Moreover, small p-values are worrisome, they indicate that a poor model might has been picked. For further discussions on the topic see, for example, \cite{p-value}.
 
 % }}}
 % {{{ COMPUTATIONAL ASPECTS
+\newpage%
 \marginnote{computational\\aspects} There are several ways to calculate the posterior in \ref{eq:posterior} and the marginalized \emph{pdf}s, and even with few parameters $(\vec{\lambda},\vec{\nu})$ the computation can easily become highly time consuming. However, the application of Markov Chain Monte Carlo (MCMC) methods in this field has revolutionized Bayesian computation. The BAT package \cite{BAT} implements several tools to perform a Bayesian data analysis.
 
 Markov chains are sequences of random numbers (or, in general, vectors of numbers), $X_t$, which follow a well-defined limiting distribution, $\pi(x)$. The fundamental property of a Markov chain is that the probability distribution for the next element in the sequence, $X_{t+1}$, depends only on the current state, and not on any previous history. A Markov chain is completely defined by the one-step probability transition matrix, $P(X_{t+1}\mid X_t)$. Under certain conditions (recurrence, irreducibility, aperiodicity), it can be proven that the chain is ergodic; i.e., that the limiting probability to be in a given state does not depend on the starting point of the chain. An MCMC is an algorithm producing an ergodic Markov chain which stationary distribution is the distribution of interest. In our case, the BAT package produces a Markov chain where the stationary distribution is the desired posterior \emph{pdf}.
@@ -122,7 +123,7 @@ where $N_\text{gen}$ is the number of primary vertices simulated and $i$, $j$, $
 
 First of all the experimental energy resolution has to be applied to the spectra with a convolution between the latter and the `resolution curves'. They were estimated using \ce{^{228}Th} sources deployed into LAr and are represented by a square-root-like function. For the present analysis we used two different global calibration curves: one for the BEGes and one for the enriched coaxials (Fig.~\ref{fig:rescurves}), as the differences between the single curves within the two detector's types are negligible.
 
-The spectra for each detector have then to be combined properly in order to be fitted to the data. In the case of external sources, for example, the Eq.~(\ref{eq:extsources}) has to be reproduced rescaling each spectra with $N_\text{gen}$, then multiplying by $t_k$ and $M$ and finally summing over all detectors. Then the overall factor $\lambda_i$ will be the parameter to estimate with the fitting procedure:
+The spectra for each detector have then to be combined properly in order to fit to the data. In the case of external sources, for example, the Eq.~(\ref{eq:extsources}) has to be reproduced rescaling each spectra with $N_\text{gen}$, then multiplying by $t_k$ and $M$ and finally summing over all detectors. Then the overall factor $\lambda_i$ will be the parameter to estimate with the fitting procedure:
 \begin{equation}b_{\text{fit},j}^i=\lambda_jM\sum_k^\textsc{det}t_k\epsilon_j^{ik}f_j^i\;.\end{equation}
 
 % }}}

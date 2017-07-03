@@ -1,6 +1,6 @@
 %! TEX root = ../main.tex
 \section{Data and simulations}\label{sec:data}
-The raw data is processed to produce a set of events which is suitable for comparison with theoretical expectations. In this section we treat how the data is structured and purified from unphysical or unwanted events, then the shapes of the resulting energy spectra, used to fit the theoretical distributions, are presented. The results from the material screening, that will be used to constrain the analysis, are given. Finally, the Monte Carlo simulations, carried out for this analysis, that represent the $2\nbb$ and the background contributions in the data are detailed.
+The raw data is processed to produce a set of events which is suitable for comparison with theoretical expectations. In this section we treat how the data is structured and purified from unphysical or unwanted events, then the shapes of the resulting energy spectra, used to fit the theoretical distributions, are presented. The results from the material screening, that will be used to constrain the analysis, are given. Finally, the Monte Carlo simulations, carried out for this analysis, that represent the $2\nbb$ and the background contributions in the data, are detailed.
 % {{{ THE GERDA DATA STRUCTURE
 \subsection*{The \textsc{Gerda} data set}
 \addcontentsline{toc}{subsection}{The \textsc{Gerda} data set}
@@ -29,6 +29,7 @@ Once the relevant quantities have been extracted from raw waveforms they have to
 % }}}
 % {{{ BACKGROUND INDEX
 \marginnote{background\\index} The Background Index (BI), used to estimate the background activity in the \textsc{RoI}, is defined as the number of counts over detector's mass, live time and energy range inside a energy window defined as follows (see also Fig.~\ref{fig:bi}). The window covers the energy range between 1930 keV and 2190 keV excluding the blinded window around $Q_{\beta\beta}$. Also the two lines from \ce{^{208}Tl} and \ce{^{214}Bi} occurring respectively at 2104 keV and 2119 keV are neglected in this computation; this is done removing the energy range within $\pm$5 keV around the peaks. The final width of the window is then 190 keV. In Tab.~\ref{tab:bindex} the background indices for the three considered data sets are given.
+
 \begin{table}[b]
 	\centering
 	\caption{Background indices for the considered data sets.}
@@ -44,7 +45,6 @@ Once the relevant quantities have been extracted from raw waveforms they have to
 		\bottomrule
 	\end{tabular}
 \end{table}
-
 \begin{figure}
 	\centering
 	\includegraphics{img/bi.pdf}
@@ -52,9 +52,10 @@ Once the relevant quantities have been extracted from raw waveforms they have to
 	\label{fig:bi}
 \end{figure}
 % }}}
+\newpage%
 \marginnote{screening\\measurements} There are some radioactive contaminations in the components of {\gerda}, though not evident in the energy spectra, which have been identified and systematically measured. The most relevant contributions, reported in Table \ref{tab:screening}, come from the silicon of the holder mounting, the cables, the nylon mini-shroud covering the detectors and the fiber-shroud. Measurements were performed with the ICP-MS mass spectroscopy or with a germanium detector (GeMPI) installed at LNGS.
 \begin{table}
-	\caption{Screening measurements for some of the considered {\gerda} components. The upper limits correspond to 90\% C.L.}
+	\caption{Screening measurements for some of the considered {\gerda} components (personal communications with A.~K.~Schütz, M.Laubenstein and B.~Schwingenheuer from the {\gerda} collaboration). The upper limits correspond to 90\% C.L.}
 	\centerline{%
 	\begin{tabular}{lcccccc}
 		\toprule
@@ -121,7 +122,7 @@ The volumes representing the germanium array, the holder mounting and the cables
 
 % }}}
 % {{{ 60Co and 207Bi
-\marginnote{\textnormal{\ce{^{60}Co} \textsc{and} \ce{^{207}Bi}}} The presence of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} was suggested by material screening measurements and earlier works (unpublished). Simulations of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} in cables, holders and mini-shrouds have been carried out (see Fig.~\ref{fig:simspectra2}, top right).
+\marginnote{\textnormal{\ce{^{60}Co} \textsc{and} \ce{^{207}Bi}}} The presence of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} was suggested by material screening measurements and earlier works (personal communications with A.~K.~Schütz from the {\gerda} collaboration). Simulations of \ce{^{60}Co} in the holder mounting and \ce{^{207}Bi} in cables, holders and mini-shrouds have been carried out (see Fig.~\ref{fig:simspectra2}, top right).
 
 % }}}
 % {{{ ALPHA MODEL
@@ -133,7 +134,7 @@ Due to the short range of $\alpha$-particles in germanium and LAr of the order o
 
 All $\alpha$-decays in the \ce{^{226}Ra} to \ce{^{210}Pb} sub-decay chain and the \ce{^{210}Po} decay have been simulated on the p$^+$ detector surface separately. Additionally, the decays in the chain following the \ce{^{226}Ra} decay were simulated assuming a homogeneous distribution in a volume extending up to 1 mm from the p$^+$ surface in LAr. The individual decays on the p$^+$ surface result in a peak-like structure with its maximum at slightly lower energies than the corresponding $\alpha$-decay energy with a quasi-exponential tail towards lower energy. The decays occurring in LAr close to the p$^+$ surface result in a quasi-flat spectrum without any peak-like structure extending to lower energies.
 
-The \ce{^{210}Po} peak structure around 5.3 MeV with high statistics was used to determine the effective dead layer model. Spectra from \ce{^{210}Po} $\alpha$-decay simulations on the p$^+$ surface with different dead layer thicknesses were used to fit the spectrum in the energy region dominated by the \ce{^{210}Po} peak, i.e.~between 4850 and 5250 keV. The weight of each spectrum was left as a free parameter. A combination of the spectra for 500, 600 and 700 nm dead layer thicknesses describes the observed peak structure well and results in a good fit, whereas a spectrum with a single dead layer thickness does not give a sufficiently good fit. Consequently the derived dead layer model was used for the later fits of $\alpha$-induced spectra.
+The \ce{^{210}Po} peak structure around 5.3 MeV with high statistics was used to determine the effective dead layer model. Spectra from \ce{^{210}Po} $\alpha$-decay simulations on the p$^+$ surface with different dead layer thicknesses were used to fit the spectrum in the energy region dominated by the \ce{^{210}Po} peak, i.e.~between 4850 and 5250 keV. The weight of each spectrum was left as a free parameter. A combination of the spectra for 500, 600, 700 nm (BEGes) and 300, 400, 500, 600, 700 nm (enriched coaxials) dead layer thicknesses describes the observed peak structure well and results in a good fit, whereas a spectrum with a single dead layer thickness does not give a sufficiently good fit. Consequently the derived dead layer model was used for the later fits of $\alpha$-induced spectra.
 
 In order to describe the whole energy interval dominated by $\alpha$-induced events, the simulated spectra of $\alpha$-decays of \ce{^{210}Po} as well as from \ce{^{226}Ra} and its short lived daughter nuclei on the p$^+$ surface and in LAr were used to fit the energy spectrum between 3500 and 7500 keV. In fact, while the surface decays alone can successfully describe the observed peak structures, they could not describe the whole spectrum. A contribution from an approximately flat component, like the spectra from $\alpha$-decays in LAr, is needed in the model. The number of events in the considered energy range was left as a free parameter for each $\alpha$-component. The final spectra for BEGe and coaxial detectors are shown in Fig.~\ref{fig:simspectra2}, bottom left.
 

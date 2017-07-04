@@ -117,6 +117,7 @@
 \setlength{\cftsubsecindent}{1cm}
 \renewcommand{\cftsecfont}{\large}
 \renewcommand{\cftsubsecfont}{\swshape}
+\renewcommand{\cftsecpagefont}{\scshape}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \begin{titlepage}
@@ -155,10 +156,15 @@
 	\end{center}
 \end{titlepage}
 \restoregeometry
+\thispagestyle{empty}
 \tableofcontents
 %\listoftables
 %\listoffigures
+\cleardoublepage
+\setcounter{page}{1}
+\renewcommand{\thepage}{\scshape\roman{page}}
 \include{src/intro}
+\pagenumbering{arabic}
 \include{src/sec1}
 \include{src/sec2}
 \include{src/sec3}

@@ -90,6 +90,7 @@
 \usepackage{booktabs, multicol, multirow}
 \usepackage{caption}\captionsetup[table]{position=top}
 \usepackage{pdflscape}
+\usepackage{emptypage}
 %\usepackage{lineno}
 %\linenumbers
 \usepackage[hidelinks]{hyperref} % must be loaded before cleveref
@@ -156,15 +157,16 @@
 	\end{center}
 \end{titlepage}
 \restoregeometry
+\cleardoublepage % skip a page
 \thispagestyle{empty}
 \tableofcontents
 %\listoftables
 %\listoffigures
-\cleardoublepage
-\setcounter{page}{1}
-\renewcommand{\thepage}{\scshape\roman{page}}
+\cleardoublepage % skip a page
+\setcounter{page}{1} % start numbering
+\renewcommand{\thepage}{\scshape\roman{page}} % roman numerals for introduction
 \include{src/intro}
-\pagenumbering{arabic}
+\pagenumbering{arabic} % arabic numerals for the rest
 \include{src/sec1}
 \include{src/sec2}
 \include{src/sec3}

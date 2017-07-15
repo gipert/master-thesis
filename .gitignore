@@ -3,5 +3,5 @@ log
 img/log
 img/*.pdf
 *.swp
-slides
 testing
+slides/log

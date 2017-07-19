@@ -1,7 +1,7 @@
 %! TEX program = lualatex
 %        File: main.tex
 %     Created: Mar Apr 18 06:00 pm 2017 C
-%
+% {{{ PREAMBLE
 \documentclass[11pt, a4paper, twoside]{article}
 %%% GEOMETRY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[pass]{geometry}
@@ -10,7 +10,7 @@
 %\setlength{\parindent}{10pt}
 %\usepackage[parfill]{parskip}
 \pagestyle{plain}
-%%% FONT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% {{{ FONT
 \usepackage[UKenglish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -74,21 +74,22 @@
 	\newcommand{\Tnu}{T_{1/2}^{2\nu}}
 \usepackage[version=4]{mhchem}
 \usepackage{microtype}
-%%% FIGURES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% }}}
+% {{{ FIGURES, TABLES
 \usepackage{graphicx}
 \usepackage{subfigure}
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepackage[mode=image]{standalone}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{booktabs, multicol, multirow}
+\usepackage{caption}\captionsetup[table]{position=top}
+% }}}
 \usepackage{xcolor}
 \usepackage{titlesec}
 	\titleformat*{\section}{\huge}
 	\titleformat*{\subsection}{\LARGE}
 	\titleformat*{\subsubsection}{\Large}
 \renewcommand{\labelitemi}{$\diamond$}
-\usepackage{booktabs, multicol, multirow}
-\usepackage{caption}\captionsetup[table]{position=top}
 \usepackage{pdflscape}
 \usepackage{emptypage}
 %\usepackage{lineno}
@@ -98,7 +99,7 @@
 	\crefname{section}{\S}{\S\S}
 	\Crefname{section}{\S}{\S\S}
 	\crefformat{section}{\S#2#1#3}
-%%% BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% {{{ BIBLIOGRAPHY
 \usepackage{cite}
 \usepackage[nottoc,notlot,notlof, other]{tocbibind}
 \settocbibname{\hspace{1.5em}References}
@@ -113,13 +114,15 @@
 \makeatother
 \usepackage{doi}
 \renewcommand{\doi}[1]{\texttt{doi:}\url{#1}}
-%%% TABLE OF CONTENTS %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% }}}
+% {{{ TABLE OF CONTENTS
 \usepackage[subfigure, titles]{tocloft}
 \setlength{\cftsubsecindent}{1cm}
 \renewcommand{\cftsecfont}{\large}
 \renewcommand{\cftsubsecfont}{\swshape}
 \renewcommand{\cftsecpagefont}{\scshape}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% }}}
+% }}}
 \begin{document}
 \begin{titlepage}
 	\thispagestyle{empty}

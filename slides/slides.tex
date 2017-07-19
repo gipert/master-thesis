@@ -3,6 +3,7 @@
 %     Created: Sab Apr 22 12:00 pm 2017 C
 % Last Change: Sab Apr 22 12:00 pm 2017 C
 %
+% {{{ PREAMBLE
 \documentclass[10pt]{beamer}
 %\PassOptionsToPackage{bookmarks=false, hidelinks}{hyperref}
 \usepackage[english]{babel}
@@ -68,7 +69,7 @@
 \date{18 Luglio 2017}
 \author{Luigi Pertoldi}
 \institute{Università degli Studi di Padova \\ INFN -- Sezione di Padova}
-%
+% }}}
 \begin{document}
 \tikzexternaldisable
 \maketitle
@@ -80,12 +81,12 @@
 \begin{frame}[label=1]{The \alert{GER}manium \alert{D}etector \alert{A}rray}
 	\metroset{block=fill}
 	\begin{columns}
-	\column{0.4\textwidth}
+	\column{0.35\textwidth}
 	\[\ce{^76Ge}\longmapsto\ce{^76Se}+2e^-\]
 	\begin{tikzpicture}\scriptsize
 		\newcommand\dy{0.2cm}
 		\newcommand\ldx{3cm}
-		\newcommand\lsx{1.5cm}
+		\newcommand\lsx{1cm}
 		\newcommand\hei{0.5cm}
 		\newcommand\ange{0.1cm}
 		\newcommand\lene{1.5cm}
@@ -172,14 +173,19 @@
 		};
 		\end{feynman}
 	\end{tikzpicture}
-	\column{0.6\textwidth}
+	\column{0.65\textwidth}
 %	\begin{exampleblock}{I neutrini oltre il Modello Standard}
 %		Il neutrino è una particella di \alert{Majorana} o di \alert{Dirac}?
 %	\end{exampleblock}
 	\begin{itemize}
-		\item {\gerda} misura la vita media del decadimento doppio-beta senza neutrini (\alert{$0\nbb$}) dell'isotopo \alert{\ce{^76Ge}}
-		\item Array di rivelatori arricchiti al \ce{^76Ge} $\longmapsto$ \alert{rivelatore = sorgente}
-		\item \alert{Fase II} --- Aumento della quantità di \ce{^76Ge} e aggiornamento della strumentazione per una maggiore efficienza di reiezione degli eventi di fondo.
+		\item {\gerda}: ricerca decadimento doppio-beta senza neutrini (\alert{$0\nbb$}) dell'isotopo \alert{\ce{^76Ge}}
+		\item Array di rivelatori arricchiti al \ce{^76Ge} \\ $\longmapsto$ \alert{rivelatore = sorgente}
+		\item \alert{Fase II}
+			\begin{itemize}
+				\item aumento della quantità di \ce{^76Ge}
+				\item aggiornamento della strumentazione
+			\end{itemize}
+			$\longmapsto$ migliore discriminazione del fondo.
 	\end{itemize}
 	\end{columns}
 \end{frame}
@@ -218,7 +224,7 @@
 	\begin{tikzpicture}
 	\scriptsize
 	\newcommand\dy{0.2cm}
-	\newcommand\ldx{3cm}
+	\newcommand\ldx{3.5cm}
 	\newcommand\lsx{1.5cm}
 	\newcommand\hei{0.6cm}
 	\newcommand\ange{0.1cm}
@@ -291,9 +297,8 @@
 		\end{feynman}
 	\end{tikzpicture}
 		\column{0.5\textwidth}
-	%\begin{simpleblock}\alert{\textit{Lorentz-violating} $2\nbb$}\end{simpleblock}
-		In decadimenti con neutrini la violazione della simmetria di Lorentz porta a una distorsione dello spettro in energia ($K=K_1+K_2$) dei due elettroni in uscita.
-
+	\begin{simpleblock}\alert{\textit{Lorentz-violating} $2\nbb$}\end{simpleblock}
+		Distorsione dello spettro in energia ($K=K_1+K_2$) dei due elettroni in uscita.
 		\vspace{0.2cm}
 	\begin{center}\alert{Distorsione regolata dal coefficiente $\aof$}\end{center}
 		\alert{\[\frac{\text{d}\Gamma_{TOT}}{\text{d}K}=\frac{\text{d}\Gamma}{\text{d}K}+\frac{\text{d}\delta\Gamma}{\text{d}K}\]}
@@ -411,7 +416,7 @@
 			\node at (axis cs:5100,1.9) {\ce{^{210}Po}};
 			\node[rectangle,draw,fill=bg] at (axis cs:3500,3.8) {BEGe --- 19.74 kg$\cdot$yr};
 			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4.7);
-			\node at (axis cs:5300,3.9) {\includegraphics[width=2cm]{../img/bege_base.pdf}};
+			\node at (axis cs:5450,3.5) {\includegraphics[width=1.5cm]{img/bege_pic.jpg}};
 		\nextgroupplot
 			\addplot[const plot, draw = blue] file {../data/EnrCoax.dat};
 			\node at (axis cs:380,3.8) {\ce{^{39}Ar}};
@@ -428,7 +433,7 @@
 			\node at (axis cs:5800,0.7) {\ce{^{218}Po}};
 			\node[rectangle,draw,fill=bg] at (axis cs:3500,3.8) {\textsc{enr coax} --- 16.22 kg$\cdot$yr};
 			\fill[green, opacity=0.5] (axis cs:2014,0) rectangle (axis cs:2064,4.7);
-			\node at (axis cs:5500,3.4) {\includegraphics[width=1.3cm]{../img/coax_base.pdf}};
+			\node at (axis cs:5500,3.4) {\includegraphics[width=1.3cm]{img/coax_pic.jpg}};
 	\end{groupplot}
 \end{tikzpicture}%
 }
@@ -1098,7 +1103,4 @@
 	}}
 \end{table}
 \end{frame}
-%\begin{frame}{\texorpdfstring{$\alpha$}{alpha}-model}
-%	Decadimenti $\alpha$ nella sottocatena \ce{^226Ra} $\rightarrow$ \ce{^210Po} sono stati simulati attorno ai contatti p$^+$.
-%\end{frame}
 \end{document}

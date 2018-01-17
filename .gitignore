@@ -2,6 +2,7 @@
 *.DS_Store
 .ycm_extra_conf.py
 
+data/
 out/
 lib/
 bin/
@@ -12,3 +13,5 @@ misc/vars.mk
 misc/outfile.root
 misc/testres
 misc/bsub
+
+management/DetectorSet.cxx_actual

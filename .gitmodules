@@ -1,3 +1,0 @@
-[submodule "progressbar"]
-	path = progressbar
-	url = git@github.com:luigipertoldi/progressbar.git

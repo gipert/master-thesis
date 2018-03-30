@@ -1,7 +1,5 @@
 .DS_Store
 log
-img/log
-img/*.pdf
 *.swp
 testing
 slides/log
